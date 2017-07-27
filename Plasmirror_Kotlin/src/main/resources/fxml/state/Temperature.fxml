@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.*?>
+<GridPane alignment="CENTER" prefHeight="62.0" prefWidth="99.0" xmlns="http://javafx.com/javafx/8.0.60"
+          xmlns:fx="http://javafx.com/fxml/1" fx:controller="ui.controllers.TemperatureController">
+    <columnConstraints>
+        <ColumnConstraints hgrow="SOMETIMES" percentWidth="80"/>
+    </columnConstraints>
+    <rowConstraints>
+        <RowConstraints percentHeight="50" vgrow="SOMETIMES"/>
+    </rowConstraints>
+    <children>
+        <AnchorPane prefHeight="200.0" prefWidth="200.0">
+            <children>
+                <TextField fx:id="T_TextField" alignment="CENTER" layoutX="-56.0" layoutY="-1.0" prefHeight="30.0"
+                           prefWidth="131.0" text="300.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0"
+                           AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0"/>
+            </children>
+        </AnchorPane>
+    </children>
+</GridPane>

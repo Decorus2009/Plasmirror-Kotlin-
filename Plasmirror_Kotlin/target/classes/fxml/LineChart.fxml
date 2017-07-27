@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.chart.LineChart?>
+<?import javafx.scene.chart.NumberAxis?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.65" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ui.controllers.LineChartController">
+    <children>
+            <StackPane prefHeight="95.0" prefWidth="158.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                <children>
+                    <AnchorPane prefHeight="200.0" prefWidth="600.0">
+                        <children>
+                              <StackPane prefHeight="200.0" prefWidth="600.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                  <children>
+                                      <LineChart fx:id="lineChart" alternativeColumnFillVisible="false" alternativeRowFillVisible="false" animated="true" horizontalGridLinesVisible="true" legendVisible="false" prefHeight="400.0" prefWidth="600.0" style="-fx-pref-width: 10;">
+                                          <xAxis>
+                                              <NumberAxis autoRanging="false" label="X" lowerBound="200.0" minorTickCount="4" prefWidth="524.0" tickUnit="100.0" upperBound="1000.0" fx:id="xAxis" />
+                                          </xAxis>
+                                          <yAxis>
+                                              <NumberAxis fx:id="yAxis" autoRanging="false" label="Y" minorTickCount="2" tickUnit="0.1" upperBound="1.0" />
+                                          </yAxis>
+                                      </LineChart>
+                                  </children>
+                              </StackPane>
+                              <GridPane alignment="TOP_RIGHT" layoutX="396.0" layoutY="15.0" prefHeight="30.0" prefWidth="184.0" AnchorPane.rightAnchor="20.0" AnchorPane.topAnchor="15.0">
+                                  <columnConstraints>
+                                      <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                                  </columnConstraints>
+                                  <rowConstraints>
+                                      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                  </rowConstraints>
+                                  <children>
+                                      <Label fx:id="XYPositionLabel" alignment="TOP_RIGHT" contentDisplay="RIGHT" prefHeight="30.0" prefWidth="425.0">
+                                          <font>
+                                              <Font size="17.0" />
+                                          </font>
+                                      </Label>
+                                  </children>
+                              </GridPane>
+                        </children>
+                    </AnchorPane>
+                </children>
+            </StackPane>
+    </children>
+</AnchorPane>

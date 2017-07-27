@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.String?>
+<?import javafx.collections.FXCollections?>
+<?import javafx.scene.control.ChoiceBox?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.RowConstraints?>
+
+
+    <GridPane alignment="CENTER" prefHeight="62.0" prefWidth="125.0" xmlns="http://javafx.com/javafx/8.0.60" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ui.controllers.RegimeController">
+        <columnConstraints>
+            <ColumnConstraints hgrow="SOMETIMES" percentWidth="80" />
+        </columnConstraints>
+        <rowConstraints>
+            <RowConstraints percentHeight="50" vgrow="SOMETIMES" />
+        </rowConstraints>
+        <children>
+            <AnchorPane prefHeight="200.0" prefWidth="200.0">
+                <children>
+                    <ChoiceBox fx:id="regimeChoiceBox" prefHeight="40.0" prefWidth="50.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                        <items>
+                            <FXCollections fx:factory="observableArrayList">
+                                <String fx:value="R" />
+                                <String fx:value="T" />
+                                <String fx:value="A" />
+                                <String fx:value="Eps" />
+                                <String fx:value="n" />
+                            </FXCollections>
+                        </items>
+                    </ChoiceBox>
+                </children>
+            </AnchorPane>
+        </children>
+    </GridPane>
