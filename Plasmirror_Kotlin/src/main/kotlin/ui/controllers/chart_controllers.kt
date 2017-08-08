@@ -7,6 +7,7 @@ import core.State.regime
 import core.State.wlEnd
 import core.State.wlStart
 import core.util.Regime.*
+import javafx.collections.ListChangeListener
 import javafx.event.ActionEvent
 import javafx.event.EventHandler
 import javafx.fxml.FXML
@@ -33,7 +34,7 @@ import ui.controllers.LineChartState.ExtendedSeries
 import ui.controllers.LineChartState.SERIES_TYPE.COMPUTED
 import ui.controllers.LineChartState.SERIES_TYPE.IMPORTED
 import java.io.File
-import java.lang.Integer.*
+import java.lang.Integer.toHexString
 import java.nio.file.Files.lines
 import java.nio.file.Path
 import java.util.*
@@ -55,6 +56,9 @@ class LineChartController {
 
     @FXML
     fun initialize() {
+        println("Line chart controller set")
+
+        /* set number formatters for axises' values */
         xAxis.tickLabelFormatter = object : StringConverter<Number>() {
             override fun toString(`object`: Number): String {
                 return String.format(Locale.ROOT, "%.1f", `object`.toDouble())
@@ -64,7 +68,6 @@ class LineChartController {
                 return 0
             }
         }
-
         yAxis.tickLabelFormatter = object : StringConverter<Number>() {
             override fun toString(`object`: Number): String {
                 return String.format(Locale.ROOT, "%.2f", `object`.toDouble())
@@ -76,28 +79,94 @@ class LineChartController {
         }
         //                it.text = String.format(Locale.ROOT, "%.5f", upperBound)
 
-
-        println("Line chart controller set")
-        with(lineChart) {
-            createSymbols = false
-            animated = false
-            isLegendVisible = true
-            /* force a css layout pass to ensure that subsequent lookup calls work. */
-            applyCss()
+        lineChart.let {
+            it.createSymbols = false
+            it.animated = false
+            it.isLegendVisible = true
+            /* force a css layout pass to ensure that subsequent lookup calls work */
+            it.applyCss()
         }
         xAxis.label = "Wavelength, nm"
 
 //        updateAxisesNames()
 //        setLegendListener()
+
+
         setCursorTracing()
         setPanning()
         setZooming()
         setDoubleMouseClickRescale()
 
+        setupLegendListener()
+
 //        yAxis.tickLabelFormatter.fromString()
     }
 
-    fun update() {
+    private fun setupLegendListener() {
+
+        lineChart.legend().childrenUnmodifiable.addListener(ListChangeListener<Any> {
+            println(it)
+
+            lineChart.labels().forEach { label ->
+                label.setOnMouseClicked {
+                    val selected = LineChartState.allExtendedSeries().find { it.selected }
+                    if (selected == null) {
+                        selectBy(label)
+                    } else {
+                        deselect()
+                        if (selected.series.name != label.text) {
+                            selectBy(label)
+                        }
+                    }
+                }
+            }
+        })
+    }
+
+
+    fun updateLineChart() {
+        fun updateComputedSeries() {
+
+            LineChartState.updateComputed()
+
+            lineChart.run {
+                if (previousComputationDataType != UNKNOWN) {
+                    /* remove real series */
+                    data.removeAt(0)
+                    if (previousComputationDataType == COMPLEX) {
+                        /* remove remained imaginary series */
+                        data.removeAt(0)
+                    }
+                }
+
+                with(LineChartState.computed) {
+                    data.add(0, extendedSeriesReal.series)
+                    lookupAll(".series" + 0)
+                            .forEach { it.style = "-fx-stroke: ${extendedSeriesReal.color}; -fx-stroke-width: 2px;" }
+                    previousComputationDataType = REAL
+
+                    if (extendedSeriesImaginary.series.data.isNotEmpty()) {
+                        data.add(1, extendedSeriesImaginary.series)
+                        lookupAll(".series" + 1)
+                                .forEach { it.style = "-fx-stroke: ${extendedSeriesImaginary.color}; -fx-stroke-width: 2px;" }
+                        previousComputationDataType = COMPLEX
+                    }
+                }
+            }
+
+//            setLegendListener()
+        }
+
+        fun updateYAxisLabel() {
+            yAxis.label = when (regime) {
+                R -> "Reflection"
+                T -> "Transmission"
+                A -> "Absorption"
+                EPS -> "Permittivity"
+                N -> "Refractive index"
+            }
+        }
+
         updateComputedSeries()
         updateYAxisLabel()
         /* regime == null is used during the first automatic call of rescale() method after initialization */
@@ -106,48 +175,6 @@ class LineChartController {
                 regimeBefore = regime
                 rescale()
             }
-        }
-    }
-
-    private fun updateComputedSeries() {
-
-        LineChartState.updateComputed()
-
-        lineChart.run {
-            if (previousComputationDataType != UNKNOWN) {
-                /* remove real series */
-                data.removeAt(0)
-                if (previousComputationDataType == COMPLEX) {
-                    /* remove remained imaginary series */
-                    data.removeAt(0)
-                }
-            }
-
-            with(LineChartState.computed) {
-                data.add(0, extendedSeriesReal.series)
-                lookupAll(".series" + 0)
-                        .forEach { it.style = "-fx-stroke: ${extendedSeriesReal.color}; -fx-stroke-width: 2px;" }
-                previousComputationDataType = REAL
-
-                if (extendedSeriesImaginary.series.data.isNotEmpty()) {
-                    data.add(1, extendedSeriesImaginary.series)
-                    lookupAll(".series" + 1)
-                            .forEach { it.style = "-fx-stroke: ${extendedSeriesImaginary.color}; -fx-stroke-width: 2px;" }
-                    previousComputationDataType = COMPLEX
-                }
-            }
-        }
-
-        setLegendListener()
-    }
-
-    private fun updateYAxisLabel() {
-        yAxis.label = when (regime) {
-            R -> "Reflection"
-            T -> "Transmission"
-            A -> "Absorption"
-            EPS -> "Permittivity"
-            N -> "Refractive index"
         }
     }
 
@@ -191,59 +218,96 @@ class LineChartController {
         }
     }
 
-    private fun selectBy(label: Label) {
-        val selectLabelCss = """
+    private fun selectBy(label: Label) =
+            LineChartState.allExtendedSeries().find { it.series.name == label.text }?.let { extendedSeries ->
+                extendedSeries.select()
+                updateStyleOf(extendedSeries)
+/*
+                extendedSeries.series.node.style = """
+                    -fx-stroke: ${extendedSeries.color};
+                    -fx-stroke-width: ${extendedSeries.width};
+                """
+                label.style = """
+                    -fx-stroke: ${extendedSeries.color};
+                    -fx-background-insets: 0 0 -1 0, 0, 1, 2;
+                    -fx-padding: 7px;
+                    -fx-background-radius: 1px, 0px, 0px, 0px;
+                    -fx-background-color: #cccccc;
+                """
+*/
+
+                /* enable series manager */
+                mainController.seriesManagerController.enableUsing(extendedSeries)
+            }
+
+    private fun deselect() =
+            LineChartState.allExtendedSeries().find { it.selected }?.let { extendedSeries ->
+                extendedSeries.deselect()
+                updateStyleOf(extendedSeries)
+/*
+                extendedSeries.series.node.style = """
+                    -fx-stroke: ${extendedSeries.color};
+                    -fx-stroke-width: ${extendedSeries.width};
+                """
+                label.style = """
+                    -fx-stroke: ${extendedSeries.color};
+                    -fx-background-insets: 0 0 -1 0, 0, 1, 2;
+                    -fx-padding: 7px;
+                    -fx-background-radius: 1px, 0px, 0px, 0px;
+                    -fx-background-color: #cccccc;
+                """
+*/
+            }
+
+    fun updateStyleOf(extendedSeries: ExtendedSeries) {
+        extendedSeries.series.node.style = """
+            -fx-stroke: ${extendedSeries.color};
+            -fx-stroke-width: ${extendedSeries.width};
+        """
+        lineChart.labels().find { it.text == extendedSeries.series.name }!!.style = """
+            -fx-stroke: ${extendedSeries.color};
             -fx-background-insets: 0 0 -1 0, 0, 1, 2;
             -fx-padding: 7px;
             -fx-background-radius: 1px, 0px, 0px, 0px;
             -fx-background-color: #cccccc;
         """
-//        label.style = selectLabelCss
+    }
 
-        LineChartState.allExtendedSeries().find { it.series.name == label.text }?.let {
-            it.series.node.style = "-fx-stroke: ${it.color}; -fx-stroke-width: 3px;"
-            it.selected = true
-
-            label.style = """
-                -fx-stroke: ${it.color};
-                -fx-background-insets: 0 0 -1 0, 0, 1, 2;
-                -fx-padding: 7px;
-                -fx-background-radius: 1px, 0px, 0px, 0px;
-                -fx-background-color: #cccccc;
-            """
-            lineChart.lookupAll(".chart-legend-item-symbol").toTypedArray()[0].style = "-fx-background-color: ${it.color}";
-
-//            Platform.runLater {
-//                lineChart.lookupAll(".chart-legend-item-symbol").toTypedArray()[0].style = "-fx-background-color: ${it.color}";
+    // OLD
+//    private fun deselect() =
+//            LineChartState.allExtendedSeries().find { it.selected }?.let { extendedSeries ->
+//                extendedSeries.deselect()
+//                with(lineChart) {
+//                    /* deselect all (due to the lookupAll() call) line chart series */
+//                    lookupAll(".chart-legend-item").forEach {
+//                        //                        println("label $it")
+//                    }
+//                    for (i in 0 until data.size) {
+//                        lookupAll(".series" + i).forEach {
+//                            /*
+//                            Set the correct color for the series:
+//                            lookupAll call finds i'th series as Node (name is unknown here).
+//                            Using the outer 'for' loop through the line chart data,
+//                            I can have the name of the corresponding series and find the correct reference in LineChartState.
+//                            Hence, I have a color of i'th series to use it in css styling.
+//                             */
+//                            val correspondingExtendedSeries = LineChartState.allExtendedSeries().find { it.series.name == data[i].name }
+//                            it.style = """
+//                                -fx-stroke-width: ${extendedSeries.width};
+//                                -fx-stroke: ${correspondingExtendedSeries!!.color};
+//                            """
+//                        }
+//                    }
+//                    /* deselect label with corresponding name */
+//                    labels().find { it.text == extendedSeries.series.name }?.let {
+//                        println(it.text)
+//                        it.style = "-fx-stroke: ${extendedSeries.color};"
+//                    }
+//                }
+//                /* disable series manager */
+//                mainController.seriesManagerController.disable()
 //            }
 
-            /* enable series manager */
-            mainController.seriesManagerController.enableUsing(it)
-        }
-    }
-
-    private fun deselect() {
-        val deselectLabelCss = ""
-        val deselectSeriesCss = "-fx-stroke-width: 2px;"
-
-        LineChartState.allExtendedSeries().find { it.selected }?.let { extendedSeries ->
-            extendedSeries.selected = false
-            /* deselect all (due to the lookupAll() call) line chart series */
-            for (i in 0 until lineChart.data.size) {
-                lineChart.lookupAll(".series" + i)
-                        .forEach { it.style = "-fx-stroke: ${extendedSeries.color}; -fx-stroke-width: 2px;" }
-            }
-            /* deselect label with corresponding name */
-            lineChart.labels().find { it.text == extendedSeries.series.name }?.let {
-//                it.style = deselectLabelCss
-                it.style = "-fx-stroke: ${extendedSeries.color};"
-                println(extendedSeries.color)
-            }
-
-            /* disable series manager */
-            mainController.seriesManagerController.disable()
-        }
-    }
 
     /**
      * http://stackoverflow.com/questions/16473078/javafx-2-x-translate-mouse-click-coordinate-into-xychart-axis-value
@@ -372,9 +436,16 @@ class LineChartController {
         }
     }
 
-    private fun LineChart<Number, Number>.labels() = childrenUnmodifiable
-            .filter { it is Legend }.map { it as Legend }.flatMap { it.childrenUnmodifiable }
+//    private fun LineChart<Number, Number>.labels() = childrenUnmodifiable
+//            .filter { it is Legend }.map { it as Legend }.flatMap { it.childrenUnmodifiable }
+//            .filter { it is Label }.map { it as Label }
+
+    private fun LineChart<Number, Number>.labels() = legend().childrenUnmodifiable
             .filter { it is Label }.map { it as Label }
+
+    /* line chart contains a single legend object */
+    private fun LineChart<Number, Number>.legend() = childrenUnmodifiable
+            .filter { it is Legend }.map { it as Legend }.single()
 }
 
 
@@ -496,8 +567,20 @@ object LineChartState {
                          var visible: Boolean = true,
                          var selected: Boolean = false,
                          var color: String = nextColor(),
+                         var width: String = "2px",
                          var type: SERIES_TYPE = COMPUTED,
-                         var xAxisFactor: Double = 1.0, var yAxisFactor: Double = 1.0)
+                         var xAxisFactor: Double = 1.0, var yAxisFactor: Double = 1.0) {
+
+        fun select() {
+            selected = true
+            width = "3px"
+        }
+
+        fun deselect() {
+            selected = false
+            width = "2px"
+        }
+    }
 
     enum class SERIES_TYPE { COMPUTED, IMPORTED }
 }
@@ -531,8 +614,10 @@ class SeriesManagerController {
             }
 
             selectedSeries.color = hexColor
-            mainController.lineChartController.lineChart.lookupAll(".series" + 0)
-                    .forEach { it.style = "-fx-stroke: ${selectedSeries.color};" }
+            mainController.lineChartController.updateStyleOf(selectedSeries)
+
+//            mainController.lineChartController.lineChart.lookupAll(".series" + 0)
+//                    .forEach { it.style = "-fx-stroke: ${selectedSeries.color};" }
 
 
 //            mainController.lineChartController.updateColorsAndWidths()
@@ -564,8 +649,6 @@ class SeriesManagerController {
 
         disable()
     }
-
-
 
 
     @FXML

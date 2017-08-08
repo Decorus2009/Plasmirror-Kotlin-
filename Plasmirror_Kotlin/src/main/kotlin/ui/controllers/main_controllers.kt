@@ -63,7 +63,7 @@ class MainController {
             set()
             compute()
         }
-        lineChartController.update()
+        lineChartController.updateLineChart()
 
 //        graphManagerController.setMainController(this)
 //        xAxisRangeController.setMainController(this)

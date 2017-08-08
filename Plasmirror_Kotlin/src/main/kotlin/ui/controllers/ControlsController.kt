@@ -33,7 +33,7 @@ class ControlsController {
                     val stopTime = nanoTime()
                     computationTimeLabel.text = "Computation time: ${String.format(Locale.US, "%.2f", (stopTime - startTime).toDouble() / 1E6)}, ms"
                 }
-                mainController.lineChartController.update()
+                mainController.lineChartController.updateLineChart()
             }
         }
     }
