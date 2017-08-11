@@ -26,7 +26,7 @@ class ControlsController {
                         .put(KeyCodeCombination(KeyCode.SPACE, KeyCombination.SHORTCUT_DOWN), Runnable(this::fire))
             }
             setOnAction {
-                State.run {
+                with(State) {
                     set()
                     val startTime = nanoTime()
                     compute()
@@ -34,7 +34,6 @@ class ControlsController {
                     computationTimeLabel.text = "Computation time: ${String.format(Locale.US, "%.2f", (stopTime - startTime).toDouble() / 1E6)} ms"
                 }
                 mainController.lineChartController.updateLineChart()
-//                mainController.lineChartController.deselectAll()
             }
         }
     }

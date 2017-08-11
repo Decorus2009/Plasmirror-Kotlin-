@@ -2,12 +2,10 @@ package ui.controllers
 
 import com.sun.javafx.charts.Legend
 import core.State
-import core.State.angle
 import core.State.mainController
-import core.State.polarization
 import core.State.regime
-import core.State.wlEnd
-import core.State.wlStart
+import core.State.wavelengthTo
+import core.State.wavelengthFrom
 import core.util.Regime.*
 import javafx.application.Platform
 import javafx.event.EventHandler
@@ -354,8 +352,8 @@ class LineChartController {
     /* TODO fix this */
     private fun rescale() = with(mainController.globalParametersController.regimeController) {
         xAxis.let {
-            it.lowerBound = wlStart
-            it.upperBound = wlEnd
+            it.lowerBound = wavelengthFrom
+            it.upperBound = wavelengthTo
             it.tickUnit = 50.0
         }
         yAxis.let {
@@ -430,18 +428,18 @@ object LineChartState {
         extendedSeriesReal.series.data.run {
             with(State) {
                 when (regime) {
-                    R -> addAll(wl.indices.map { Data<Number, Number>(wl[it], reflection[it]) })
-                    T -> addAll(wl.indices.map { Data<Number, Number>(wl[it], transmission[it]) })
-                    A -> addAll(wl.indices.map { Data<Number, Number>(wl[it], absorption[it]) })
+                    R -> addAll(wavelength.indices.map { Data<Number, Number>(wavelength[it], reflection[it]) })
+                    T -> addAll(wavelength.indices.map { Data<Number, Number>(wavelength[it], transmission[it]) })
+                    A -> addAll(wavelength.indices.map { Data<Number, Number>(wavelength[it], absorption[it]) })
                     EPS -> {
-                        addAll(wl.indices.map { Data<Number, Number>(wl[it], permittivity[it].real) })
+                        addAll(wavelength.indices.map { Data<Number, Number>(wavelength[it], permittivity[it].real) })
                         extendedSeriesImaginary.series.data
-                                .addAll(wl.indices.map { Data<Number, Number>(wl[it], permittivity[it].imaginary) })
+                                .addAll(wavelength.indices.map { Data<Number, Number>(wavelength[it], permittivity[it].imaginary) })
                     }
                     N -> {
-                        addAll(wl.indices.map { Data<Number, Number>(wl[it], refractiveIndex[it].real) })
+                        addAll(wavelength.indices.map { Data<Number, Number>(wavelength[it], refractiveIndex[it].real) })
                         extendedSeriesImaginary.series.data
-                                .addAll(wl.indices.map { Data<Number, Number>(wl[it], refractiveIndex[it].imaginary) })
+                                .addAll(wavelength.indices.map { Data<Number, Number>(wavelength[it], refractiveIndex[it].imaginary) })
                     }
                 }
             }
@@ -463,39 +461,6 @@ object LineChartState {
             }
         }
     }
-
-    fun removeByName(name: String) {
-        with(imported) {
-            remove(find { it.extendedSeriesReal.series.name == name || it.extendedSeriesImaginary.series.name == name })
-        }
-        /* -=2 due to the 2 removed extended series (real and imaginary) in LineChartSeries */
-        currentColorIndex -= 2
-    }
-
-    class LineChartSeries(val extendedSeriesReal: ExtendedSeries = ExtendedSeries(),
-                          val extendedSeriesImaginary: ExtendedSeries = ExtendedSeries(color = nextColor(offset = 50)))
-
-    data class ExtendedSeries(val series: Series<Number, Number> = Series<Number, Number>(),
-                              var visible: Boolean = true,
-                              var selected: Boolean = false,
-                              var color: String = nextColor(),
-                              var width: String = "2px",
-                              var type: SERIES_TYPE = COMPUTED,
-                              var previousXAxisFactor: Double = 1.0, var previousYAxisFactor: Double = 1.0) {
-
-        fun select() {
-            selected = true
-            width = "3px"
-        }
-
-        fun deselect() {
-            selected = false
-            width = "2px"
-        }
-    }
-
-    enum class SERIES_TYPE { COMPUTED, IMPORTED }
-
 
     fun importFrom(file: File) {
         val x = mutableListOf<Double>()
@@ -536,31 +501,38 @@ object LineChartState {
         imported += LineChartSeries(ExtendedSeries(seriesReal, type = IMPORTED), ExtendedSeries(seriesImaginary, type = IMPORTED))
     }
 
-    fun buildExportFileName() = StringBuilder().apply {
-        append("calculation_${regime}_${wlStart}_$wlEnd")
-        if (regime == R || regime == T || regime == A) {
-            append("_$polarization-POL_^${String.format("%04.1f", angle)}_deg")
+    fun removeByName(name: String) {
+        with(imported) {
+            remove(find { it.extendedSeriesReal.series.name == name || it.extendedSeriesImaginary.series.name == name })
         }
-    }.toString()
+        /* -=2 due to the 2 removed extended series (real and imaginary) in LineChartSeries */
+        currentColorIndex -= 2
+    }
 
-    fun writeTo(file: File) = file.writeText(StringBuilder().apply {
-        val columnSeparator = "    "
-        with(computed.extendedSeriesReal.series.data) {
-            indices.forEach { i ->
-                append(String.format(Locale.US, "%.8f", this[i].xValue.toDouble()))
-                append(columnSeparator)
-                append(String.format(Locale.US, "%.8f", this[i].yValue.toDouble()))
+    class LineChartSeries(val extendedSeriesReal: ExtendedSeries = ExtendedSeries(),
+                          val extendedSeriesImaginary: ExtendedSeries = ExtendedSeries(color = nextColor(offset = 50)))
 
-                with(computed.extendedSeriesImaginary.series.data) {
-                    if (isNotEmpty()) {
-                        append(columnSeparator)
-                        append(String.format(Locale.US, "%.8f", this[i].yValue.toDouble()))
-                    }
-                }
-                append(System.lineSeparator())
-            }
+    data class ExtendedSeries(val series: Series<Number, Number> = Series<Number, Number>(),
+                              var visible: Boolean = true,
+                              var selected: Boolean = false,
+                              var color: String = nextColor(),
+                              var width: String = "2px",
+                              var type: SERIES_TYPE = COMPUTED,
+                              var previousXAxisFactor: Double = 1.0, var previousYAxisFactor: Double = 1.0) {
+
+        fun select() {
+            selected = true
+            width = "3px"
         }
-    }.toString())
+
+        fun deselect() {
+            selected = false
+            width = "2px"
+        }
+    }
+
+    enum class SERIES_TYPE { COMPUTED, IMPORTED }
+
 }
 
 

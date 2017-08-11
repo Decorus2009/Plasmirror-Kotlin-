@@ -4,13 +4,21 @@ import core.State
 import core.State.angle
 import core.State.n_left
 import core.State.n_right
+import core.State.regime
 import core.State.structure
-import core.State.wlEnd
-import core.State.wlStart
-import core.State.wlStep
+import core.State.wavelengthFrom
+import core.State.wavelengthStep
+import core.State.wavelengthTo
 import core.util.OpticalParametersValidator.validateAndSetOpticalParametersUsing
+import core.util.Regime.EPS
+import core.util.Regime.N
 import core.util.StructureValidator.validateAndBuildStructure
+import core.util.ValidateResult.FAILURE
+import core.util.ValidateResult.SUCCESS
+import javafx.scene.control.Alert
 import ui.controllers.*
+
+enum class ValidateResult { SUCCESS, FAILURE }
 
 object Validator {
     fun validateAndSetStateUsing(mainController: MainController) = mainController.run {
@@ -20,30 +28,61 @@ object Validator {
     }
 }
 
-object ExportMultipleDialogParametersValidator {
-
-    fun validateAngles() {
-        try {
-            with(State.mainController.exportMultipleDialogController) {
-                val angleFrom = angleFromTextField.text.toDouble()
-                val angleTo = angleToTextField.text.toDouble()
-                val angleStep = angleStepTextField.text.toDouble()
-
-//                if (angleFrom)
-            }
-
-
-            wlStart = wLStartTextField.text.toDouble()
-            wlEnd = wLEndTextField.text.toDouble()
-            wlStep = wLStepTextField.text.toDouble()
-            if (wlStart < 0.0 || wlEnd <= 0.0 || wlStep <= 0.0 || wlStart > wlEnd) {
-                throw StateException("Wrong calculation range format")
-            }
-
-        } catch (e: NumberFormatException) {
-            throw StateException("Wrong angle value format")
+object MultipleExportDialogParametersValidator {
+    fun validateRegime(): ValidateResult {
+        if ((regime == EPS || regime == N) && State.mainController.multipleExportDialogController.anglesSelected()) {
+            alert(headerText = "Computation regime for multiple export error",
+                    contentText = "For permittivity or refractive index computation temperature range must be selected")
+            return FAILURE
         }
+        return SUCCESS
+    }
 
+    fun validateAngles(): ValidateResult {
+        try {
+            with(State.mainController.multipleExportDialogController) {
+                angleFrom = angleFromTextField.text.toDouble()
+                angleTo = angleToTextField.text.toDouble()
+                angleStep = angleStepTextField.text.toDouble()
+                /* angles allowed range */
+                fun Double.isNotAllowed() = this !in 0.0..89.99999999
+                if (angleFrom.isNotAllowed() || angleTo.isNotAllowed() || angleStep.isNotAllowed()
+                        || angleFrom > angleTo || angleStep > angleTo || angleStep == 0.0) {
+                    alert(headerText = "Angle Range Error", contentText = "Provide Correct Angle Range")
+                    return FAILURE
+                }
+            }
+        } catch (e: NumberFormatException) {
+            alert(headerText = "Angle Range Error", contentText = "Provide Correct Angle Range")
+            return FAILURE
+        }
+        return SUCCESS
+    }
+
+    fun validateTemperatures(): ValidateResult {
+        try {
+            with(State.mainController.multipleExportDialogController) {
+                temperatureFrom = temperatureFromTextField.text.toDouble()
+                temperatureTo = temperatureToTextField.text.toDouble()
+                temperatureStep = temperatureStepTextField.text.toDouble()
+                if (temperatureFrom <= 0.0 || temperatureTo <= 0.0 || temperatureStep <= 0.0 || temperatureFrom > temperatureTo || temperatureStep > temperatureTo) {
+                    alert(headerText = "Temperature Range Error", contentText = "Provide Correct Temperature Range")
+                    return FAILURE
+                }
+            }
+        } catch (e: NumberFormatException) {
+            alert(headerText = "Temperature Range Error", contentText = "Provide Correct Temperature Range")
+            return FAILURE
+        }
+        return SUCCESS
+    }
+
+    fun validateChosenDirectory(): ValidateResult {
+        if (State.mainController.multipleExportDialogController.chosenDirectory == null) {
+            alert(headerText = "Directory error", contentText = "Choose a directory")
+            return FAILURE
+        }
+        return SUCCESS
     }
 }
 
@@ -94,17 +133,17 @@ private object OpticalParametersValidator {
 
     @Throws(StateException::class)
     private fun validateCalculationRangeUsing(computationRangeController: ComputationRangeController) =
-            with(computationRangeController) {
-                try {
-                    wlStart = wLStartTextField.text.toDouble()
-                    wlEnd = wLEndTextField.text.toDouble()
-                    wlStep = wLStepTextField.text.toDouble()
-                    if (wlStart < 0.0 || wlEnd <= 0.0 || wlStep <= 0.0 || wlStart > wlEnd) {
+            try {
+                with(computationRangeController) {
+                    wavelengthFrom = wavelengthFromTextField.text.toDouble()
+                    wavelengthTo = wavelengthToTextField.text.toDouble()
+                    wavelengthStep = wavelengthStepTextField.text.toDouble()
+                    if (wavelengthFrom < 0.0 || wavelengthTo <= 0.0 || wavelengthStep <= 0.0 || wavelengthFrom > wavelengthTo) {
                         throw StateException("Wrong calculation range format")
                     }
-                } catch (e: NumberFormatException) {
-                    throw StateException("Wrong calculation range format")
                 }
+            } catch (e: NumberFormatException) {
+                throw StateException("Wrong calculation range format")
             }
 }
 
@@ -351,3 +390,10 @@ class StructureDescriptionException(message: String) : RuntimeException(message)
 
 
 class StateException(message: String) : RuntimeException(message)
+
+private fun alert(title: String = "Error", headerText: String, contentText: String) = with(Alert(Alert.AlertType.ERROR)) {
+    this.title = title
+    this.headerText = headerText
+    this.contentText = contentText
+    showAndWait()
+}

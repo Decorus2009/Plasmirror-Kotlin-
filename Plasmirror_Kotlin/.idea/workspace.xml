@@ -17,182 +17,37 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="chart_controllers.kt" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/kotlin/ui/controllers/chart_controllers.kt">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="437">
-              <caret line="61" column="20" lean-forward="false" selection-start-line="60" selection-start-column="4" selection-end-line="61" selection-end-column="20" />
-              <folding>
-                <element signature="e#24#1594#0" expanded="true" />
-                <element signature="n#!!block;n#initialize#0;n#!!block;n#LineChartController#0" expanded="false" />
-                <element signature="n#!!doc;n#setCursorTracing#0;n#!!block;n#initialize#0;n#!!block;n#LineChartController#0" expanded="false" />
-                <element signature="n#!!block;n#setCursorTracing#0;n#!!block;n#initialize#0;n#!!block;n#LineChartController#0" expanded="false" />
-                <element signature="e#2359#3002#2" expanded="false" />
-                <element signature="e#2666#2917#2" expanded="false" />
-                <element signature="e#3027#3375#2" expanded="false" />
-                <element signature="e#3132#3290#2" expanded="false" />
-                <element signature="e#3400#3748#2" expanded="false" />
-                <element signature="e#3505#3663#2" expanded="false" />
-                <element signature="n#!!doc;n#setPanning#0;n#!!block;n#initialize#0;n#!!block;n#LineChartController#0" expanded="false" />
-                <element signature="n#!!block;n#setPanning#0;n#!!block;n#initialize#0;n#!!block;n#LineChartController#0" expanded="false" />
-                <element signature="e#4049#4317#2" expanded="false" />
-                <element signature="e#4180#4237#1" expanded="false" />
-                <element signature="e#4243#4303#1" expanded="false" />
-                <element signature="n#!!doc;n#setZooming#0;n#!!block;n#initialize#0;n#!!block;n#LineChartController#0" expanded="false" />
-                <element signature="n#!!block;n#setZooming#0;n#!!block;n#initialize#0;n#!!block;n#LineChartController#0" expanded="false" />
-                <element signature="n#!!doc;n#setupZooming#0;n#!!block;n#setZooming#0;n#!!block;n#initialize#0;n#!!block;n#LineChartController#0" expanded="false" />
-                <element signature="e#4686#5491#2" expanded="false" />
-                <element signature="e#4730#4807#1" expanded="false" />
-                <element signature="e#4905#5190#2" expanded="false" />
-                <element signature="e#5379#5477#2" expanded="false" />
-                <element signature="e#5554#5724#2" expanded="false" />
-                <element signature="e#5650#5710#1" expanded="false" />
-                <element signature="n#!!block;n#setDoubleMouseClickRescale#0;n#!!block;n#initialize#0;n#!!block;n#LineChartController#0" expanded="false" />
-                <element signature="e#5903#6062#2" expanded="false" />
-                <element signature="e#5999#6048#1" expanded="false" />
-                <element signature="e#6199#6467#0" expanded="false" />
-                <element signature="e#6261#6355#0" expanded="false" />
-                <element signature="e#6417#6457#0" expanded="false" />
-                <element signature="e#6538#6806#0" expanded="false" />
-                <element signature="e#6600#6694#0" expanded="false" />
-                <element signature="e#6756#6796#0" expanded="false" />
-                <element signature="e#6830#7060#2" expanded="false" />
-                <element signature="n#!!block;n#updateLineChart#0;n#!!block;n#LineChartController#0" expanded="false" />
-                <element signature="n#!!block;n#updateComputedSeries#0;n#!!block;n#updateLineChart#0;n#!!block;n#LineChartController#0" expanded="false" />
-                <element signature="e#7380#8139#2" expanded="false" />
-                <element signature="e#7439#7732#1" expanded="false" />
-                <element signature="e#7587#7714#1" expanded="false" />
-                <element signature="e#7764#8125#2" expanded="false" />
-                <element signature="e#7954#8107#1" expanded="false" />
-                <element signature="n#!!block;n#updateYAxisLabel#0;n#!!block;n#updateLineChart#0;n#!!block;n#LineChartController#0" expanded="false" />
-                <element signature="e#8647#8984#2" expanded="false" />
-                <element signature="e#8749#8974#1" expanded="false" />
-                <element signature="e#9219#10685#2" expanded="false" />
-                <element signature="e#9345#9380#1" expanded="false" />
-                <element signature="e#9409#9494#0" expanded="false" />
-                <element signature="e#9594#9911#1" expanded="false" />
-                <element signature="e#9616#9893#0" expanded="false" />
-                <element signature="e#9917#9959#1" expanded="false" />
-                <element signature="e#9968#10211#0" expanded="false" />
-                <element signature="e#10238#10678#2" expanded="false" />
-                <element signature="e#10309#10668#2" expanded="false" />
-                <element signature="e#10394#10654#2" expanded="false" />
-                <element signature="n#!!block;n#importFrom#0;n#!!block;n#LineChartController#0" expanded="false" />
-                <element signature="e#10959#11295#2" expanded="false" />
-                <element signature="e#11008#11285#2" expanded="false" />
-                <element signature="e#11191#11271#1" expanded="false" />
-                <element signature="n#!!doc;n#setVisibilityBy#0;n#!!block;n#LineChartController#0" expanded="false" />
-                <element signature="n#!!block;n#setVisibilityBy#0;n#!!block;n#LineChartController#0" expanded="false" />
-                <element signature="n#!!doc;n#updateLegendListener#0;n#!!block;n#LineChartController#0" expanded="false" />
-                <element signature="e#12233#12694#2" expanded="false" />
-                <element signature="e#12270#12688#2" expanded="false" />
-                <element signature="e#12317#12678#2" expanded="false" />
-                <element signature="e#12429#12484#1" expanded="false" />
-                <element signature="e#12490#12664#1" expanded="false" />
-                <element signature="e#12583#12646#1" expanded="false" />
-                <element signature="e#12812#12960#2" expanded="false" />
-                <element signature="e#13049#13193#2" expanded="false" />
-                <element signature="e#13312#14036#2" expanded="false" />
-                <element signature="e#13332#13444#2" expanded="false" />
-                <element signature="e#13463#14030#2" expanded="false" />
-                <element signature="e#13524#13645#1" expanded="false" />
-                <element signature="e#13670#13834#1" expanded="false" />
-                <element signature="e#13857#14020#1" expanded="false" />
-                <element signature="n#!!block;n#nextColor#0;n#!!block;n#LineChartState#0" expanded="false" />
-                <element signature="e#16454#16508#1" expanded="false" />
-                <element signature="e#16898#18817#2" expanded="false" />
-                <element signature="e#17096#18156#2" expanded="false" />
-                <element signature="e#17122#18146#2" expanded="false" />
-                <element signature="e#17476#17779#0" expanded="false" />
-                <element signature="e#17805#18114#0" expanded="false" />
-                <element signature="e#18420#18811#2" expanded="false" />
-                <element signature="e#18486#18801#1" expanded="false" />
-                <element signature="n#!!block;n#removeByName#0;n#!!block;n#LineChartState#0" expanded="false" />
-                <element signature="e#18879#19011#2" expanded="false" />
-                <element signature="n#!!block;n#ExtendedSeries#0;n#!!block;n#LineChartState#0" expanded="false" />
-                <element signature="n#!!block;n#select#0;n#!!block;n#ExtendedSeries#0;n#!!block;n#LineChartState#0" expanded="false" />
-                <element signature="n#!!block;n#deselect#0;n#!!block;n#ExtendedSeries#0;n#!!block;n#LineChartState#0" expanded="false" />
-                <element signature="n#!!block;n#importFrom#0;n#!!block;n#LineChartState#0" expanded="false" />
-                <element signature="e#20365#21045#2" expanded="false" />
-                <element signature="e#20418#21035#2" expanded="false" />
-                <element signature="e#20457#20514#1" expanded="false" />
-                <element signature="e#20520#20629#1" expanded="false" />
-                <element signature="e#20667#20727#1" expanded="false" />
-                <element signature="e#20733#20842#1" expanded="false" />
-                <element signature="e#20961#21021#1" expanded="false" />
-                <element signature="e#21272#21380#1" expanded="false" />
-                <element signature="e#21429#21540#2" expanded="false" />
-                <element signature="n#!!block;n#initialize#0;n#!!block;n#SeriesManagerController#0" expanded="false" />
-                <element signature="e#23452#23779#2" expanded="false" />
-                <element signature="e#23505#23648#2" expanded="false" />
-                <element signature="e#23837#24409#2" expanded="false" />
-                <element signature="e#23873#24344#0" expanded="false" />
-                <element signature="e#24075#24330#1" expanded="false" />
-                <element signature="e#24118#24312#2" expanded="false" />
-                <element signature="e#24384#24399#0" expanded="false" />
-                <element signature="e#24467#25039#2" expanded="false" />
-                <element signature="e#24503#24974#0" expanded="false" />
-                <element signature="e#24705#24960#1" expanded="false" />
-                <element signature="e#24748#24942#2" expanded="false" />
-                <element signature="e#25014#25029#0" expanded="false" />
-                <element signature="e#25069#25309#2" expanded="false" />
-                <element signature="e#25131#25299#2" expanded="false" />
-                <element signature="e#25350#25733#2" expanded="false" />
-                <element signature="e#25453#25723#2" expanded="false" />
-                <element signature="e#25497#25659#2" expanded="false" />
-                <element signature="n#!!block;n#enableUsing#0;n#!!block;n#SeriesManagerController#0" expanded="false" />
-                <element signature="e#26101#26572#2" expanded="false" />
-                <element signature="e#26137#26318#1" expanded="false" />
-                <element signature="n#!!block;n#disable#0;n#!!block;n#SeriesManagerController#0" expanded="false" />
-                <marker date="1502345819000" expanded="false" signature="14322:16302" ph="..." />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="util.kt" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/kotlin/ui/controllers/util.kt">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="460">
-              <caret line="20" column="0" lean-forward="false" selection-start-line="20" selection-start-column="0" selection-end-line="20" selection-end-column="0" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="ControlsController.kt" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/kotlin/ui/controllers/ControlsController.kt">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="345">
-              <caret line="24" column="0" lean-forward="false" selection-start-line="24" selection-start-column="0" selection-end-line="24" selection-end-column="0" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="menu_controllers.kt" pinned="false" current-in-tab="false">
+      <file leaf-file-name="menu_controllers.kt" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/main/kotlin/ui/controllers/menu_controllers.kt">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="897">
-              <caret line="194" column="36" lean-forward="false" selection-start-line="194" selection-start-column="36" selection-end-line="194" selection-end-column="36" />
+            <state relative-caret-position="3703">
+              <caret line="161" column="62" lean-forward="false" selection-start-line="161" selection-start-column="62" selection-end-line="161" selection-end-column="62" />
               <folding>
-                <element signature="e#25#662#0" expanded="true" />
-                <element signature="n#!!block;n#MenuController#0" expanded="false" />
-                <marker date="1502461527000" expanded="true" signature="9656:10013" ph="..." />
+                <element signature="e#25#884#0" expanded="true" />
               </folding>
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="validators.kt" pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/src/main/kotlin/core/util/validators.kt">
+      <file leaf-file-name="structure_description_help.txt" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/data/inner/structure_description_help.txt">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="498">
-              <caret line="36" column="13" lean-forward="true" selection-start-line="36" selection-start-column="13" selection-end-line="36" selection-end-column="13" />
-              <folding>
-                <element signature="e#19#381#0" expanded="true" />
-                <element signature="e#2175#3073#2" expanded="false" />
-              </folding>
+            <state relative-caret-position="0">
+              <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="HelpInfo.fxml" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/main/resources/fxml/HelpInfo.fxml">
+          <provider editor-type-id="JavaFX-Scene-Builder">
+            <state />
+          </provider>
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="0">
+              <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+              <folding />
             </state>
           </provider>
         </entry>
@@ -200,18 +55,30 @@
       <file leaf-file-name="notes.txt" pinned="false" current-in-tab="false">
         <entry file="file://$APPLICATION_PLUGINS_DIR$/scratches/notes.txt">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="46">
-              <caret line="2" column="0" lean-forward="false" selection-start-line="2" selection-start-column="0" selection-end-line="2" selection-end-column="0" />
+            <state relative-caret-position="23">
+              <caret line="1" column="6" lean-forward="true" selection-start-line="1" selection-start-column="6" selection-end-line="1" selection-end-column="6" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="axises_range_controllers.kt" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/kotlin/ui/controllers/axises_range_controllers.kt">
+      <file leaf-file-name="util.kt" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/main/kotlin/ui/controllers/util.kt">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1679">
-              <caret line="77" column="0" lean-forward="false" selection-start-line="77" selection-start-column="0" selection-end-line="86" selection-end-column="13" />
+            <state relative-caret-position="193">
+              <caret line="40" column="4" lean-forward="false" selection-start-line="40" selection-start-column="4" selection-end-line="40" selection-end-column="4" />
+              <folding>
+                <element signature="e#24#315#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="ControlsController.kt" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/main/kotlin/ui/controllers/ControlsController.kt">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="227">
+              <caret line="29" column="22" lean-forward="false" selection-start-line="29" selection-start-column="22" selection-end-line="29" selection-end-column="22" />
               <folding />
             </state>
           </provider>
@@ -220,8 +87,8 @@
       <file leaf-file-name="main_controllers.kt" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/kotlin/ui/controllers/main_controllers.kt">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="897">
-              <caret line="42" column="79" lean-forward="false" selection-start-line="42" selection-start-column="79" selection-end-line="42" selection-end-column="79" />
+            <state relative-caret-position="492">
+              <caret line="71" column="28" lean-forward="false" selection-start-line="71" selection-start-column="28" selection-end-line="71" selection-end-column="28" />
               <folding />
             </state>
           </provider>
@@ -230,21 +97,11 @@
       <file leaf-file-name="state_controllers.kt" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/kotlin/ui/controllers/state_controllers.kt">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="6854">
-              <caret line="315" column="0" lean-forward="false" selection-start-line="315" selection-start-column="0" selection-end-line="315" selection-end-column="0" />
+            <state relative-caret-position="-5492">
+              <caret line="66" column="41" lean-forward="true" selection-start-line="66" selection-start-column="41" selection-end-line="66" selection-end-column="41" />
               <folding>
-                <element signature="e#24#505#0" expanded="true" />
+                <element signature="e#24#704#0" expanded="true" />
               </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="State.kt" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/kotlin/core/State.kt">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="138">
-              <caret line="13" column="48" lean-forward="false" selection-start-line="13" selection-start-column="48" selection-end-line="13" selection-end-column="48" />
-              <folding />
             </state>
           </provider>
         </entry>
@@ -282,10 +139,17 @@
       <find>polari</find>
       <find>State.</find>
       <find>mainCo</find>
+      <find>MainState</find>
+      <find>buil</find>
+      <find>buildExportFileName</find>
+      <find>writeTo</find>
+      <find>lines(</find>
     </findStrings>
     <replaceStrings>
       <replace>allExtendedSeries</replace>
       <replace>separator</replace>
+      <replace>State</replace>
+      <replace>Files.lines(</replace>
     </replaceStrings>
     <dirStrings>
       <dir>$PROJECT_DIR$/../../../CSC/Projects/IdeaProjects/Mirror/MyMirror/src/main/java</dir>
@@ -300,7 +164,6 @@
     <option name="CHANGED_PATHS">
       <list>
         <option value="$PROJECT_DIR$/.idea/workspace.xml" />
-        <option value="$PROJECT_DIR$/src/main/kotlin/ui/controllers/ControlsController.kt" />
         <option value="$PROJECT_DIR$/src/main/kotlin/ui/controllers/axises_range_controllers.kt" />
         <option value="$PROJECT_DIR$/src/main/kotlin/Test.kt" />
         <option value="$PROJECT_DIR$/src/main/resources/fxml/menu.fxml" />
@@ -309,15 +172,20 @@
         <option value="$PROJECT_DIR$/src/main/kotlin/Main.kt" />
         <option value="$PROJECT_DIR$/data/for_import/ST1279-7 P06 0.0.txt" />
         <option value="$PROJECT_DIR$/data/calculated/calculation_EPS_600.0_1001.0.txt" />
-        <option value="$PROJECT_DIR$/src/main/kotlin/ui/controllers/chart_controllers.kt" />
         <option value="$PROJECT_DIR$/src/main/resources/fxml/ExportMultipleDialog.fxml" />
-        <option value="$PROJECT_DIR$/src/main/kotlin/ui/controllers/state_controllers.kt" />
-        <option value="$PROJECT_DIR$/src/main/kotlin/ui/controllers/util.kt" />
         <option value="$PROJECT_DIR$/src/main/kotlin/ui/controllers/MenuController.kt" />
         <option value="$PROJECT_DIR$/src/main/kotlin/ui/controllers/main_controllers.kt" />
+        <option value="$PROJECT_DIR$/src/main/resources/fxml/MultipleExportDialog.fxml" />
+        <option value="$PROJECT_DIR$/src/main/kotlin/ui/controllers/chart_controllers.kt" />
+        <option value="$PROJECT_DIR$/src/main/kotlin/core/util/validators.kt" />
+        <option value="$PROJECT_DIR$/src/main/kotlin/ui/controllers/ControlsController.kt" />
+        <option value="$PROJECT_DIR$/src/main/kotlin/core/util/builders.kt" />
+        <option value="$PROJECT_DIR$/src/main/kotlin/core/State.kt" />
+        <option value="$PROJECT_DIR$/src/main/kotlin/ui/controllers/util.kt" />
+        <option value="$PROJECT_DIR$/data/computed_single/calculation_N_600.0_1001.0.txt" />
+        <option value="$PROJECT_DIR$/src/main/kotlin/ui/controllers/state_controllers.kt" />
         <option value="$PROJECT_DIR$/src/main/kotlin/ui/controllers/menu_controllers.kt" />
         <option value="$APPLICATION_PLUGINS_DIR$/scratches/notes.txt" />
-        <option value="$PROJECT_DIR$/src/main/kotlin/core/util/validators.kt" />
       </list>
     </option>
   </component>
@@ -532,6 +400,64 @@
               <option name="myItemId" value="data" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="inner" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="Plasmirror_Kotlin" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="Plasmirror_Kotlin" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="data" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="inner" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="state_parameters" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="Plasmirror_Kotlin" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="Plasmirror_Kotlin" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="data" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="Plasmirror_Kotlin" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="Plasmirror_Kotlin" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="data" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="computed_single" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
           </PATH>
         </subPane>
       </pane>
@@ -546,6 +472,7 @@
   </component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/data/inner" />
       <recent name="$PROJECT_DIR$/data/" />
       <recent name="$PROJECT_DIR$/data/computed_single" />
       <recent name="$PROJECT_DIR$/data/for_import" />
@@ -828,18 +755,20 @@
       <window_info id="Palette" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Nl-Palette" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3271523" sideWeight="0.5" order="10" side_tool="false" content_ui="tabs" />
       <window_info id="Palette&#9;" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" />
       <window_info id="Image Layers" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
       <window_info id="Capture Analysis" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
       <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32975295" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25298014" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.25298014" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="false" weight="0.33" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
       <window_info id="Properties" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" />
       <window_info id="Capture Tool" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Designer" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.20773639" sideWeight="0.49328858" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.30860928" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="UI Designer" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
@@ -851,9 +780,7 @@
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
-      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3271523" sideWeight="0.5" order="10" side_tool="false" content_ui="tabs" />
       <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
-      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.30860928" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Learn" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
     </layout>
     <layout-to-restore>
@@ -903,33 +830,180 @@
     <option name="FILTER_TARGETS" value="false" />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/../src/main/resources/fxml/Main.fxml" />
-    <entry file="file://$PROJECT_DIR$/../src/main/resources/fxml/YAxisRange.fxml" />
-    <entry file="file://$PROJECT_DIR$/../src/main/kotlin/core/layers/layers_with_excitons.kt" />
-    <entry file="file://$PROJECT_DIR$/../src/main/kotlin/ui/controllers/state_controllers.kt" />
-    <entry file="file://$PROJECT_DIR$/../src/main/kotlin/ui/controllers/chart_controllers.kt" />
-    <entry file="file://$PROJECT_DIR$/../pom.xml" />
-    <entry file="file://$PROJECT_DIR$/../.idea/.name" />
-    <entry file="file://$PROJECT_DIR$/../.idea/workspace.xml" />
-    <entry file="file://$PROJECT_DIR$/.idea/.name" />
-    <entry file="file://$PROJECT_DIR$/.idea/workspace.xml">
+    <entry file="file://$APPLICATION_PLUGINS_DIR$/scratches/scratch01.txt">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="2290">
-          <caret line="406" column="42" lean-forward="false" selection-start-line="406" selection-start-column="42" selection-end-line="406" selection-end-column="42" />
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/pom.xml">
+    <entry file="file://$PROJECT_DIR$/src/main/resources/fxml/MultipleExportDialog.fxml">
+      <provider editor-type-id="JavaFX-Scene-Builder">
+        <state />
+      </provider>
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="138">
-          <caret line="6" column="27" lean-forward="false" selection-start-line="6" selection-start-column="27" selection-end-line="6" selection-end-column="27" />
-          <folding />
+        <state relative-caret-position="59">
+          <caret line="17" column="164" lean-forward="true" selection-start-line="17" selection-start-column="164" selection-end-line="17" selection-end-column="164" />
+          <folding>
+            <marker date="1502478948000" expanded="true" signature="17373:17543" ph="..." />
+            <marker date="1502478948000" expanded="true" signature="24462:24827" ph="..." />
+            <marker date="1502478948000" expanded="true" signature="24500:24789" ph="..." />
+          </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/kotlin/Main.kt">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-466">
+        <state relative-caret-position="179">
+          <caret line="28" column="17" lean-forward="false" selection-start-line="28" selection-start-column="17" selection-end-line="28" selection-end-column="17" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/kotlin/core/util/file_utilities.kt">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-475">
+          <caret line="16" column="4" lean-forward="false" selection-start-line="16" selection-start-column="4" selection-end-line="16" selection-end-column="4" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/data/computed_multiple/calculation_R_600.0_1001.0_S-POL_^42.5_deg.txt">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/data/computed_multiple/calculation_R_600.0_1001.0_S-POL_^55.0_deg.txt">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/data/computed_multiple/calculation_R_600.0_1001.0_S-POL_^62.5_deg.txt">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-973">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/data/computed_multiple/calculation_R_600.0_1001.0_S-POL_^67.5_deg.txt">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/data/computed_multiple/calculation_R_600.0_1001.0_S-POL_^72.5_deg.txt">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="23">
+          <caret line="1" column="0" lean-forward="false" selection-start-line="1" selection-start-column="0" selection-end-line="1" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/data/computed_multiple/calculation_R_600.0_1001.0_S-POL_^00,0_deg.txt">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/data/computed_multiple/calculation_R_600.0_1001.0_S-POL_^00.0_deg.txt">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/data/computed_multiple/calculation_R_600.0_1001.0_S-POL_^  0.0_deg.txt">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/data/computed_multiple/calculation_R_600.0_1001.0_S-POL_^17.5_deg.txt">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-6">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/data/computed_multiple/calculation_R_600.0_1001.0_S-POL_^77.5_deg.txt">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/data/computed_multiple/calculation_R_600.0_1001.0_S-POL_^52.5_deg.txt">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/data/computed_multiple/calculation_R_600.0_1001.0_S-POL_^47.5_deg.txt">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/data/computed_multiple/calculation_R_600.0_1001.0_S-POL_^07.5_deg.txt">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/data/computed_multiple/calculation_R_600.0_1001.0_S-POL_^12.5_deg.txt">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/kotlin/core/util/validators.kt">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="170">
+          <caret line="122" column="16" lean-forward="false" selection-start-line="122" selection-start-column="16" selection-end-line="122" selection-end-column="16" />
+          <folding>
+            <element signature="e#19#596#0" expanded="true" />
+            <element signature="e#4274#5172#2" expanded="false" />
+            <element signature="n#!!block;n#StructureValidator#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/data/computed_single/calculation_R_600.0_1001.0_S-POL_^50.0_deg.txt">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/data/computed_multiple/calculation_R_600.0_1001.0_S-POL_^70.0_deg.txt">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
           <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding />
         </state>
@@ -937,455 +1011,348 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/kotlin/core/Mirror.kt">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="529">
-          <caret line="30" column="0" lean-forward="false" selection-start-line="30" selection-start-column="0" selection-end-line="30" selection-end-column="0" />
-          <folding>
-            <element signature="e#14#313#0" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Plasmirror_Kotlin.iml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="69">
-          <caret line="3" column="18" lean-forward="false" selection-start-line="3" selection-start-column="17" selection-end-line="3" selection-end-column="18" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/.idea/workspace.xml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="6831">
-          <caret line="297" column="33" lean-forward="false" selection-start-line="297" selection-start-column="33" selection-end-line="297" selection-end-column="33" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/pom.xml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="138">
-          <caret line="6" column="27" lean-forward="false" selection-start-line="6" selection-start-column="27" selection-end-line="6" selection-end-column="27" />
+        <state relative-caret-position="170">
+          <caret line="60" column="16" lean-forward="false" selection-start-line="60" selection-start-column="16" selection-end-line="60" selection-end-column="16" />
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="jar:///Library/Java/JavaVirtualMachines/jdk1.8.0_101.jdk/Contents/Home/javafx-src.zip!/javafx/collections/ObservableList.java">
+    <entry file="file://$PROJECT_DIR$/src/main/kotlin/core/util/builders.kt">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="182">
-          <caret line="50" column="16" lean-forward="false" selection-start-line="50" selection-start-column="16" selection-end-line="50" selection-end-column="16" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="jar:///Library/Java/JavaVirtualMachines/jdk1.8.0_101.jdk/Contents/Home/javafx-src.zip!/javafx/scene/Node.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-163">
-          <caret line="1734" column="15" lean-forward="false" selection-start-line="1734" selection-start-column="15" selection-end-line="1734" selection-end-column="15" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="jar:///Library/Java/JavaVirtualMachines/jdk1.8.0_101.jdk/Contents/Home/javafx-src.zip!/com/sun/javafx/scene/control/skin/SeparatorSkin.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-847">
-          <caret line="37" column="13" lean-forward="false" selection-start-line="37" selection-start-column="13" selection-end-line="37" selection-end-column="13" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="jar:///Library/Java/JavaVirtualMachines/jdk1.8.0_101.jdk/Contents/Home/jre/lib/ext/jfxrt.jar!/com/sun/javafx/scene/control/skin/caspian/caspian.css">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-1173">
-          <caret line="768" column="28" lean-forward="true" selection-start-line="768" selection-start-column="28" selection-end-line="768" selection-end-column="28" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="jar:///Library/Java/JavaVirtualMachines/jdk1.8.0_101.jdk/Contents/Home/javafx-src.zip!/com/sun/javafx/charts/Legend.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-33">
-          <caret line="137" column="24" lean-forward="false" selection-start-line="137" selection-start-column="24" selection-end-line="137" selection-end-column="24" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="jar:///Library/Java/JavaVirtualMachines/jdk1.8.0_101.jdk/Contents/Home/jre/lib/ext/jfxrt.jar!/com/sun/javafx/scene/control/skin/modena/modena.css">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="73">
-          <caret line="2735" column="13" lean-forward="false" selection-start-line="2735" selection-start-column="7" selection-end-line="2735" selection-end-column="13" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/kotlin/Test.kt">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="276">
-          <caret line="14" column="12" lean-forward="false" selection-start-line="14" selection-start-column="12" selection-end-line="14" selection-end-column="12" />
-          <folding>
-            <element signature="n#!!doc;n#A#0" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="jar:///Library/Java/JavaVirtualMachines/jdk1.8.0_101.jdk/Contents/Home/src.zip!/java/util/Map.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1021">
-          <caret line="740" column="14" lean-forward="false" selection-start-line="740" selection-start-column="14" selection-end-line="740" selection-end-column="14" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/kotlin/ui/controllers/chart_controllers_backuo.kt" />
-    <entry file="file://$PROJECT_DIR$/src/main/resources/fxml/Main.fxml">
-      <provider editor-type-id="JavaFX-Scene-Builder">
-        <state />
-      </provider>
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-517">
-          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/resources/fxml/root.fxml">
-      <provider editor-type-id="JavaFX-Scene-Builder">
-        <state />
-      </provider>
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="223">
-          <caret line="20" column="59" lean-forward="false" selection-start-line="20" selection-start-column="59" selection-end-line="20" selection-end-column="59" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/resources/fxml/Menu.fxml">
-      <provider editor-type-id="JavaFX-Scene-Builder">
-        <state />
-      </provider>
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="155">
-          <caret line="16" column="102" lean-forward="false" selection-start-line="16" selection-start-column="102" selection-end-line="16" selection-end-column="102" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/data/for_import/ST1279-7 P06 0.0.txt" />
-    <entry file="file://$PROJECT_DIR$/src/main/resources/fxml/AxisesRanges.fxml">
-      <provider editor-type-id="JavaFX-Scene-Builder">
-        <state />
-      </provider>
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-11">
-          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/resources/fxml/SeriesManager.fxml">
-      <provider editor-type-id="JavaFX-Scene-Builder">
-        <state />
-      </provider>
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="23" lean-forward="false" selection-start-line="0" selection-start-column="22" selection-end-line="0" selection-end-column="23" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="jar://$MAVEN_REPOSITORY$/org/jetbrains/kotlin/kotlin-stdlib/1.1.3/kotlin-stdlib-1.1.3-sources.jar!/kotlin/collections/MutableCollections.kt">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="179">
-          <caret line="14" column="79" lean-forward="false" selection-start-line="14" selection-start-column="79" selection-end-line="14" selection-end-column="79" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/resources/fxml/XAxisRange.fxml">
-      <provider editor-type-id="JavaFX-Scene-Builder">
-        <state />
-      </provider>
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-1190">
-          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/data/for_import/ST1279-7 P06/P/ST1279-7 P06 P 07.5.txt">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$USER_HOME$/Downloads/Main.kt">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="318">
-          <caret line="148" column="8" lean-forward="true" selection-start-line="148" selection-start-column="8" selection-end-line="148" selection-end-column="8" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/data/computed_single/calculation_R_600.0_1001.0_S-POL_^00,0_deg.txt" />
-    <entry file="file://$PROJECT_DIR$/data/computed_single/calculation_EPS_600.0_1001.0.txt" />
-    <entry file="file://$PROJECT_DIR$/src/main/resources/fxml/ExportMultipleDialog.fxml">
-      <provider editor-type-id="JavaFX-Scene-Builder">
-        <state />
-      </provider>
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-1026">
-          <caret line="17" column="165" lean-forward="false" selection-start-line="17" selection-start-column="165" selection-end-line="17" selection-end-column="165" />
-          <folding>
-            <marker date="1502348685000" expanded="true" signature="17294:17539" ph="..." />
-            <marker date="1502348685000" expanded="true" signature="17294:17589" ph="..." />
-            <marker date="1502348685000" expanded="true" signature="17294:17634" ph="..." />
-            <marker date="1502348685000" expanded="true" signature="17294:17672" ph="..." />
-            <marker date="1502348685000" expanded="true" signature="17294:17711" ph="..." />
-            <marker date="1502348685000" expanded="true" signature="17294:17749" ph="..." />
-            <marker date="1502348685000" expanded="true" signature="17294:18248" ph="..." />
-            <marker date="1502348685000" expanded="true" signature="17294:18278" ph="..." />
-            <marker date="1502348685000" expanded="true" signature="17294:18305" ph="..." />
-            <marker date="1502348685000" expanded="true" signature="17294:18331" ph="..." />
-            <marker date="1502348685000" expanded="true" signature="17823:18215" ph="..." />
-            <marker date="1502348685000" expanded="true" signature="17861:18177" ph="..." />
-            <marker date="1502348685000" expanded="true" signature="18492:22826" ph="..." />
-            <marker date="1502348685000" expanded="true" signature="18518:22800" ph="..." />
-            <marker date="1502348685000" expanded="true" signature="18717:22773" ph="..." />
-            <marker date="1502348685000" expanded="true" signature="18758:18880" ph="..." />
-            <marker date="1502348685000" expanded="true" signature="18918:19037" ph="..." />
-            <marker date="1502348685000" expanded="true" signature="19069:22743" ph="..." />
-            <marker date="1502348685000" expanded="true" signature="19104:22710" ph="..." />
-            <marker date="1502348685000" expanded="true" signature="19151:19375" ph="..." />
-            <marker date="1502348685000" expanded="true" signature="19419:19548" ph="..." />
-            <marker date="1502348685000" expanded="true" signature="19586:22674" ph="..." />
-            <marker date="1502348685000" expanded="true" signature="19666:21108" ph="..." />
-            <marker date="1502348685000" expanded="true" signature="19710:21064" ph="..." />
-            <marker date="1502348685000" expanded="true" signature="19907:21019" ph="..." />
-            <marker date="1502348685000" expanded="true" signature="19966:20126" ph="..." />
-            <marker date="1502348685000" expanded="true" signature="20182:20335" ph="..." />
-            <marker date="1502348685000" expanded="true" signature="20385:20971" ph="..." />
-            <marker date="1502348685000" expanded="true" signature="20477:20920" ph="..." />
-            <marker date="1502348685000" expanded="true" signature="20533:20864" ph="..." />
-            <marker date="1502348685000" expanded="true" signature="21176:22635" ph="..." />
-            <marker date="1502348685000" expanded="true" signature="21220:22591" ph="..." />
-            <marker date="1502348685000" expanded="true" signature="21440:22546" ph="..." />
-            <marker date="1502348685000" expanded="true" signature="21499:21659" ph="..." />
-            <marker date="1502348685000" expanded="true" signature="21715:21868" ph="..." />
-            <marker date="1502348685000" expanded="true" signature="21918:22498" ph="..." />
-            <marker date="1502348685000" expanded="true" signature="22010:22447" ph="..." />
-            <marker date="1502348685000" expanded="true" signature="22066:22391" ph="..." />
-            <marker date="1502348685000" expanded="true" signature="22910:23282" ph="..." />
-            <marker date="1502348685000" expanded="true" signature="22936:23269" ph="..." />
-            <marker date="1502348685000" expanded="true" signature="23132:23242" ph="..." />
-            <marker date="1502348685000" expanded="true" signature="23160:23234" ph="..." />
-            <marker date="1502348685000" expanded="true" signature="23366:25073" ph="..." />
-            <marker date="1502348685000" expanded="true" signature="23392:25047" ph="..." />
-            <marker date="1502348685000" expanded="true" signature="23605:25020" ph="..." />
-            <marker date="1502348685000" expanded="true" signature="23646:23852" ph="..." />
-            <marker date="1502348685000" expanded="true" signature="23890:24009" ph="..." />
-            <marker date="1502348685000" expanded="true" signature="24041:24990" ph="..." />
-            <marker date="1502348685000" expanded="true" signature="24140:24472" ph="..." />
-            <marker date="1502348685000" expanded="true" signature="24178:24434" ph="..." />
-            <marker date="1502348685000" expanded="true" signature="24601:24957" ph="..." />
-            <marker date="1502348685000" expanded="true" signature="24639:24919" ph="..." />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/kotlin/Main.kt">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="782">
-          <caret line="41" column="40" lean-forward="false" selection-start-line="41" selection-start-column="40" selection-end-line="41" selection-end-column="40" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/kotlin/core/State.kt">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="138">
-          <caret line="13" column="48" lean-forward="false" selection-start-line="13" selection-start-column="48" selection-end-line="13" selection-end-column="48" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/data/computed_multiple/calculation_EPS_600.0_1001.0.txt" />
-    <entry file="file://$PROJECT_DIR$/src/main/kotlin/ui/controllers/axises_range_controllers.kt">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1679">
-          <caret line="77" column="0" lean-forward="false" selection-start-line="77" selection-start-column="0" selection-end-line="86" selection-end-column="13" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/kotlin/ui/controllers/ControlsController.kt">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="345">
-          <caret line="24" column="0" lean-forward="false" selection-start-line="24" selection-start-column="0" selection-end-line="24" selection-end-column="0" />
+        <state relative-caret-position="483">
+          <caret line="25" column="0" lean-forward="false" selection-start-line="25" selection-start-column="0" selection-end-line="25" selection-end-column="0" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/kotlin/ui/controllers/chart_controllers.kt">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="437">
-          <caret line="61" column="20" lean-forward="false" selection-start-line="60" selection-start-column="4" selection-end-line="61" selection-end-column="20" />
+        <state relative-caret-position="234">
+          <caret line="196" column="19" lean-forward="true" selection-start-line="196" selection-start-column="19" selection-end-line="196" selection-end-column="19" />
           <folding>
-            <element signature="e#24#1594#0" expanded="true" />
+            <element signature="e#24#1553#0" expanded="true" />
             <element signature="n#!!block;n#initialize#0;n#!!block;n#LineChartController#0" expanded="false" />
             <element signature="n#!!doc;n#setCursorTracing#0;n#!!block;n#initialize#0;n#!!block;n#LineChartController#0" expanded="false" />
             <element signature="n#!!block;n#setCursorTracing#0;n#!!block;n#initialize#0;n#!!block;n#LineChartController#0" expanded="false" />
-            <element signature="e#2359#3002#2" expanded="false" />
-            <element signature="e#2666#2917#2" expanded="false" />
-            <element signature="e#3027#3375#2" expanded="false" />
-            <element signature="e#3132#3290#2" expanded="false" />
-            <element signature="e#3400#3748#2" expanded="false" />
-            <element signature="e#3505#3663#2" expanded="false" />
+            <element signature="e#2318#2961#2" expanded="false" />
+            <element signature="e#2625#2876#2" expanded="false" />
+            <element signature="e#2986#3334#2" expanded="false" />
+            <element signature="e#3091#3249#2" expanded="false" />
+            <element signature="e#3359#3707#2" expanded="false" />
+            <element signature="e#3464#3622#2" expanded="false" />
             <element signature="n#!!doc;n#setPanning#0;n#!!block;n#initialize#0;n#!!block;n#LineChartController#0" expanded="false" />
             <element signature="n#!!block;n#setPanning#0;n#!!block;n#initialize#0;n#!!block;n#LineChartController#0" expanded="false" />
-            <element signature="e#4049#4317#2" expanded="false" />
-            <element signature="e#4180#4237#1" expanded="false" />
-            <element signature="e#4243#4303#1" expanded="false" />
+            <element signature="e#4008#4276#2" expanded="false" />
+            <element signature="e#4139#4196#1" expanded="false" />
+            <element signature="e#4202#4262#1" expanded="false" />
             <element signature="n#!!doc;n#setZooming#0;n#!!block;n#initialize#0;n#!!block;n#LineChartController#0" expanded="false" />
             <element signature="n#!!block;n#setZooming#0;n#!!block;n#initialize#0;n#!!block;n#LineChartController#0" expanded="false" />
             <element signature="n#!!doc;n#setupZooming#0;n#!!block;n#setZooming#0;n#!!block;n#initialize#0;n#!!block;n#LineChartController#0" expanded="false" />
-            <element signature="e#4686#5491#2" expanded="false" />
-            <element signature="e#4730#4807#1" expanded="false" />
-            <element signature="e#4905#5190#2" expanded="false" />
-            <element signature="e#5379#5477#2" expanded="false" />
-            <element signature="e#5554#5724#2" expanded="false" />
-            <element signature="e#5650#5710#1" expanded="false" />
+            <element signature="e#4645#5450#2" expanded="false" />
+            <element signature="e#4689#4766#1" expanded="false" />
+            <element signature="e#4864#5149#2" expanded="false" />
+            <element signature="e#5338#5436#2" expanded="false" />
+            <element signature="e#5513#5683#2" expanded="false" />
+            <element signature="e#5609#5669#1" expanded="false" />
             <element signature="n#!!block;n#setDoubleMouseClickRescale#0;n#!!block;n#initialize#0;n#!!block;n#LineChartController#0" expanded="false" />
-            <element signature="e#5903#6062#2" expanded="false" />
-            <element signature="e#5999#6048#1" expanded="false" />
-            <element signature="e#6199#6467#0" expanded="false" />
-            <element signature="e#6261#6355#0" expanded="false" />
-            <element signature="e#6417#6457#0" expanded="false" />
-            <element signature="e#6538#6806#0" expanded="false" />
-            <element signature="e#6600#6694#0" expanded="false" />
-            <element signature="e#6756#6796#0" expanded="false" />
-            <element signature="e#6830#7060#2" expanded="false" />
-            <element signature="n#!!block;n#updateLineChart#0;n#!!block;n#LineChartController#0" expanded="false" />
-            <element signature="n#!!block;n#updateComputedSeries#0;n#!!block;n#updateLineChart#0;n#!!block;n#LineChartController#0" expanded="false" />
-            <element signature="e#7380#8139#2" expanded="false" />
-            <element signature="e#7439#7732#1" expanded="false" />
-            <element signature="e#7587#7714#1" expanded="false" />
-            <element signature="e#7764#8125#2" expanded="false" />
-            <element signature="e#7954#8107#1" expanded="false" />
+            <element signature="e#5862#6021#2" expanded="false" />
+            <element signature="e#5958#6007#1" expanded="false" />
+            <element signature="e#6158#6426#0" expanded="false" />
+            <element signature="e#6220#6314#0" expanded="false" />
+            <element signature="e#6376#6416#0" expanded="false" />
+            <element signature="e#6497#6765#0" expanded="false" />
+            <element signature="e#6559#6653#0" expanded="false" />
+            <element signature="e#6715#6755#0" expanded="false" />
+            <element signature="e#6789#7019#2" expanded="false" />
+            <element signature="e#7339#8098#2" expanded="false" />
+            <element signature="e#7398#7691#1" expanded="false" />
+            <element signature="e#7546#7673#1" expanded="false" />
+            <element signature="e#7723#8084#2" expanded="false" />
+            <element signature="e#7913#8066#1" expanded="false" />
             <element signature="n#!!block;n#updateYAxisLabel#0;n#!!block;n#updateLineChart#0;n#!!block;n#LineChartController#0" expanded="false" />
-            <element signature="e#8647#8984#2" expanded="false" />
-            <element signature="e#8749#8974#1" expanded="false" />
-            <element signature="e#9219#10685#2" expanded="false" />
-            <element signature="e#9345#9380#1" expanded="false" />
-            <element signature="e#9409#9494#0" expanded="false" />
-            <element signature="e#9594#9911#1" expanded="false" />
-            <element signature="e#9616#9893#0" expanded="false" />
-            <element signature="e#9917#9959#1" expanded="false" />
-            <element signature="e#9968#10211#0" expanded="false" />
-            <element signature="e#10238#10678#2" expanded="false" />
-            <element signature="e#10309#10668#2" expanded="false" />
-            <element signature="e#10394#10654#2" expanded="false" />
+            <element signature="e#8606#8943#2" expanded="false" />
+            <element signature="e#8708#8933#1" expanded="false" />
+            <element signature="e#9178#10644#2" expanded="false" />
+            <element signature="e#9304#9339#1" expanded="false" />
+            <element signature="e#9368#9453#0" expanded="false" />
+            <element signature="e#9553#9870#1" expanded="false" />
+            <element signature="e#9575#9852#0" expanded="false" />
+            <element signature="e#9876#9918#1" expanded="false" />
+            <element signature="e#9927#10170#0" expanded="false" />
+            <element signature="e#10197#10637#2" expanded="false" />
+            <element signature="e#10268#10627#2" expanded="false" />
+            <element signature="e#10353#10613#2" expanded="false" />
             <element signature="n#!!block;n#importFrom#0;n#!!block;n#LineChartController#0" expanded="false" />
-            <element signature="e#10959#11295#2" expanded="false" />
-            <element signature="e#11008#11285#2" expanded="false" />
-            <element signature="e#11191#11271#1" expanded="false" />
+            <element signature="e#10918#11254#2" expanded="false" />
+            <element signature="e#10967#11244#2" expanded="false" />
+            <element signature="e#11150#11230#1" expanded="false" />
             <element signature="n#!!doc;n#setVisibilityBy#0;n#!!block;n#LineChartController#0" expanded="false" />
             <element signature="n#!!block;n#setVisibilityBy#0;n#!!block;n#LineChartController#0" expanded="false" />
             <element signature="n#!!doc;n#updateLegendListener#0;n#!!block;n#LineChartController#0" expanded="false" />
-            <element signature="e#12233#12694#2" expanded="false" />
-            <element signature="e#12270#12688#2" expanded="false" />
-            <element signature="e#12317#12678#2" expanded="false" />
-            <element signature="e#12429#12484#1" expanded="false" />
-            <element signature="e#12490#12664#1" expanded="false" />
-            <element signature="e#12583#12646#1" expanded="false" />
-            <element signature="e#12812#12960#2" expanded="false" />
-            <element signature="e#13049#13193#2" expanded="false" />
-            <element signature="e#13312#14036#2" expanded="false" />
-            <element signature="e#13332#13444#2" expanded="false" />
-            <element signature="e#13463#14030#2" expanded="false" />
-            <element signature="e#13524#13645#1" expanded="false" />
-            <element signature="e#13670#13834#1" expanded="false" />
-            <element signature="e#13857#14020#1" expanded="false" />
+            <element signature="e#12192#12653#2" expanded="false" />
+            <element signature="e#12229#12647#2" expanded="false" />
+            <element signature="e#12276#12637#2" expanded="false" />
+            <element signature="e#12388#12443#1" expanded="false" />
+            <element signature="e#12449#12623#1" expanded="false" />
+            <element signature="e#12542#12605#1" expanded="false" />
+            <element signature="e#12771#12919#2" expanded="false" />
+            <element signature="e#13008#13152#2" expanded="false" />
+            <element signature="e#13271#14009#2" expanded="false" />
+            <element signature="e#13291#13417#2" expanded="false" />
+            <element signature="e#13436#14003#2" expanded="false" />
+            <element signature="e#13497#13618#1" expanded="false" />
+            <element signature="e#13643#13807#1" expanded="false" />
+            <element signature="e#13830#13993#1" expanded="false" />
             <element signature="n#!!block;n#nextColor#0;n#!!block;n#LineChartState#0" expanded="false" />
-            <element signature="e#16454#16508#1" expanded="false" />
-            <element signature="e#16898#18817#2" expanded="false" />
-            <element signature="e#17096#18156#2" expanded="false" />
-            <element signature="e#17122#18146#2" expanded="false" />
-            <element signature="e#17476#17779#0" expanded="false" />
-            <element signature="e#17805#18114#0" expanded="false" />
-            <element signature="e#18420#18811#2" expanded="false" />
-            <element signature="e#18486#18801#1" expanded="false" />
+            <element signature="e#16427#16481#1" expanded="false" />
+            <element signature="e#16871#18902#2" expanded="false" />
+            <element signature="e#17069#18241#2" expanded="false" />
+            <element signature="e#17095#18231#2" expanded="false" />
+            <element signature="e#17497#17832#0" expanded="false" />
+            <element signature="e#17858#18199#0" expanded="false" />
+            <element signature="e#18505#18896#2" expanded="false" />
+            <element signature="e#18571#18886#1" expanded="false" />
+            <element signature="e#19173#19853#2" expanded="false" />
+            <element signature="e#19226#19843#2" expanded="false" />
+            <element signature="e#19265#19322#1" expanded="false" />
+            <element signature="e#19328#19437#1" expanded="false" />
+            <element signature="e#19475#19535#1" expanded="false" />
+            <element signature="e#19541#19650#1" expanded="false" />
+            <element signature="e#19769#19829#1" expanded="false" />
+            <element signature="e#20080#20188#1" expanded="false" />
+            <element signature="e#20237#20348#2" expanded="false" />
             <element signature="n#!!block;n#removeByName#0;n#!!block;n#LineChartState#0" expanded="false" />
-            <element signature="e#18879#19011#2" expanded="false" />
+            <element signature="e#20547#20679#2" expanded="false" />
             <element signature="n#!!block;n#ExtendedSeries#0;n#!!block;n#LineChartState#0" expanded="false" />
             <element signature="n#!!block;n#select#0;n#!!block;n#ExtendedSeries#0;n#!!block;n#LineChartState#0" expanded="false" />
             <element signature="n#!!block;n#deselect#0;n#!!block;n#ExtendedSeries#0;n#!!block;n#LineChartState#0" expanded="false" />
-            <element signature="n#!!block;n#importFrom#0;n#!!block;n#LineChartState#0" expanded="false" />
-            <element signature="e#20365#21045#2" expanded="false" />
-            <element signature="e#20418#21035#2" expanded="false" />
-            <element signature="e#20457#20514#1" expanded="false" />
-            <element signature="e#20520#20629#1" expanded="false" />
-            <element signature="e#20667#20727#1" expanded="false" />
-            <element signature="e#20733#20842#1" expanded="false" />
-            <element signature="e#20961#21021#1" expanded="false" />
-            <element signature="e#21272#21380#1" expanded="false" />
-            <element signature="e#21429#21540#2" expanded="false" />
             <element signature="n#!!block;n#initialize#0;n#!!block;n#SeriesManagerController#0" expanded="false" />
-            <element signature="e#23452#23779#2" expanded="false" />
-            <element signature="e#23505#23648#2" expanded="false" />
-            <element signature="e#23837#24409#2" expanded="false" />
-            <element signature="e#23873#24344#0" expanded="false" />
-            <element signature="e#24075#24330#1" expanded="false" />
-            <element signature="e#24118#24312#2" expanded="false" />
-            <element signature="e#24384#24399#0" expanded="false" />
-            <element signature="e#24467#25039#2" expanded="false" />
-            <element signature="e#24503#24974#0" expanded="false" />
-            <element signature="e#24705#24960#1" expanded="false" />
-            <element signature="e#24748#24942#2" expanded="false" />
-            <element signature="e#25014#25029#0" expanded="false" />
-            <element signature="e#25069#25309#2" expanded="false" />
-            <element signature="e#25131#25299#2" expanded="false" />
-            <element signature="e#25350#25733#2" expanded="false" />
-            <element signature="e#25453#25723#2" expanded="false" />
-            <element signature="e#25497#25659#2" expanded="false" />
+            <element signature="e#22473#22800#2" expanded="false" />
+            <element signature="e#22526#22669#2" expanded="false" />
+            <element signature="e#22858#23430#2" expanded="false" />
+            <element signature="e#22894#23365#0" expanded="false" />
+            <element signature="e#23096#23351#1" expanded="false" />
+            <element signature="e#23139#23333#2" expanded="false" />
+            <element signature="e#23405#23420#0" expanded="false" />
+            <element signature="e#23488#24060#2" expanded="false" />
+            <element signature="e#23524#23995#0" expanded="false" />
+            <element signature="e#23726#23981#1" expanded="false" />
+            <element signature="e#23769#23963#2" expanded="false" />
+            <element signature="e#24035#24050#0" expanded="false" />
+            <element signature="e#24090#24330#2" expanded="false" />
+            <element signature="e#24152#24320#2" expanded="false" />
+            <element signature="e#24371#24754#2" expanded="false" />
+            <element signature="e#24474#24744#2" expanded="false" />
+            <element signature="e#24518#24680#2" expanded="false" />
             <element signature="n#!!block;n#enableUsing#0;n#!!block;n#SeriesManagerController#0" expanded="false" />
-            <element signature="e#26101#26572#2" expanded="false" />
-            <element signature="e#26137#26318#1" expanded="false" />
+            <element signature="e#25122#25593#2" expanded="false" />
+            <element signature="e#25158#25339#1" expanded="false" />
             <element signature="n#!!block;n#disable#0;n#!!block;n#SeriesManagerController#0" expanded="false" />
-            <marker date="1502345819000" expanded="false" signature="14322:16302" ph="..." />
+            <marker date="1502475713000" expanded="false" signature="14295:16275" ph="..." />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/kotlin/ui/controllers/state_controllers.kt">
+    <entry file="file://$PROJECT_DIR$/data/computed_multiple/calculation_R_600.0_1001.0_S-POL_^45.0_deg.txt">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="6854">
-          <caret line="315" column="0" lean-forward="false" selection-start-line="315" selection-start-column="0" selection-end-line="315" selection-end-column="0" />
-          <folding>
-            <element signature="e#24#505#0" expanded="true" />
-          </folding>
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/kotlin/ui/controllers/util.kt">
+    <entry file="file://$PROJECT_DIR$/data/computed_multiple/calculation_R_600.0_1001.0_S-POL_^60.0_deg.txt">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="460">
-          <caret line="20" column="0" lean-forward="false" selection-start-line="20" selection-start-column="0" selection-end-line="20" selection-end-column="0" />
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/data/computed_multiple/calculation_R_600.0_1001.0_S-POL_^50.0_deg.txt">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/data/computed_multiple/calculation_R_600.0_1001.0_S-POL_^40.0_deg.txt">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="9108">
+          <caret line="396" column="26" lean-forward="true" selection-start-line="396" selection-start-column="26" selection-end-line="396" selection-end-column="26" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/data/computed_multiple/calculation_R_600.0_1001.0_S-POL_^35.0_deg.txt">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/data/computed_multiple/calculation_R_600.0_1001.0_S-POL_^15.0_deg.txt">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/kotlin/core/util/global_enums.kt">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="230">
+          <caret line="10" column="11" lean-forward="false" selection-start-line="10" selection-start-column="11" selection-end-line="10" selection-end-column="11" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar://$MAVEN_REPOSITORY$/org/jetbrains/kotlin/kotlin-stdlib/1.1.3/kotlin-stdlib-1.1.3-sources.jar!/kotlin/collections/Collections.kt">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1327">
+          <caret line="76" column="42" lean-forward="true" selection-start-line="76" selection-start-column="42" selection-end-line="76" selection-end-column="42" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/kotlin/core/State.kt">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="197">
+          <caret line="54" column="16" lean-forward="false" selection-start-line="54" selection-start-column="16" selection-end-line="54" selection-end-column="16" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/kotlin/ui/controllers/main_controllers.kt">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="897">
-          <caret line="42" column="79" lean-forward="false" selection-start-line="42" selection-start-column="79" selection-end-line="42" selection-end-column="79" />
+        <state relative-caret-position="492">
+          <caret line="71" column="28" lean-forward="false" selection-start-line="71" selection-start-column="28" selection-end-line="71" selection-end-column="28" />
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/kotlin/ui/controllers/menu_controllers.kt">
+    <entry file="file://$PROJECT_DIR$/src/main/kotlin/ui/controllers/ControlsController.kt">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="897">
-          <caret line="194" column="36" lean-forward="false" selection-start-line="194" selection-start-column="36" selection-end-line="194" selection-end-column="36" />
+        <state relative-caret-position="227">
+          <caret line="29" column="22" lean-forward="false" selection-start-line="29" selection-start-column="22" selection-end-line="29" selection-end-column="22" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/data/computed_multiple/calculation_R_600.0_1001.0_S-POL_^20.0_deg.txt">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/data/computed_multiple/calculation_R_600.0_1001.0_S-POL_^30.0_deg.txt">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/kotlin/ui/controllers/util.kt">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="193">
+          <caret line="40" column="4" lean-forward="false" selection-start-line="40" selection-start-column="4" selection-end-line="40" selection-end-column="4" />
           <folding>
-            <element signature="e#25#662#0" expanded="true" />
-            <element signature="n#!!block;n#MenuController#0" expanded="false" />
-            <marker date="1502461527000" expanded="true" signature="9656:10013" ph="..." />
+            <element signature="e#24#315#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$APPLICATION_PLUGINS_DIR$/scratches/scratch01.txt">
+    <entry file="jar:///Library/Java/JavaVirtualMachines/jdk1.8.0_101.jdk/Contents/Home/src.zip!/java/io/File.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="179">
+          <caret line="274" column="11" lean-forward="false" selection-start-line="274" selection-start-column="11" selection-end-line="274" selection-end-column="11" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/data/computed_single/calculation_N_600.0_1001.0.txt">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/data/computed_multiple/calculation_R_600.0_1001.0_S-POL_^75.0_deg.txt">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/data/computed_multiple/calculation_R_600.0_1001.0_S-POL_^37.5_deg.txt">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/data/computed_multiple/calculation_R_600.0_1001.0_S-POL_^80.0_deg.txt">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/data/computed_multiple/calculation_R_600.0_1001.0_S-POL_^10.0_deg.txt">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/data/inner/structure_description_help.txt">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/resources/fxml/HelpInfo.fxml">
+      <provider editor-type-id="JavaFX-Scene-Builder">
+        <state />
+      </provider>
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/kotlin/ui/controllers/state_controllers.kt">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-5492">
+          <caret line="66" column="41" lean-forward="true" selection-start-line="66" selection-start-column="41" selection-end-line="66" selection-end-column="41" />
+          <folding>
+            <element signature="e#24#704#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/data/computed_single/calculation_R_600.0_1001.0_S-POL_^00.0_deg.txt">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/data/computed_single/calculation_R_600.0_1001.0_P-POL_^00.0_deg.txt">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
           <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
@@ -1395,19 +1362,18 @@
     </entry>
     <entry file="file://$APPLICATION_PLUGINS_DIR$/scratches/notes.txt">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="46">
-          <caret line="2" column="0" lean-forward="false" selection-start-line="2" selection-start-column="0" selection-end-line="2" selection-end-column="0" />
+        <state relative-caret-position="23">
+          <caret line="1" column="6" lean-forward="true" selection-start-line="1" selection-start-column="6" selection-end-line="1" selection-end-column="6" />
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/kotlin/core/util/validators.kt">
+    <entry file="file://$PROJECT_DIR$/src/main/kotlin/ui/controllers/menu_controllers.kt">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="498">
-          <caret line="36" column="13" lean-forward="true" selection-start-line="36" selection-start-column="13" selection-end-line="36" selection-end-column="13" />
+        <state relative-caret-position="3703">
+          <caret line="161" column="62" lean-forward="false" selection-start-line="161" selection-start-column="62" selection-end-line="161" selection-end-column="62" />
           <folding>
-            <element signature="e#19#381#0" expanded="true" />
-            <element signature="e#2175#3073#2" expanded="false" />
+            <element signature="e#25#884#0" expanded="true" />
           </folding>
         </state>
       </provider>

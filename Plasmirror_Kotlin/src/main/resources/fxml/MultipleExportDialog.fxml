@@ -13,9 +13,8 @@
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.RowConstraints?>
-<?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="150.0" prefWidth="550.0" xmlns="http://javafx.com/javafx/8.0.65" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ui.controllers.ExportMultipleDialogController">
+<AnchorPane prefHeight="150.0" prefWidth="550.0" xmlns="http://javafx.com/javafx/8.0.65" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ui.controllers.MultipleExportDialogController">
    <children>
       <GridPane alignment="CENTER" prefHeight="120.0" prefWidth="450.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <columnConstraints>
@@ -119,7 +118,7 @@
                                     </AnchorPane>
                                     <AnchorPane layoutX="210.0" layoutY="10.0" prefHeight="31.0" prefWidth="150.0">
                                        <children>
-                                                            <TextField fx:id="angleFromTextField" alignment="CENTER" layoutX="-58.0" layoutY="16.0" prefHeight="31.0" prefWidth="74.0" text="1.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+                                                            <TextField fx:id="angleFromTextField" alignment="CENTER" layoutX="-58.0" layoutY="16.0" prefHeight="31.0" prefWidth="74.0" text="7.5" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
                                        </children>
                                     </AnchorPane>
                                     <AnchorPane layoutX="410.0" layoutY="10.0" prefHeight="200.0" prefWidth="100.0">
@@ -129,7 +128,7 @@
                                     </AnchorPane>
                                     <AnchorPane layoutX="610.0" layoutY="10.0" prefHeight="200.0" prefWidth="150.0">
                                        <children>
-                                                            <TextField fx:id="angleToTextField" alignment="CENTER" layoutX="-79.0" layoutY="18.0" prefHeight="31.0" prefWidth="75.0" text="1.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+                                                            <TextField fx:id="angleToTextField" alignment="CENTER" layoutX="-79.0" layoutY="18.0" prefHeight="31.0" prefWidth="75.0" text="85.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
                                        </children>
                                     </AnchorPane>
                                     <AnchorPane layoutX="395.0" layoutY="10.0" prefHeight="200.0" prefWidth="100.0">
@@ -139,7 +138,7 @@
                                     </AnchorPane>
                                     <AnchorPane layoutX="445.0" layoutY="10.0" prefHeight="200.0" prefWidth="150.0">
                                        <children>
-                                          <TextField fx:id="angleStepTextField" alignment="CENTER" layoutX="-79.0" layoutY="18.0" prefHeight="31.0" prefWidth="50.0" text="1.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+                                          <TextField fx:id="angleStepTextField" alignment="CENTER" layoutX="-79.0" layoutY="18.0" prefHeight="31.0" prefWidth="50.0" text="2.5" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
                                        </children>
                                     </AnchorPane>
                                  </children>
@@ -198,7 +197,7 @@
                                     </AnchorPane>
                                     <AnchorPane layoutX="210.0" layoutY="10.0" prefHeight="31.0" prefWidth="150.0">
                                        <children>
-                                          <TextField fx:id="temperatureFromTextField" alignment="CENTER" disable="true" layoutX="-58.0" layoutY="16.0" prefHeight="31.0" prefWidth="74.0" text="1.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+                                          <TextField fx:id="temperatureFromTextField" alignment="CENTER" disable="true" layoutX="-58.0" layoutY="16.0" prefHeight="31.0" prefWidth="74.0" text="80.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
                                        </children>
                                     </AnchorPane>
                                     <AnchorPane layoutX="410.0" layoutY="10.0" prefHeight="200.0" prefWidth="100.0">
@@ -208,7 +207,7 @@
                                     </AnchorPane>
                                     <AnchorPane layoutX="610.0" layoutY="10.0" prefHeight="200.0" prefWidth="150.0">
                                        <children>
-                                          <TextField fx:id="temperatureToTextField" alignment="CENTER" disable="true" layoutX="-79.0" layoutY="18.0" prefHeight="31.0" prefWidth="75.0" text="1.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+                                          <TextField fx:id="temperatureToTextField" alignment="CENTER" disable="true" layoutX="-79.0" layoutY="18.0" prefHeight="31.0" prefWidth="75.0" text="300.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
                                        </children>
                                     </AnchorPane>
                                     <AnchorPane layoutX="395.0" layoutY="10.0" prefHeight="200.0" prefWidth="100.0">
@@ -218,7 +217,7 @@
                                     </AnchorPane>
                                     <AnchorPane layoutX="445.0" layoutY="10.0" prefHeight="200.0" prefWidth="150.0">
                                        <children>
-                                          <TextField fx:id="temperatureStepTextField" alignment="CENTER" disable="true" layoutX="-79.0" layoutY="18.0" prefHeight="31.0" prefWidth="50.0" text="1.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+                                          <TextField fx:id="temperatureStepTextField" alignment="CENTER" disable="true" layoutX="-79.0" layoutY="18.0" prefHeight="31.0" prefWidth="50.0" text="5.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
                                        </children>
                                     </AnchorPane>
                                  </children>
@@ -299,10 +298,7 @@
             </AnchorPane>
             <AnchorPane prefHeight="200.0" prefWidth="200.0" GridPane.rowIndex="8">
                <children>
-                  <Label fx:id="statusLabel" prefHeight="45.0" prefWidth="405.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-                     <font>
-                        <Font size="16.0" />
-                     </font></Label>
+                  <Label fx:id="statusLabel" prefHeight="45.0" prefWidth="405.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
                </children></AnchorPane>
             <AnchorPane prefHeight="200.0" prefWidth="476.0" GridPane.rowIndex="7">
                <children>
@@ -317,12 +313,12 @@
                      <children>
                         <AnchorPane prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="0">
                            <children>
-                              <Label prefHeight="45.0" prefWidth="495.0" text="Current directory: " AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+                              <Label prefHeight="45.0" prefWidth="495.0" text="Chosen directory: " AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
                            </children>
                         </AnchorPane>
                         <AnchorPane layoutX="10.0" layoutY="10.0" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1">
                            <children>
-                              <Label fx:id="curDirLabel" prefHeight="45.0" prefWidth="495.0" textOverrun="LEADING_ELLIPSIS" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+                              <Label fx:id="chosenDirectoryLabel" prefHeight="45.0" prefWidth="495.0" textOverrun="LEADING_ELLIPSIS" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
                            </children>
                         </AnchorPane>
                      </children>

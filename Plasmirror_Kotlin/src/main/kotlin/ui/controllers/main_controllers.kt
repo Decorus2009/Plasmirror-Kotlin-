@@ -2,7 +2,6 @@ package ui.controllers
 
 import MainApp
 import core.State
-import javafx.application.Platform
 import javafx.fxml.FXML
 
 class RootController {
@@ -40,7 +39,7 @@ class MainController {
     @FXML private lateinit var yAxisRangeController: YAxisRangeController
     @FXML lateinit var seriesManagerController: SeriesManagerController
 
-    lateinit var exportMultipleDialogController: ExportMultipleDialogController
+    @FXML lateinit var multipleExportDialogController: MultipleExportDialogController
 
 //    @FXML lateinit var menuController: MenuController
 

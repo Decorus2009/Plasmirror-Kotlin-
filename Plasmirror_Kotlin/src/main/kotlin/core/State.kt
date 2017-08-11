@@ -4,7 +4,7 @@ import core.util.*
 import core.util.Regime.*
 import core.util.Validator.validateAndSetStateUsing
 import ui.controllers.MainController
-import java.io.File
+import java.io.File.*
 import java.io.IOException
 import java.nio.file.Paths
 import java.util.*
@@ -14,9 +14,9 @@ object State {
     @JvmStatic lateinit var mainController: MainController
     @JvmStatic val GaAs_n = mutableMapOf<Double, Cmplx>()
 
-    @JvmStatic var wlStart: Double = 0.0
-    @JvmStatic var wlEnd: Double = 0.0
-    @JvmStatic var wlStep: Double = 0.0
+    @JvmStatic var wavelengthFrom: Double = 0.0
+    @JvmStatic var wavelengthTo: Double = 0.0
+    @JvmStatic var wavelengthStep: Double = 0.0
     @JvmStatic var wlCurrent: Double = 0.0
 
     @JvmStatic var angle: Double = 0.0
@@ -33,7 +33,7 @@ object State {
 
     @JvmStatic lateinit var mirror: Mirror
 
-    @JvmStatic var wl = mutableListOf<Double>()
+    @JvmStatic var wavelength = mutableListOf<Double>()
     @JvmStatic val reflection = mutableListOf<Double>()
     @JvmStatic val transmission = mutableListOf<Double>()
     @JvmStatic val absorption = mutableListOf<Double>()
@@ -42,19 +42,16 @@ object State {
 
     fun set() {
         println("State set")
-
         clearPreviousComputation()
         /* Reading n GaAs file only once */
         if (GaAs_n.isEmpty()) {
             readGaAsRefractiveIndex()
         }
         validateAndSetStateUsing(mainController)
-
         buildMirror()
     }
 
     private fun clearPreviousComputation() {
-
         fun <T> clearIfNotEmpty(vararg lists: MutableList<out T>) = lists.forEach { it.run { if (isNotEmpty()) clear() } }
 
         clearIfNotEmpty(reflection, transmission, absorption)
@@ -73,16 +70,16 @@ object State {
     }
 
     fun compute() {
-        val size = ((wlEnd - wlStart) / wlStep).toInt() + 1
-        wl = ArrayList<Double>(size)
+        val size = ((wavelengthTo - wavelengthFrom) / wavelengthStep).toInt() + 1
+        wavelength = ArrayList<Double>(size)
 
         // TODO MERGE TWO LOOPS, CHECK PERFORMANCE
-        (0..size - 1).forEach { wl.add(wlStart + it * wlStep) }
+        (0..size - 1).forEach { wavelength.add(wavelengthFrom + it * wavelengthStep) }
 
 
         // TODO PARALLEL
-        (0..wl.size - 1).forEach {
-            wlCurrent = wl[it]
+        (0..wavelength.size - 1).forEach {
+            wlCurrent = wavelength[it]
 
             mirror.run {
                 when (regime) {
@@ -95,14 +92,13 @@ object State {
             }
         }
 
-//        println("${wl[0]} ${reflection[0]}")
-//        for (i in 0..wl.size - 1) println("${wl[i]} ${reflection[i]}")
+//        println("${wavelength[0]} ${reflection[0]}")
+//        for (i in 0..wavelength.size - 1) println("${wavelength[i]} ${reflection[i]}")
     }
 
     fun printState() {
-        println("$wlStart $wlEnd $wlStep\n $polarization $angle\n $leftMedium $rightMedium\n")
+        println("$wavelengthFrom $wavelengthTo $wavelengthStep\n $polarization $angle\n $leftMedium $rightMedium\n")
     }
-
 
     private fun buildMirror() {
         mirror = MirrorBuilder.build(structure, leftMedium, rightMedium)
@@ -111,7 +107,7 @@ object State {
 
     // TODO use new AlxGa1-xAs calculation for x = 0. It's unknown whether I can trust the experimental data
     private fun readGaAsRefractiveIndex() {
-        val data = Paths.get(".${File.separator}data${File.separator}inner${File.separator}state_parameters${File.separator}GaAs_n_240_840nm_interpolated.txt")
+        val data = Paths.get(".${separator}data${separator}inner${separator}state_parameters${separator}GaAs_n_240_840nm_interpolated.txt")
 
         try {
             Scanner(data).useLocale(Locale.US).use { scanner ->
@@ -168,9 +164,9 @@ object State {
         val path = Paths.get(".${File.separator}data${File.separator}inner${File.separator}state_parameters${File.separator}computation_range.txt")
         val lines = readFromFile(path)
 
-        wlStart = lines[0].toDouble()
-        wlEnd = lines[1].toDouble()
-        wlStep = lines[2].toDouble()
+        wavelengthFrom = lines[0].toDouble()
+        wavelengthTo = lines[1].toDouble()
+        wavelengthStep = lines[2].toDouble()
     }
 
     private fun readStructureDescription() {
@@ -197,11 +193,11 @@ object State {
             Scanner(data).useLocale(Locale.US).use { scanner ->
                 with (scanner) {
                     while (hasNextDouble()) {
-                        val wl = nextDouble()
+                        val wavelength = nextDouble()
                         val refractiveIndex = nextDouble()
                         val k = nextDouble()
 
-                        GaAs_n.put(wl, Cmplx(refractiveIndex, k))
+                        GaAs_n.put(wavelength, Cmplx(refractiveIndex, k))
                     }
                 }
             }

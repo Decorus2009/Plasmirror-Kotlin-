@@ -7,20 +7,26 @@ import core.State.n_right
 import core.State.polarization
 import core.State.regime
 import core.State.rightMedium
-import core.util.*
+import core.util.Medium
 import core.util.Medium.*
+import core.util.Polarization
 import core.util.Polarization.P
 import core.util.Polarization.S
+import core.util.Regime
 import core.util.Regime.*
+import core.util.writeToFile
 import javafx.fxml.FXML
-import javafx.scene.control.*
+import javafx.scene.control.ChoiceBox
+import javafx.scene.control.Label
+import javafx.scene.control.TextArea
+import javafx.scene.control.TextField
 import java.io.File
-import java.nio.file.Files.lines
+import java.nio.file.Files
 import java.nio.file.Paths
 import kotlin.streams.toList
 
 
-// TODO Files.lines(path)
+// TODO Files.Files.lines(path)
 
 class GlobalParametersController {
 
@@ -56,7 +62,7 @@ class RegimeController {
         println("Regime controller set")
         /* set initial value */
         /* lines.size should be == 1 */
-        val lines = lines(path).toList().filter { it.isNotBlank() }
+        val lines = Files.lines(path).toList().filter { it.isNotBlank() }
 
         regime = Regime.valueOf(lines[0])
 
@@ -131,7 +137,7 @@ class MediumParametersController {
         println("Medium parameters controller set")
         /* set initial values */
         /* lines.size should be == 6 */
-        val lines = lines(path).toList().filter { it.isNotBlank() }
+        val lines = Files.lines(path).toList().filter { it.isNotBlank() }
 
         leftMedium = Medium.valueOf(lines[0])
         with(leftMediumChoiceBox) {
@@ -243,7 +249,7 @@ class LightParametersController {
         println("Light parameters controller set")
         /* set initial values */
         /* lines.size should be == 2 */
-        val lines = lines(path).toList().filter { it.isNotBlank() }
+        val lines = Files.lines(path).toList().filter { it.isNotBlank() }
         polarization = Polarization.valueOf(lines[0])
         angleTextField.text = lines[1]
 
@@ -275,9 +281,9 @@ class ComputationRangeController {
 
     lateinit var globalParametersController: GlobalParametersController
 
-    @FXML lateinit var wLStartTextField: TextField
-    @FXML lateinit var wLEndTextField: TextField
-    @FXML lateinit var wLStepTextField: TextField
+    @FXML lateinit var wavelengthFromTextField: TextField
+    @FXML lateinit var wavelengthToTextField: TextField
+    @FXML lateinit var wavelengthStepTextField: TextField
 
     private val path = Paths.get(".${File.separator}data${File.separator}inner${File.separator}state_parameters${File.separator}computation_range.txt")
 
@@ -286,14 +292,14 @@ class ComputationRangeController {
         println("Computation range controller set")
         /* set initial values */
         /* lines.size should be == 3 */
-        val lines = lines(path).toList().filter { it.isNotBlank() }
+        val lines = Files.lines(path).toList().filter { it.isNotBlank() }
 
-        wLStartTextField.text = lines[0]
-        wLEndTextField.text = lines[1]
-        wLStepTextField.text = lines[2]
+        wavelengthFromTextField.text = lines[0]
+        wavelengthToTextField.text = lines[1]
+        wavelengthStepTextField.text = lines[2]
     }
 
-    fun writeComputationRange() = writeToFile(path, text = "${State.wlStart}\n${State.wlEnd}\n${State.wlStep}")
+    fun writeComputationRange() = writeToFile(path, text = "${State.wavelengthFrom}\n${State.wavelengthTo}\n${State.wavelengthStep}")
 }
 
 class StructureDescriptionController {
@@ -306,7 +312,7 @@ class StructureDescriptionController {
     fun initialize() {
         println("Structure description controller set")
         /* set initial values */
-        structureDescriptionTextArea.text = lines(path).toList()
+        structureDescriptionTextArea.text = Files.lines(path).toList()
                 .filter { it.isNotBlank() }
                 .reduce { text, line -> text + "\n" + line }
     }

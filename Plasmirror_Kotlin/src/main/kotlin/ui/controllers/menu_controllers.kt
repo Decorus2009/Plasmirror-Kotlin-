@@ -4,34 +4,40 @@ package ui.controllers
 import MainApp
 import core.State
 import core.State.polarization
+import core.util.MultipleExportDialogParametersValidator
 import core.util.Polarization
+import core.util.ValidateResult.SUCCESS
 import javafx.fxml.FXML
 import javafx.fxml.FXMLLoader
 import javafx.scene.Scene
 import javafx.scene.control.*
+import javafx.scene.input.KeyCode
 import javafx.scene.input.KeyCode.E
 import javafx.scene.input.KeyCode.I
 import javafx.scene.input.KeyCodeCombination
 import javafx.scene.input.KeyCombination.SHIFT_DOWN
 import javafx.scene.input.KeyCombination.SHORTCUT_DOWN
+import javafx.scene.input.KeyEvent
 import javafx.scene.layout.AnchorPane
 import javafx.stage.DirectoryChooser
 import javafx.stage.FileChooser
 import javafx.stage.Stage
 import java.io.File
 import java.io.File.separator
-import java.io.IOException
+import java.nio.file.Files
+import java.nio.file.Paths
+import kotlin.streams.toList
 
 
 class MenuController {
 
-    lateinit var mainController: MainController
     lateinit var rootController: RootController
 
     @FXML private lateinit var importMenuItem: MenuItem
     @FXML private lateinit var importMultipleMenuItem: MenuItem
     @FXML private lateinit var exportMenuItem: MenuItem
     @FXML private lateinit var exportMultipleMenuItem: MenuItem
+    @FXML private lateinit var helpMenuItem: MenuItem
 
     @FXML
     fun initialize() {
@@ -58,131 +64,60 @@ class MenuController {
 
         exportMenuItem.setOnAction {
             val file = initFileChooser(".${separator}data${separator}computed_single").let {
-                it.initialFileName = LineChartState.buildExportFileName()
+                it.initialFileName = buildExportFileName()
                 it.showSaveDialog(rootController.mainApp.primaryStage)
             }
             if (file != null) {
-                LineChartState.writeTo(file)
+                writeTo(file)
             }
         }
 
         exportMultipleMenuItem.setOnAction {
-            try {
-                val loader = FXMLLoader()
-                loader.location = MainApp::class.java.getResource("fxml/ExportMultipleDialog.fxml")
-                val page = loader.load<AnchorPane>()
-
-                // Создаём диалоговое окно Stage.
-                val exportMultipleDialogStage = Stage()
-                exportMultipleDialogStage.title = "Export Multiple"
-                exportMultipleDialogStage.isResizable = false
-
-                //            dialogStage.initModality(Modality.WINDOW_MODAL);
-                //            dialogStage.initOwner(mainLayoutController.);
-
-
-                val scene = Scene(page)
-                exportMultipleDialogStage.scene = scene
-
-                // Отображаем диалоговое окно и ждём, пока пользователь его не закроет
-                exportMultipleDialogStage.showAndWait()
-            } catch (e: IOException) {
-                e.printStackTrace()
+            val page = with(FXMLLoader()) {
+                location = MainApp::class.java.getResource("fxml/MultipleExportDialog.fxml")
+                load<AnchorPane>()
             }
+            with(Stage()) {
+                title = "Export Multiple"
+                isResizable = false
+                scene = Scene(page)
+                /* works after pressing directory button or switching between angle and temperature regimes. Why? */
+                addEventHandler(KeyEvent.KEY_RELEASED) { event: KeyEvent ->
+                    if (KeyCode.ESCAPE == event.code) {
+                        close()
+                    }
+                }
+                show()
+            }
+        }
 
+        helpMenuItem.setOnAction {
+            val page = with(FXMLLoader()) {
+                location = MainApp::class.java.getResource("fxml/HelpInfo.fxml")
+                load<AnchorPane>()
+            }
+            with(Stage()) {
+                title = "Help"
+                isAlwaysOnTop = true
+                scene = Scene(page)
+                /* works after pressing directory button or switching between angle and temperature regimes. Why? */
+                addEventHandler(KeyEvent.KEY_RELEASED) { event: KeyEvent ->
+                    if (KeyCode.ESCAPE == event.code) {
+                        close()
+                    }
+                }
+                showAndWait()
+            }
         }
     }
 
-    //    @FXML
-//    internal fun handleExport(event: ActionEvent) {
-////
-////        val fileChooser = FileChooser()
-////
-////        // фильтр расширений
-////        fileChooser
-////                .extensionFilters
-////                .add(FileChooser.ExtensionFilter("Data Files", "*.txt", "*.dat"))
-////
-////        fileChooser.initialDirectory = File("./data/calculated")
-////
-////
-////        fileChooser.initialFileName = buildExportFileName()
-////
-////        // Показываем диалог сохранения файла
-////        val file = fileChooser.showSaveDialog(rootLayoutController.getMainApp().getPrimaryStage())
-////
-////        saveCalcResult(
-////                file,
-////                rootLayoutController
-////                        .getMainLayoutController()
-////                        .getStructureDescriptionController()
-////                        .getStructureDescriptionAsText(),
-////                MainState.regime
-////        )
-//    }
-//
-//    // todo Export Multiple
-//    @FXML
-//    internal fun handleExportMultiple(event: ActionEvent) {
-////        try {
-////            val loader = FXMLLoader()
-////            loader.location = MainApp::class.java!!.getResource("view/ExportMultipleDialog.fxml")
-////            val page = loader.load<AnchorPane>()
-////
-////            // Создаём диалоговое окно Stage.
-////            val exportMultipleDialogStage = Stage()
-////            exportMultipleDialogStage.title = "Export Multiple"
-////            exportMultipleDialogStage.isResizable = false
-////
-////            //            dialogStage.initModality(Modality.WINDOW_MODAL);
-////            //            dialogStage.initOwner(mainLayoutController.);
-////
-////
-////            val scene = Scene(page)
-////            exportMultipleDialogStage.scene = scene
-////
-////            // Отображаем диалоговое окно и ждём, пока пользователь его не закроет
-////            exportMultipleDialogStage.showAndWait()
-////        } catch (e: IOException) {
-////            e.printStackTrace()
-////        }
-////
-//    }
-//
     private fun initFileChooser(dir: String) = FileChooser().apply {
         extensionFilters.add(FileChooser.ExtensionFilter("Data Files", "*.txt", "*.dat"))
         initialDirectory = File(dir)
     }
-
-//    @FXML
-//    internal fun handleHelpInfo(event: ActionEvent) {
-////
-////        try {
-////            val loader = FXMLLoader()
-////            loader.location = MainApp::class.java!!.getResource("view/HelpInfo.fxml")
-////            val page = loader.load<AnchorPane>()
-////
-////            // Создаём диалоговое окно Stage.
-////            val infoStage = Stage()
-////            infoStage.title = "Info"
-////            infoStage.isAlwaysOnTop = true
-////            //            dialogStage.initModality(Modality.WINDOW_MODAL);
-////            //            dialogStage.initOwner(mainLayoutController.);
-////            val scene = Scene(page)
-////            infoStage.scene = scene
-////
-////            // Отображаем диалоговое окно и ждём, пока пользователь его не закроет
-////            infoStage.showAndWait()
-////        } catch (e: IOException) {
-////            e.printStackTrace()
-////        }
-////
-//    }
 }
 
-class ExportMultipleDialogController {
-
-    lateinit var mainController: MainController
+class MultipleExportDialogController {
 
     @FXML private lateinit var polarizationChoiceBox: ChoiceBox<String>
     @FXML private lateinit var anglesLabel: Label
@@ -209,14 +144,23 @@ class ExportMultipleDialogController {
     @FXML private lateinit var directoryButton: Button
     @FXML private lateinit var exportButton: Button
     @FXML private lateinit var statusLabel: Label
-    @FXML private lateinit var curDirLabel: Label
+    @FXML private lateinit var chosenDirectoryLabel: Label
 
-    private var multipleExportDirectory: File? = null
+    var angleFrom: Double = 0.0
+    var angleTo: Double = 0.0
+    var angleStep: Double = 0.0
+    var temperatureFrom: Double = 0.0
+    var temperatureTo: Double = 0.0
+    var temperatureStep: Double = 0.0
+
+    var chosenDirectory: File? = null
+
+    fun anglesSelected(): Boolean = toggleGroup.selectedToggle as? RadioButton === angleRadioButton
 
     @FXML
     fun initialize() {
-        State.mainController.exportMultipleDialogController.mainController = State.mainController
-
+        /* the only way to call another controllers of GUI is using already initialized State.mainController */
+        State.mainController.multipleExportDialogController = this
 
         with(polarizationChoiceBox) {
             /* initial value */
@@ -228,14 +172,11 @@ class ExportMultipleDialogController {
             }
         }
 
-        toggleGroup.selectedToggleProperty().addListener { observable, oldValue, newValue ->
-            if (toggleGroup.selectedToggle != null) {
-                val selectedRadioButton = toggleGroup.selectedToggle as RadioButton
-                if (selectedRadioButton === angleRadioButton) {
-                    enableAngles()
-                } else if (selectedRadioButton === temperatureRadioButton) {
-                    enableTemperatures()
-                }
+        toggleGroup.selectedToggleProperty().addListener { _, _, _ ->
+            if (anglesSelected()) {
+                enableAngles()
+            } else {
+                enableTemperatures()
             }
         }
 
@@ -247,23 +188,57 @@ class ExportMultipleDialogController {
                 Solution: any Node from fxml that has fx:id
                 http://stackoverflow.com/questions/25491732/how-do-i-open-the-javafx-filechooser-from-a-controller-class
                  */
-                multipleExportDirectory = showDialog(directoryButton.scene.window)
-//                if (multipleExportDirectory == null) {
-//                    with(Alert(Alert.AlertType.ERROR)) {
-//                        title = "Error"
-//                        headerText = "Directory error"
-//                        contentText = "Choose a directory"
-//                        showAndWait()
-//                    }
-//                }
+                chosenDirectory = showDialog(directoryButton.scene.window)
             }
+            chosenDirectory?.let { chosenDirectoryLabel.text = it.canonicalPath }
         }
 
         exportButton.setOnMouseClicked {
+            with(MultipleExportDialogParametersValidator) {
+                if (validateRegime() == SUCCESS && validateChosenDirectory() == SUCCESS) {
+                    if (anglesSelected()) {
+                        if (validateAngles() == SUCCESS) {
+                            /*
+                            Computation process runs through the setting fields in GUI (angle, polarization, etc.).
+                            After that the validation takes place parsing these GUI fields and setting actual inner
+                            parameters in program (State.angle, State.polarization, etc.).
+                            To be able to compute and export data at multiple angles,
+                            the corresponding GUI text field is set each time and validated and the computation process is performed.
+                            In the end each field must get its initial value.
+                            */
+                            val initialAngle: String = State.mainController.globalParametersController
+                                    .lightParametersController.angleTextField.text
+                            val initialPolarization = State.mainController.globalParametersController
+                                    .lightParametersController.polarizationChoiceBox.value
 
+                            var currentAngle = angleFrom
+                            while (currentAngle < 90.0 && currentAngle <= angleTo) {
+                                with(State) {
+                                    /* angleTextField.text will be validated before computation */
+                                    mainController.globalParametersController.lightParametersController
+                                            .angleTextField.text = currentAngle.toString()
+                                    set()
+                                    compute()
+                                }
+                                writeTo(File("${chosenDirectory!!.canonicalPath}$separator${buildExportFileName()}.txt"))
+                                currentAngle += angleStep
+                            }
+
+                            with(State.mainController.globalParametersController.lightParametersController) {
+                                angleTextField.text = initialAngle
+                                polarizationChoiceBox.value = initialPolarization
+                            }
+                        }
+                    } else {
+                        if (validateTemperatures() == SUCCESS) {
+                            /* TODO multiple export for temperature range */
+                        }
+                    }
+                    statusLabel.text = "Exported"
+                }
+            }
         }
     }
-
 
     private fun enableAngles() {
         enable(anglesLabel, angleFromLabel, angleToLabel, angleStepLabel)
@@ -277,6 +252,20 @@ class ExportMultipleDialogController {
         enable(temperatureFromTextField, temperatureToTextField, temperatureStepTextField)
         disable(anglesLabel, angleFromLabel, angleToLabel, angleStepLabel)
         disable(angleFromTextField, angleToTextField, angleStepTextField)
+    }
+}
+
+class HelpInfoController {
+
+    @FXML private lateinit var helpTextArea: TextArea
+
+    private val path = Paths.get("./data/inner/structure_description_help.txt")
+
+    @FXML
+    fun initialize() {
+        helpTextArea.text = Files.lines(path).toList()
+                .filter { it.isNotBlank() }
+                .reduce { text, line -> text + "\n" + line }
     }
 }
 

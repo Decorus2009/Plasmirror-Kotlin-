@@ -61,9 +61,9 @@ fun saveCalcResult(file: File?, structureInfo: String?, regime: Regime) {
                     calculatedData = State.absorption
                 }
 
-                for (i in 0..State.wl.size - 1) {
+                for (i in 0..State.wavelength.size - 1) {
                     writer.write(
-                            String.format(Locale.US, "%.8f", State.wl.get(i))
+                            String.format(Locale.US, "%.8f", State.wavelength.get(i))
                                     + "\t"
                                     + String.format(Locale.US, "%.8f", calculatedData!![i])
                                     + "\n"
@@ -78,9 +78,9 @@ fun saveCalcResult(file: File?, structureInfo: String?, regime: Regime) {
                     calculatedData = State.refractiveIndex
                 }
 
-                for (i in 0..State.wl.size - 1) {
+                for (i in 0..State.wavelength.size - 1) {
                     writer.write(
-                            String.format(Locale.US, "%.8f", State.wl[i])
+                            String.format(Locale.US, "%.8f", State.wavelength[i])
                                     + "\t"
                                     + String.format(Locale.US, "%.8f", calculatedData!![i].real)
                                     + "\t"
@@ -105,9 +105,9 @@ fun buildExportFileName(): String {
             .append("calculation_")
             .append(regime)
             .append("_")
-            .append(State.wlStart)
+            .append(State.wavelengthFrom)
             .append("_")
-            .append(State.wlEnd)
+            .append(State.wavelengthTo)
 
     if (regime == R || regime == T || regime == A) {
 
