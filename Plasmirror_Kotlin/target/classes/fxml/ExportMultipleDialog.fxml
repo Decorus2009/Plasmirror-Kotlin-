@@ -3,10 +3,11 @@
 <?import java.lang.String?>
 <?import javafx.collections.FXCollections?>
 <?import javafx.scene.control.Button?>
-<?import javafx.scene.control.CheckBox?>
 <?import javafx.scene.control.ChoiceBox?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.RadioButton?>
 <?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.ToggleGroup?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
@@ -14,7 +15,7 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="150.0" prefWidth="550.0" xmlns="http://javafx.com/javafx/8.0.60" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ui.controllers.ExportMultipleDialogController">
+<AnchorPane prefHeight="150.0" prefWidth="550.0" xmlns="http://javafx.com/javafx/8.0.65" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ui.controllers.ExportMultipleDialogController">
    <children>
       <GridPane alignment="CENTER" prefHeight="120.0" prefWidth="450.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <columnConstraints>
@@ -89,7 +90,7 @@
                      <children>
                         <AnchorPane prefHeight="200.0" prefWidth="200.0">
                            <children>
-                              <Label alignment="CENTER" contentDisplay="CENTER" layoutX="-189.0" layoutY="32.0" prefHeight="56.0" prefWidth="514.0" text="Angles (°)" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+                              <Label fx:id="anglesLabel" alignment="CENTER" contentDisplay="CENTER" layoutX="-189.0" layoutY="32.0" prefHeight="56.0" prefWidth="514.0" text="Angles (°)" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
                            </children>
                         </AnchorPane>
                      </children>
@@ -147,7 +148,10 @@
                         </AnchorPane>
                         <AnchorPane prefHeight="200.0" prefWidth="200.0">
                            <children>
-                              <CheckBox fx:id="angleCheckBox" layoutX="-10.0" layoutY="4.0" mnemonicParsing="false" prefHeight="31.0" prefWidth="50.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+                              <RadioButton fx:id="angleRadioButton" mnemonicParsing="false" prefHeight="27.0" prefWidth="99.0" selected="true" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                 <toggleGroup>
+                                    <ToggleGroup fx:id="toggleGroup" />
+                                 </toggleGroup></RadioButton>
                            </children></AnchorPane>
                      </children>
                   </GridPane>
@@ -165,7 +169,7 @@
                      <children>
                         <AnchorPane prefHeight="200.0" prefWidth="200.0">
                            <children>
-                              <Label alignment="CENTER" contentDisplay="CENTER" layoutX="-189.0" layoutY="32.0" prefHeight="56.0" prefWidth="514.0" text="transmission" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+                              <Label fx:id="temperaturesLabel" alignment="CENTER" contentDisplay="CENTER" disable="true" layoutX="-1.0" prefHeight="56.0" prefWidth="514.0" text="Temperatures" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="-1.0" AnchorPane.rightAnchor="1.0" AnchorPane.topAnchor="0.0" />
                            </children>
                         </AnchorPane>
                      </children>
@@ -189,32 +193,32 @@
                                  <children>
                                     <AnchorPane layoutX="10.0" layoutY="10.0" prefHeight="200.0" prefWidth="90.0">
                                        <children>
-                                          <Label fx:id="TFromLabel" contentDisplay="CENTER" layoutX="-21.0" layoutY="-2.0" prefHeight="31.0" prefWidth="45.0" text="From" textAlignment="CENTER" wrapText="true" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+                                          <Label fx:id="temperatureFromLabel" contentDisplay="CENTER" disable="true" layoutX="-21.0" layoutY="-2.0" prefHeight="31.0" prefWidth="45.0" text="From" textAlignment="CENTER" wrapText="true" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
                                        </children>
                                     </AnchorPane>
                                     <AnchorPane layoutX="210.0" layoutY="10.0" prefHeight="31.0" prefWidth="150.0">
                                        <children>
-                                          <TextField fx:id="TFromTextField" alignment="CENTER" layoutX="-58.0" layoutY="16.0" prefHeight="31.0" prefWidth="74.0" text="1.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+                                          <TextField fx:id="temperatureFromTextField" alignment="CENTER" disable="true" layoutX="-58.0" layoutY="16.0" prefHeight="31.0" prefWidth="74.0" text="1.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
                                        </children>
                                     </AnchorPane>
                                     <AnchorPane layoutX="410.0" layoutY="10.0" prefHeight="200.0" prefWidth="100.0">
                                        <children>
-                                          <Label fx:id="TToLabel" alignment="CENTER" layoutX="-20.0" layoutY="1.0" prefHeight="31.0" prefWidth="49.0" text="To" textAlignment="CENTER" wrapText="true" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+                                          <Label fx:id="temperatureToLabel" alignment="CENTER" disable="true" layoutX="-20.0" layoutY="1.0" prefHeight="31.0" prefWidth="49.0" text="To" textAlignment="CENTER" wrapText="true" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
                                        </children>
                                     </AnchorPane>
                                     <AnchorPane layoutX="610.0" layoutY="10.0" prefHeight="200.0" prefWidth="150.0">
                                        <children>
-                                          <TextField fx:id="TToTextField" alignment="CENTER" layoutX="-79.0" layoutY="18.0" prefHeight="31.0" prefWidth="75.0" text="1.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+                                          <TextField fx:id="temperatureToTextField" alignment="CENTER" disable="true" layoutX="-79.0" layoutY="18.0" prefHeight="31.0" prefWidth="75.0" text="1.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
                                        </children>
                                     </AnchorPane>
                                     <AnchorPane layoutX="395.0" layoutY="10.0" prefHeight="200.0" prefWidth="100.0">
                                        <children>
-                                          <Label fx:id="TStepLabel" alignment="CENTER" layoutX="-20.0" layoutY="1.0" prefHeight="31.0" prefWidth="50.0" text="Step" textAlignment="CENTER" wrapText="true" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+                                          <Label fx:id="temperatureStepLabel" alignment="CENTER" disable="true" layoutX="-20.0" layoutY="1.0" prefHeight="31.0" prefWidth="50.0" text="Step" textAlignment="CENTER" wrapText="true" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
                                        </children>
                                     </AnchorPane>
                                     <AnchorPane layoutX="445.0" layoutY="10.0" prefHeight="200.0" prefWidth="150.0">
                                        <children>
-                                          <TextField fx:id="TStepTextField" alignment="CENTER" layoutX="-79.0" layoutY="18.0" prefHeight="31.0" prefWidth="50.0" text="1.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+                                          <TextField fx:id="temperatureStepTextField" alignment="CENTER" disable="true" layoutX="-79.0" layoutY="18.0" prefHeight="31.0" prefWidth="50.0" text="1.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
                                        </children>
                                     </AnchorPane>
                                  </children>
@@ -223,7 +227,7 @@
                         </AnchorPane>
                         <AnchorPane prefHeight="200.0" prefWidth="200.0">
                            <children>
-                              <CheckBox fx:id="TCheckBox" layoutX="-21.0" layoutY="4.0" mnemonicParsing="false" prefHeight="31.0" prefWidth="50.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+                              <RadioButton fx:id="temperatureRadioButton" mnemonicParsing="false" prefHeight="27.0" prefWidth="50.0" toggleGroup="$toggleGroup" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
                            </children>
                         </AnchorPane>
                      </children>
@@ -261,7 +265,7 @@
                                        <children>
                                           <AnchorPane prefHeight="200.0" prefWidth="200.0">
                                              <children>
-                                                <Button fx:id="dirChooserButton" mnemonicParsing="false" onAction="#dirChooseButtonClicked" prefHeight="31.0" prefWidth="208.0" text="Directory" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+                                                <Button fx:id="directoryButton" mnemonicParsing="false" prefHeight="31.0" prefWidth="208.0" text="Directory" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
                                              </children>
                                           </AnchorPane>
                                        </children>
@@ -280,7 +284,7 @@
                                        <children>
                                           <AnchorPane prefHeight="200.0" prefWidth="200.0">
                                              <children>
-                                                <Button mnemonicParsing="false" onAction="#exportButtonClicked" prefHeight="31.0" prefWidth="207.0" text="Export" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+                                                <Button fx:id="exportButton" mnemonicParsing="false" prefHeight="31.0" prefWidth="207.0" text="Export" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
                                              </children>
                                           </AnchorPane>
                                        </children>

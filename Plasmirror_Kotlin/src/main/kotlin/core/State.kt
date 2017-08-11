@@ -2,7 +2,7 @@ package core
 
 import core.util.*
 import core.util.Regime.*
-import core.util.Validator.validateAndSetStateThrough
+import core.util.Validator.validateAndSetStateUsing
 import ui.controllers.MainController
 import java.io.File
 import java.io.IOException
@@ -48,7 +48,7 @@ object State {
         if (GaAs_n.isEmpty()) {
             readGaAsRefractiveIndex()
         }
-        validateAndSetStateThrough(mainController)
+        validateAndSetStateUsing(mainController)
 
         buildMirror()
     }

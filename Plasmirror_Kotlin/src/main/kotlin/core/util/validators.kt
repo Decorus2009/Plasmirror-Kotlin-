@@ -1,5 +1,6 @@
 package core.util
 
+import core.State
 import core.State.angle
 import core.State.n_left
 import core.State.n_right
@@ -7,93 +8,111 @@ import core.State.structure
 import core.State.wlEnd
 import core.State.wlStart
 import core.State.wlStep
-import core.util.OpticalParametersValidator.validateAndSetOpticalParameters
+import core.util.OpticalParametersValidator.validateAndSetOpticalParametersUsing
 import core.util.StructureValidator.validateAndBuildStructure
 import ui.controllers.*
 
 object Validator {
-
-    fun validateAndSetStateThrough(mainController: MainController) = mainController.run {
-
+    fun validateAndSetStateUsing(mainController: MainController) = mainController.run {
         println("Validating")
-
-        validateAndSetOpticalParameters(globalParametersController)
+        validateAndSetOpticalParametersUsing(globalParametersController)
         validateAndBuildStructure(structureDescriptionController)
+    }
+}
+
+object ExportMultipleDialogParametersValidator {
+
+    fun validateAngles() {
+        try {
+            with(State.mainController.exportMultipleDialogController) {
+                val angleFrom = angleFromTextField.text.toDouble()
+                val angleTo = angleToTextField.text.toDouble()
+                val angleStep = angleStepTextField.text.toDouble()
+
+//                if (angleFrom)
+            }
+
+
+            wlStart = wLStartTextField.text.toDouble()
+            wlEnd = wLEndTextField.text.toDouble()
+            wlStep = wLStepTextField.text.toDouble()
+            if (wlStart < 0.0 || wlEnd <= 0.0 || wlStep <= 0.0 || wlStart > wlEnd) {
+                throw StateException("Wrong calculation range format")
+            }
+
+        } catch (e: NumberFormatException) {
+            throw StateException("Wrong angle value format")
+        }
+
     }
 }
 
 private object OpticalParametersValidator {
 
     @Throws(StateException::class)
-    fun validateAndSetOpticalParameters(globalParametersController: GlobalParametersController) =
-            globalParametersController.run {
-                validateRefractiveIndices(mediumParametersController)
-                validateAngle(lightParametersController)
-                validateCalculationRange(computationRangeController)
-
+    fun validateAndSetOpticalParametersUsing(globalParametersController: GlobalParametersController) =
+            with(globalParametersController) {
+                validateRefractiveIndicesUsing(mediumParametersController)
+                validateAngleUsing(lightParametersController)
+                validateCalculationRangeUsing(computationRangeController)
             }
-}
 
-@Throws(StateException::class)
-private fun validateRefractiveIndices(mediumParametersController: MediumParametersController) {
-
-    mediumParametersController.run {
-        try {
-            leftMediumChoiceBox.run {
-                /* left medium == OTHER */
-                if (value == items[2]) {
-                    n_left = Cmplx(n_leftRealTextField.text.toDouble(),
-                            n_leftImaginaryTextField.text.toDouble())
+    @Throws(StateException::class)
+    private fun validateRefractiveIndicesUsing(mediumParametersController: MediumParametersController) =
+            with(mediumParametersController) {
+                try {
+                    leftMediumChoiceBox.run {
+                        /* left medium == OTHER */
+                        if (value == items[2]) {
+                            n_left = Cmplx(n_leftRealTextField.text.toDouble(),
+                                    n_leftImaginaryTextField.text.toDouble())
+                        }
+                    }
+                    rightMediumChoiceBox.run {
+                        /* right medium == OTHER */
+                        if (value == items[2]) {
+                            n_right = Cmplx(n_rightRealTextField.text.toDouble(),
+                                    n_rightImaginaryTextField.text.toDouble())
+                        }
+                    }
+                } catch (e: NumberFormatException) {
+                    throw StateException("Wrong medium refractive index format")
                 }
             }
-            rightMediumChoiceBox.run {
-                /* right medium == OTHER */
-                if (value == items[2]) {
-                    n_right = Cmplx(n_rightRealTextField.text.toDouble(),
-                            n_rightImaginaryTextField.text.toDouble())
+
+    @Throws(StateException::class)
+    private fun validateAngleUsing(lightParametersController: LightParametersController) {
+        try {
+            angle = lightParametersController.angleTextField.text.toDouble()
+            if (angle < 0.0 || angle >= 90.0) {
+                throw StateException("Wrong angle value")
+            }
+        } catch (e: NumberFormatException) {
+            throw StateException("Wrong angle value format")
+        }
+    }
+
+    @Throws(StateException::class)
+    private fun validateCalculationRangeUsing(computationRangeController: ComputationRangeController) =
+            with(computationRangeController) {
+                try {
+                    wlStart = wLStartTextField.text.toDouble()
+                    wlEnd = wLEndTextField.text.toDouble()
+                    wlStep = wLStepTextField.text.toDouble()
+                    if (wlStart < 0.0 || wlEnd <= 0.0 || wlStep <= 0.0 || wlStart > wlEnd) {
+                        throw StateException("Wrong calculation range format")
+                    }
+                } catch (e: NumberFormatException) {
+                    throw StateException("Wrong calculation range format")
                 }
             }
-        } catch (e: NumberFormatException) {
-            throw StateException("Wrong medium refractive index format")
-        }
-    }
-}
-
-@Throws(StateException::class)
-private fun validateAngle(lightParametersController: LightParametersController) {
-    try {
-        angle = lightParametersController.angleTextField.text.toDouble()
-        if (angle < 0.0 || angle >= 90.0) {
-            throw StateException("Wrong angle value")
-        }
-    } catch (e: NumberFormatException) {
-        throw StateException("Wrong angle value format")
-    }
-}
-
-@Throws(StateException::class)
-private fun validateCalculationRange(computationRangeController: ComputationRangeController) {
-
-    computationRangeController.run {
-        try {
-            wlStart = wLStartTextField.text.toDouble()
-            wlEnd = wLEndTextField.text.toDouble()
-            wlStep = wLStepTextField.text.toDouble()
-
-            if (wlStart < 0.0 || wlEnd <= 0.0 || wlStep <= 0.0 || wlStart > wlEnd) {
-                throw StateException("Wrong calculation range format")
-            }
-        } catch (e: NumberFormatException) {
-            throw StateException("Wrong calculation range format")
-        }
-    }
 }
 
 /**
- * StructureValidator analyzes structure file as a String and builds StructureDescription using LayerDescription and BlockDescription
+ * StructureValidator analyzes structure file as a String
+ * and builds StructureDescription using LayerDescription and BlockDescription
  */
 private object StructureValidator {
-
     private var parameterNumbers = mapOf(
             1 to 2,
             2 to 4,

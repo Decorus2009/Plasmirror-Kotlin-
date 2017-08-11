@@ -1,14 +1,15 @@
 package ui.controllers
 
-//import State.reflection
 import com.sun.javafx.charts.Legend
 import core.State
+import core.State.angle
+import core.State.mainController
+import core.State.polarization
 import core.State.regime
 import core.State.wlEnd
 import core.State.wlStart
 import core.util.Regime.*
-import javafx.collections.ListChangeListener
-import javafx.event.ActionEvent
+import javafx.application.Platform
 import javafx.event.EventHandler
 import javafx.fxml.FXML
 import javafx.geometry.Pos
@@ -18,7 +19,8 @@ import javafx.scene.chart.XYChart
 import javafx.scene.chart.XYChart.Data
 import javafx.scene.chart.XYChart.Series
 import javafx.scene.control.*
-import javafx.scene.input.MouseButton
+import javafx.scene.input.MouseButton.PRIMARY
+import javafx.scene.input.MouseButton.SECONDARY
 import javafx.scene.input.MouseEvent
 import javafx.scene.layout.Region
 import javafx.scene.layout.StackPane
@@ -33,10 +35,12 @@ import ui.controllers.LineChartController.ComputationType.*
 import ui.controllers.LineChartState.ExtendedSeries
 import ui.controllers.LineChartState.SERIES_TYPE.COMPUTED
 import ui.controllers.LineChartState.SERIES_TYPE.IMPORTED
+import ui.controllers.LineChartState.allExtendedSeries
+import ui.controllers.LineChartState.computed
+import ui.controllers.LineChartState.imported
 import java.io.File
 import java.lang.Integer.toHexString
 import java.nio.file.Files.lines
-import java.nio.file.Path
 import java.util.*
 import kotlin.streams.toList
 
@@ -50,13 +54,111 @@ class LineChartController {
     @FXML lateinit var yAxis: NumberAxis
     @FXML private lateinit var XYPositionLabel: Label
 
-    private enum class ComputationType { REAL, COMPLEX, UNKNOWN }
+    private enum class ComputationType { REAL, COMPLEX, NONE }
 
-    private var previousComputationDataType = UNKNOWN
+    private var previousComputationDataType = NONE
 
     @FXML
     fun initialize() {
         println("Line chart controller set")
+        /**
+         * http://stackoverflow.com/questions/16473078/javafx-2-x-translate-mouse-click-coordinate-into-xychart-axis-value
+         */
+        fun setCursorTracing() {
+
+            val chartBackground = lineChart.lookup(".chart-plot-background")
+
+            with(chartBackground) {
+                parent.childrenUnmodifiable
+                        .filter { it !== chartBackground && it !== xAxis && it !== yAxis }
+                        .forEach { it.isMouseTransparent = true }
+
+                setOnMouseEntered { XYPositionLabel.isVisible = true }
+                setOnMouseMoved {
+                    XYPositionLabel.text = String.format(Locale.US, "x = %.2f, y = %.3f",
+                            xAxis.getValueForDisplay(it.x).toDouble(),
+                            yAxis.getValueForDisplay(it.y).toDouble())
+                }
+                setOnMouseExited { XYPositionLabel.isVisible = false }
+            }
+            with(xAxis) {
+                setOnMouseEntered { XYPositionLabel.isVisible = true }
+                setOnMouseMoved { mouseEvent ->
+                    XYPositionLabel.text = String.format(Locale.US, "x = %.2f", getValueForDisplay(mouseEvent.x).toDouble())
+                }
+                setOnMouseExited { XYPositionLabel.isVisible = false }
+            }
+            with(yAxis) {
+                setOnMouseEntered { XYPositionLabel.isVisible = true }
+                setOnMouseMoved { mouseEvent ->
+                    XYPositionLabel.text = String.format(Locale.US, "y = %.3f", getValueForDisplay(mouseEvent.y).toDouble())
+                }
+                setOnMouseExited { XYPositionLabel.isVisible = false }
+            }
+        }
+
+        /**
+         * from gillius zoomable and panning chart sample
+         */
+        fun setPanning() {
+            //Panning works via either secondary (right) mouse or primary with ctrl held down
+            val panner = ChartPanManager(lineChart)
+            panner.setMouseFilter { mouseEvent ->
+                if (mouseEvent.button === SECONDARY || mouseEvent.button === PRIMARY && mouseEvent.isShortcutDown) {
+                    // let it through
+                } else {
+                    mouseEvent.consume()
+                }
+            }
+            panner.start()
+        }
+
+        /**
+         * from gillius zoomable and panning chart sample
+         */
+        fun setZooming() {
+            /**
+             * Redefined method from JFXChartUtil for customization
+             */
+            fun setupZooming(chart: XYChart<*, *>, mouseFilter: EventHandler<in MouseEvent>): Region = StackPane().apply {
+                if (chart.parent != null) {
+                    JFXUtil.replaceComponent(chart, this)
+                }
+
+                val selectRect = Rectangle(0.0, 0.0, 0.0, 0.0)
+                with(selectRect) {
+                    fill = Color.DARKGRAY
+                    isMouseTransparent = true
+                    opacity = 0.15
+                    stroke = Color.rgb(0, 0x29, 0x66)
+                    strokeType = StrokeType.INSIDE
+                    strokeWidth = 1.0
+                }
+                StackPane.setAlignment(selectRect, Pos.TOP_LEFT)
+
+                children.addAll(chart, selectRect)
+
+                with(ChartZoomManager(this@apply, selectRect, chart)) {
+                    this.mouseFilter = mouseFilter
+                    start()
+                }
+            }
+
+            setupZooming(lineChart, EventHandler<MouseEvent> { mouseEvent ->
+                if (mouseEvent.button !== PRIMARY || mouseEvent.isShortcutDown) {
+                    mouseEvent.consume()
+                }
+            })
+        }
+
+        fun setDoubleMouseClickRescale() {
+            val chartBackground = lineChart.lookup(".chart-plot-background")
+            chartBackground.setOnMouseClicked { mouseEvent ->
+                if (mouseEvent.button == PRIMARY && mouseEvent.clickCount == 2) {
+                    rescale()
+                }
+            }
+        }
 
         /* set number formatters for axises' values */
         xAxis.tickLabelFormatter = object : StringConverter<Number>() {
@@ -77,7 +179,6 @@ class LineChartController {
                 return 0
             }
         }
-        //                it.text = String.format(Locale.ROOT, "%.5f", upperBound)
 
         lineChart.let {
             it.createSymbols = false
@@ -88,49 +189,18 @@ class LineChartController {
         }
         xAxis.label = "Wavelength, nm"
 
-//        updateAxisesNames()
-//        setLegendListener()
-
-
         setCursorTracing()
         setPanning()
         setZooming()
         setDoubleMouseClickRescale()
-
-        setupLegendListener()
-
-//        yAxis.tickLabelFormatter.fromString()
+        updateLegendListener()
     }
-
-    private fun setupLegendListener() {
-
-        lineChart.legend().childrenUnmodifiable.addListener(ListChangeListener<Any> {
-            println(it)
-
-            lineChart.labels().forEach { label ->
-                label.setOnMouseClicked {
-                    val selected = LineChartState.allExtendedSeries().find { it.selected }
-                    if (selected == null) {
-                        selectBy(label)
-                    } else {
-                        deselect()
-                        if (selected.series.name != label.text) {
-                            selectBy(label)
-                        }
-                    }
-                }
-            }
-        })
-    }
-
 
     fun updateLineChart() {
         fun updateComputedSeries() {
-
             LineChartState.updateComputed()
-
             lineChart.run {
-                if (previousComputationDataType != UNKNOWN) {
+                if (previousComputationDataType != NONE) {
                     /* remove real series */
                     data.removeAt(0)
                     if (previousComputationDataType == COMPLEX) {
@@ -138,23 +208,15 @@ class LineChartController {
                         data.removeAt(0)
                     }
                 }
-
-                with(LineChartState.computed) {
+                with(computed) {
                     data.add(0, extendedSeriesReal.series)
-                    lookupAll(".series" + 0)
-                            .forEach { it.style = "-fx-stroke: ${extendedSeriesReal.color}; -fx-stroke-width: 2px;" }
                     previousComputationDataType = REAL
-
                     if (extendedSeriesImaginary.series.data.isNotEmpty()) {
                         data.add(1, extendedSeriesImaginary.series)
-                        lookupAll(".series" + 1)
-                                .forEach { it.style = "-fx-stroke: ${extendedSeriesImaginary.color}; -fx-stroke-width: 2px;" }
                         previousComputationDataType = COMPLEX
                     }
                 }
             }
-
-//            setLegendListener()
         }
 
         fun updateYAxisLabel() {
@@ -167,45 +229,102 @@ class LineChartController {
             }
         }
 
-        updateComputedSeries()
-        updateYAxisLabel()
         /* regime == null is used during the first automatic call of rescale() method after initialization */
-        with(mainController.globalParametersController.regimeController) {
+        fun updateRegimeAndRescale() = with(mainController.globalParametersController.regimeController) {
+            /* if another regime */
             if (regimeBefore == null || regimeBefore != regime) {
                 regimeBefore = regime
+                /* deselect all series, labels and disable activated series manager */
+                allExtendedSeries().forEach { deselect() }
                 rescale()
             }
         }
+
+        updateComputedSeries()
+        updateYAxisLabel()
+        updateRegimeAndRescale()
+        updateLegendListener()
+        updateStyleOfAll()
     }
 
+    fun updateStyleOf(extendedSeries: ExtendedSeries) = with(extendedSeries) {
+        /* if series.data.isEmpty(), series.node == null. No need to set styles (NPE) */
+        if (series.data.isEmpty()) {
+            return@with
+        }
+        series.node.style = """
+            -fx-stroke: $color;
+            -fx-stroke-width: $width;
+        """
+        lineChart.labels().find { it.text == series.name }!!.style =
+                if (selected) {
+                    """
+                    -fx-stroke: $color;
+                    -fx-background-insets: 0 0 -1 0, 0, 1, 2;
+                    -fx-padding: 7px;
+                    -fx-background-radius: 1px, 0px, 0px, 0px;
+                    -fx-background-color: #cccccc;
+                """
+                } else {
+                    ""
+                }
+        /**
+         * http://news.kynosarges.org/2017/05/14/javafx-chart-coloring/
+         *
+         * sometimes when pressing compute button a few times in sequence, 'chart-legend-item-symbol' color is set to default.
+         * a bug?
+         */
+        Platform.runLater({
+            lineChart.lookupAll(".chart-legend-item-symbol").forEach { node ->
+                node.styleClass.filter { it.startsWith("series") }.forEach {
+                    val i = it.substring("series".length).toInt()
+                    val color = allExtendedSeries().find { it.series.name == lineChart.data[i].name }!!.color
+                    node.style = "-fx-background-color: $color;"
+                }
+            }
+        })
+    }
+
+    fun updateStyleOfAll() = allExtendedSeries().forEach { updateStyleOf(it) }
+
+
     /* TODO vertical scaling works separately for re_y and im_y of the imported complex data */
-    fun importFrom(path: Path) {
-
-        LineChartState.importFrom(path)
-
+    fun importFrom(file: File) {
+        LineChartState.importFrom(file)
         lineChart.run {
-            with(LineChartState.imported[LineChartState.imported.lastIndex]) {
+            with(imported[imported.lastIndex]) {
                 data.add(extendedSeriesReal.series)
-                lookupAll(".series" + data.lastIndex)
-                        .forEach { it.style = "-fx-stroke: ${extendedSeriesReal.color}; -fx-stroke-width: 2px;" }
-
                 /* if imported file contained 3 columns */
                 if (extendedSeriesImaginary.series.data.isNotEmpty()) {
                     data.add(extendedSeriesImaginary.series)
-                    lookupAll(".series" + data.lastIndex)
-                            .forEach { it.style = "-fx-stroke: ${extendedSeriesImaginary.color}; -fx-stroke-width: 2px;" }
                 }
             }
         }
+        updateLegendListener()
+        updateStyleOfAll()
     }
 
-    fun importMultiple(files: List<File>) = files.forEach { importFrom(it.toPath()) }
+    fun importMultiple(files: List<File>) = files.forEach { importFrom(it) }
 
+    fun removeByName(name: String) = with(lineChart) { data.remove(data.find { it.name == name }) }
 
-    private fun setLegendListener() {
+    /**
+     * Sets the visibility for the line chart series corresponding to the extendedSeries
+     */
+    fun setVisibilityBy(extendedSeries: ExtendedSeries) {
+        lineChart.data.find { it.name == extendedSeries.series.name }!!.node.visibleProperty().value = extendedSeries.visible
+    }
+
+    /**
+     * Legend is initialized after the line chart is added to the scene, so 'Platform.runLater'
+     * Legend items are dynamically changed (added and removed when changing regimes),
+     * so this method is called at each 'updateLineChart' call to handle new legend items.
+     * Otherwise mouse clicks after updates don't work.
+     */
+    fun updateLegendListener() = Platform.runLater {
         lineChart.labels().forEach { label ->
             label.setOnMouseClicked {
-                val selected = LineChartState.allExtendedSeries().find { it.selected }
+                val selected = allExtendedSeries().find { it.selected }
                 if (selected == null) {
                     selectBy(label)
                 } else {
@@ -219,239 +338,53 @@ class LineChartController {
     }
 
     private fun selectBy(label: Label) =
-            LineChartState.allExtendedSeries().find { it.series.name == label.text }?.let { extendedSeries ->
-                extendedSeries.select()
-                updateStyleOf(extendedSeries)
-/*
-                extendedSeries.series.node.style = """
-                    -fx-stroke: ${extendedSeries.color};
-                    -fx-stroke-width: ${extendedSeries.width};
-                """
-                label.style = """
-                    -fx-stroke: ${extendedSeries.color};
-                    -fx-background-insets: 0 0 -1 0, 0, 1, 2;
-                    -fx-padding: 7px;
-                    -fx-background-radius: 1px, 0px, 0px, 0px;
-                    -fx-background-color: #cccccc;
-                """
-*/
-
-                /* enable series manager */
-                mainController.seriesManagerController.enableUsing(extendedSeries)
+            allExtendedSeries().find { it.series.name == label.text }?.let {
+                it.select()
+                updateStyleOf(it)
+                mainController.seriesManagerController.enableUsing(it)
             }
 
     private fun deselect() =
-            LineChartState.allExtendedSeries().find { it.selected }?.let { extendedSeries ->
-                extendedSeries.deselect()
-                updateStyleOf(extendedSeries)
-/*
-                extendedSeries.series.node.style = """
-                    -fx-stroke: ${extendedSeries.color};
-                    -fx-stroke-width: ${extendedSeries.width};
-                """
-                label.style = """
-                    -fx-stroke: ${extendedSeries.color};
-                    -fx-background-insets: 0 0 -1 0, 0, 1, 2;
-                    -fx-padding: 7px;
-                    -fx-background-radius: 1px, 0px, 0px, 0px;
-                    -fx-background-color: #cccccc;
-                """
-*/
+            allExtendedSeries().find { it.selected }?.let {
+                it.deselect()
+                updateStyleOf(it)
+                mainController.seriesManagerController.disable()
             }
 
-    fun updateStyleOf(extendedSeries: ExtendedSeries) {
-        extendedSeries.series.node.style = """
-            -fx-stroke: ${extendedSeries.color};
-            -fx-stroke-width: ${extendedSeries.width};
-        """
-        lineChart.labels().find { it.text == extendedSeries.series.name }!!.style = """
-            -fx-stroke: ${extendedSeries.color};
-            -fx-background-insets: 0 0 -1 0, 0, 1, 2;
-            -fx-padding: 7px;
-            -fx-background-radius: 1px, 0px, 0px, 0px;
-            -fx-background-color: #cccccc;
-        """
-    }
-
-    // OLD
-//    private fun deselect() =
-//            LineChartState.allExtendedSeries().find { it.selected }?.let { extendedSeries ->
-//                extendedSeries.deselect()
-//                with(lineChart) {
-//                    /* deselect all (due to the lookupAll() call) line chart series */
-//                    lookupAll(".chart-legend-item").forEach {
-//                        //                        println("label $it")
-//                    }
-//                    for (i in 0 until data.size) {
-//                        lookupAll(".series" + i).forEach {
-//                            /*
-//                            Set the correct color for the series:
-//                            lookupAll call finds i'th series as Node (name is unknown here).
-//                            Using the outer 'for' loop through the line chart data,
-//                            I can have the name of the corresponding series and find the correct reference in LineChartState.
-//                            Hence, I have a color of i'th series to use it in css styling.
-//                             */
-//                            val correspondingExtendedSeries = LineChartState.allExtendedSeries().find { it.series.name == data[i].name }
-//                            it.style = """
-//                                -fx-stroke-width: ${extendedSeries.width};
-//                                -fx-stroke: ${correspondingExtendedSeries!!.color};
-//                            """
-//                        }
-//                    }
-//                    /* deselect label with corresponding name */
-//                    labels().find { it.text == extendedSeries.series.name }?.let {
-//                        println(it.text)
-//                        it.style = "-fx-stroke: ${extendedSeries.color};"
-//                    }
-//                }
-//                /* disable series manager */
-//                mainController.seriesManagerController.disable()
-//            }
-
-
-    /**
-     * http://stackoverflow.com/questions/16473078/javafx-2-x-translate-mouse-click-coordinate-into-xychart-axis-value
-     */
-    private fun setCursorTracing() {
-
-        val chartBackground = lineChart.lookup(".chart-plot-background")
-
-        with(chartBackground) {
-            parent.childrenUnmodifiable.stream()
-                    .filter { it !== chartBackground && it !== xAxis && it !== yAxis }
-                    .forEach { it.isMouseTransparent = true }
-
-            setOnMouseEntered { XYPositionLabel.isVisible = true }
-            setOnMouseMoved {
-                XYPositionLabel.text = String.format(Locale.US, "x = %.2f, y = %.3f",
-                        xAxis.getValueForDisplay(it.x).toDouble(),
-                        yAxis.getValueForDisplay(it.y).toDouble())
-            }
-            setOnMouseExited { XYPositionLabel.isVisible = false }
+    /* TODO fix this */
+    private fun rescale() = with(mainController.globalParametersController.regimeController) {
+        xAxis.let {
+            it.lowerBound = wlStart
+            it.upperBound = wlEnd
+            it.tickUnit = 50.0
         }
-
-        with(xAxis) {
-            setOnMouseEntered { XYPositionLabel.isVisible = true }
-            setOnMouseMoved { mouseEvent ->
-                XYPositionLabel.text = String.format(Locale.US, "x = %.2f", getValueForDisplay(mouseEvent.x).toDouble())
-            }
-            setOnMouseExited { XYPositionLabel.isVisible = false }
-        }
-
-        with(yAxis) {
-            setOnMouseEntered { XYPositionLabel.isVisible = true }
-            setOnMouseMoved { mouseEvent ->
-                XYPositionLabel.text = String.format(Locale.US, "y = %.3f", getValueForDisplay(mouseEvent.y).toDouble())
-            }
-            setOnMouseExited { XYPositionLabel.isVisible = false }
-        }
-    }
-
-    /**
-     * from gillius zoomable and panning chart sample
-     */
-    private fun setPanning() {
-        //Panning works via either secondary (right) mouse or primary with ctrl held down
-        val panner = ChartPanManager(lineChart)
-        panner.setMouseFilter { mouseEvent ->
-            if (mouseEvent.button === MouseButton.SECONDARY || mouseEvent.button === MouseButton.PRIMARY && mouseEvent.isShortcutDown) {
-                //let it through
-            } else {
-                mouseEvent.consume()
-            }
-        }
-        panner.start()
-    }
-
-    /**
-     * from gillius zoomable and panning chart sample
-     */
-    private fun setZooming() {
-        /**
-         * Redefined method from JFXChartUtil for customization
-         */
-        fun setupZooming(chart: XYChart<*, *>, mouseFilter: EventHandler<in MouseEvent>): Region = StackPane().apply {
-            if (chart.parent != null) {
-                JFXUtil.replaceComponent(chart, this)
-            }
-
-            val selectRect = Rectangle(0.0, 0.0, 0.0, 0.0)
-            with(selectRect) {
-                fill = Color.DARKGRAY
-                isMouseTransparent = true
-                opacity = 0.15
-                stroke = Color.rgb(0, 0x29, 0x66)
-                strokeType = StrokeType.INSIDE
-                strokeWidth = 1.0
-            }
-            StackPane.setAlignment(selectRect, Pos.TOP_LEFT)
-
-            children.addAll(chart, selectRect)
-
-            with(ChartZoomManager(this@apply, selectRect, chart)) {
-                this.mouseFilter = mouseFilter
-                start()
-            }
-        }
-
-        setupZooming(lineChart, EventHandler<MouseEvent> { mouseEvent ->
-            if (mouseEvent.button !== MouseButton.PRIMARY || mouseEvent.isShortcutDown) {
-                mouseEvent.consume()
-            }
-        })
-    }
-
-    private fun setDoubleMouseClickRescale() {
-        val chartBackground = lineChart.lookup(".chart-plot-background")
-        chartBackground.setOnMouseClicked { mouseEvent ->
-            if (mouseEvent.button == MouseButton.PRIMARY && mouseEvent.clickCount == 2) {
-                rescale()
-            }
-        }
-    }
-
-    // TODO fix this
-    fun rescale() = with(mainController.globalParametersController.regimeController) {
-        xAxis.run {
-            lowerBound = wlStart
-            upperBound = wlEnd
-            tickUnit = 50.0
-        }
-        yAxis.run {
+        yAxis.let {
             if (regime == R || regime == A || regime == T) {
-                lowerBound = 0.0
-                upperBound = 1.0
-                tickUnit = 0.1
+                it.lowerBound = 0.0
+                it.upperBound = 1.0
+                it.tickUnit = 0.1
             } else if (regime == EPS) {
-                lowerBound = -5.0
-                upperBound = 20.0
-                tickUnit = 1.0
-                isAutoRanging = false
+                it.lowerBound = -5.0
+                it.upperBound = 20.0
+                it.tickUnit = 1.0
+                it.isAutoRanging = false
             } else if (regime == N) {
-                lowerBound = -3.0
-                upperBound = 5.0
-                tickUnit = 0.5
-                isAutoRanging = false
+                it.lowerBound = -3.0
+                it.upperBound = 5.0
+                it.tickUnit = 0.5
+                it.isAutoRanging = false
             }
         }
     }
 
-//    private fun LineChart<Number, Number>.labels() = childrenUnmodifiable
-//            .filter { it is Legend }.map { it as Legend }.flatMap { it.childrenUnmodifiable }
-//            .filter { it is Label }.map { it as Label }
-
-    private fun LineChart<Number, Number>.labels() = legend().childrenUnmodifiable
+    private fun LineChart<Number, Number>.labels() = childrenUnmodifiable
+            .filter { it is Legend }.map { it as Legend }.flatMap { it.childrenUnmodifiable }
             .filter { it is Label }.map { it as Label }
-
-    /* line chart contains a single legend object */
-    private fun LineChart<Number, Number>.legend() = childrenUnmodifiable
-            .filter { it is Legend }.map { it as Legend }.single()
 }
-
 
 object LineChartState {
 
-    val colors = mapOf(
+    private val colors = mapOf(
             /* main */
             0 to "#F3622D", 1 to "#FBA71B", 2 to "#57B757", 3 to "#41A9C9", 4 to "#4258C9",
             5 to "#9A42C8", 6 to "#C84164", 7 to "#888888", 8 to "#000000", 9 to "#FFFFFF",
@@ -476,7 +409,6 @@ object LineChartState {
             95 to "#800000", 96 to "#66CDAA", 97 to "#0000CD", 98 to "#BA55D3", 99 to "#9370DB"
     )
     private var currentColorIndex = 2
-
     private fun nextColor(offset: Int = 0): String {
         if (currentColorIndex + offset > colors.size) {
             currentColorIndex = offset + 2
@@ -514,19 +446,64 @@ object LineChartState {
                 }
             }
         }
-        /* set names */
+
+        /* set default names */
         extendedSeriesReal.series.name = "Computed Real"
         extendedSeriesImaginary.series.name = "Computed Imaginary"
+
+        /* if another regime */
+        with(mainController.globalParametersController.regimeController) {
+            if (regimeBefore == null || regime != regimeBefore) {
+                /* set default colors */
+                extendedSeriesReal.color = colors[0]!!
+                extendedSeriesImaginary.color = colors[1]!!
+                /* set default widths */
+                extendedSeriesReal.width = "2px"
+                extendedSeriesImaginary.width = "2px"
+            }
+        }
     }
 
-    fun importFrom(path: Path) {
+    fun removeByName(name: String) {
+        with(imported) {
+            remove(find { it.extendedSeriesReal.series.name == name || it.extendedSeriesImaginary.series.name == name })
+        }
+        /* -=2 due to the 2 removed extended series (real and imaginary) in LineChartSeries */
+        currentColorIndex -= 2
+    }
 
+    class LineChartSeries(val extendedSeriesReal: ExtendedSeries = ExtendedSeries(),
+                          val extendedSeriesImaginary: ExtendedSeries = ExtendedSeries(color = nextColor(offset = 50)))
+
+    data class ExtendedSeries(val series: Series<Number, Number> = Series<Number, Number>(),
+                              var visible: Boolean = true,
+                              var selected: Boolean = false,
+                              var color: String = nextColor(),
+                              var width: String = "2px",
+                              var type: SERIES_TYPE = COMPUTED,
+                              var previousXAxisFactor: Double = 1.0, var previousYAxisFactor: Double = 1.0) {
+
+        fun select() {
+            selected = true
+            width = "3px"
+        }
+
+        fun deselect() {
+            selected = false
+            width = "2px"
+        }
+    }
+
+    enum class SERIES_TYPE { COMPUTED, IMPORTED }
+
+
+    fun importFrom(file: File) {
         val x = mutableListOf<Double>()
         val re_y = mutableListOf<Double>()
         val im_y = mutableListOf<Double>()
 
-        lines(path).toList().filter { it[0].isDigit() }.map { it.replace(Regex(","), ".") }.forEach {
-            with(Scanner(it)) {
+        lines(file.toPath()).toList().filter { it[0].isDigit() }.map { it.replace(Regex(","), ".") }.forEach {
+            with(Scanner(it).useLocale(Locale.US)) {
                 if (hasNextDouble()) {
                     x += nextDouble()
                 } else {
@@ -551,39 +528,41 @@ object LineChartState {
         if (im_y.isNotEmpty()) {
             seriesImaginary.data.addAll(x.indices.map { Data<Number, Number>(x[it], im_y[it]) })
         }
-
         /* set names */
-        with(path.fileName.toString()) {
+        with(file.name) {
             seriesReal.name = this + " Real"
             seriesImaginary.name = this + " Imaginary"
         }
         imported += LineChartSeries(ExtendedSeries(seriesReal, type = IMPORTED), ExtendedSeries(seriesImaginary, type = IMPORTED))
     }
 
-    class LineChartSeries(val extendedSeriesReal: ExtendedSeries = ExtendedSeries(),
-                          val extendedSeriesImaginary: ExtendedSeries = ExtendedSeries(color = nextColor(offset = 50)))
-
-    class ExtendedSeries(val series: Series<Number, Number> = Series<Number, Number>(),
-                         var visible: Boolean = true,
-                         var selected: Boolean = false,
-                         var color: String = nextColor(),
-                         var width: String = "2px",
-                         var type: SERIES_TYPE = COMPUTED,
-                         var xAxisFactor: Double = 1.0, var yAxisFactor: Double = 1.0) {
-
-        fun select() {
-            selected = true
-            width = "3px"
+    fun buildExportFileName() = StringBuilder().apply {
+        append("calculation_${regime}_${wlStart}_$wlEnd")
+        if (regime == R || regime == T || regime == A) {
+            append("_$polarization-POL_^${String.format("%04.1f", angle)}_deg")
         }
+    }.toString()
 
-        fun deselect() {
-            selected = false
-            width = "2px"
+    fun writeTo(file: File) = file.writeText(StringBuilder().apply {
+        val columnSeparator = "    "
+        with(computed.extendedSeriesReal.series.data) {
+            indices.forEach { i ->
+                append(String.format(Locale.US, "%.8f", this[i].xValue.toDouble()))
+                append(columnSeparator)
+                append(String.format(Locale.US, "%.8f", this[i].yValue.toDouble()))
+
+                with(computed.extendedSeriesImaginary.series.data) {
+                    if (isNotEmpty()) {
+                        append(columnSeparator)
+                        append(String.format(Locale.US, "%.8f", this[i].yValue.toDouble()))
+                    }
+                }
+                append(System.lineSeparator())
+            }
         }
-    }
-
-    enum class SERIES_TYPE { COMPUTED, IMPORTED }
+    }.toString())
 }
+
 
 
 class SeriesManagerController {
@@ -603,99 +582,64 @@ class SeriesManagerController {
 
     @FXML
     fun initialize() {
-
-        /*
-          Цвет при colorPicker.getValue() выдается не в HTML формате, который нужен для css
-          Конвертацию см. по ссылке http://stackoverflow.com/a/17925600
-         */
+        /* http://stackoverflow.com/a/17925600 */
         colorPicker.setOnAction {
             val hexColor = with(colorPicker.value) {
                 "#" + toHexString((red * 255).toInt()) + toHexString((green * 255).toInt()) + toHexString((blue * 255).toInt())
             }
-
             selectedSeries.color = hexColor
             mainController.lineChartController.updateStyleOf(selectedSeries)
-
-//            mainController.lineChartController.lineChart.lookupAll(".series" + 0)
-//                    .forEach { it.style = "-fx-stroke: ${selectedSeries.color};" }
-
-
-//            mainController.lineChartController.updateColorsAndWidths()
         }
 
+        xAxisFactorTextField.textProperty().addListener { _, _, newValue ->
+            try {
+                val newFactor = newValue.toDouble()
+                /* 0.0 as the value of the previous newFactor will be remembered an will break the scaling */
+                if (newFactor != 0.0) {
+                    with(selectedSeries) {
+                        series.data.forEach { it.xValue = it.xValue.toDouble() / previousXAxisFactor * newFactor }
+                        previousXAxisFactor = newFactor
+                    }
+                }
+            } catch (ignored: NumberFormatException) {
+            }
+        }
 
-        xAxisFactorTextField
-                .textProperty()
-                .addListener { observable, oldValue, newValue -> tryScaleData(newValue, false) }
+        yAxisFactorTextField.textProperty().addListener { _, _, newValue ->
+            try {
+                val newFactor = newValue.toDouble()
+                /* 0.0 as the value of the previous newFactor will be remembered an will break the scaling */
+                if (newFactor != 0.0) {
+                    with(selectedSeries) {
+                        series.data.forEach { it.yValue = it.yValue.toDouble() / previousYAxisFactor * newFactor }
+                        previousYAxisFactor = newFactor
+                    }
+                }
+            } catch (ignored: NumberFormatException) {
+            }
+        }
 
-        yAxisFactorTextField
-                .textProperty()
-                .addListener { observable, oldValue, newValue -> tryScaleData(newValue, true) }
+        visibleCheckBox.let {
+            it.isSelected = true
+            it.setOnAction {
+                selectedSeries.visible = selectedSeries.visible.not()
+                mainController.lineChartController.setVisibilityBy(selectedSeries)
+            }
+        }
 
-        visibleCheckBox.isSelected = true
-
-        visibleCheckBox.setOnAction { event ->
-
-            //            if (visibleCheckBox.isSelected) {
-//
-//                selectedSeries!!.setVisible(true)
-//                selectedSeries!!.getSeries().getNode().visibleProperty().setValue(true)
-//            } else {
-//
-//                selectedSeries!!.setVisible(false)
-//                selectedSeries!!.getSeries().getNode().visibleProperty().setValue(false)
-//            }
+        removeButton.setOnMouseClicked {
+            LineChartState.removeByName(selectedSeries.series.name)
+            with(mainController) {
+                with(lineChartController) {
+                    removeByName(selectedSeries.series.name)
+                    updateStyleOfAll()
+                    updateLegendListener()
+                }
+                seriesManagerController.disable()
+            }
         }
 
         disable()
-    }
-
-
-    @FXML
-    internal fun removeButtonClicked(event: ActionEvent) {
-
-//        mainController!!
-//                .getChartController()
-//                .getLineChart().getData().remove(selectedSeries!!.getSeries())
-//
-//        if (ChartData.imported.contains(selectedSeries)) {
-//            ChartData.imported.remove(selectedSeries)
-//
-//        } else if (ChartData.calculated.contains(selectedSeries)) {
-//            ChartData.calculated.remove(selectedSeries)
-//        }
-//
-//        mainController!!.getChartController().updateColorsAndWidths()
-//        disable()
-    }
-
-    private fun tryScaleData(newValue: String, yAxis: Boolean) {
-
-//        try {
-//            val factor = java.lang.Double.parseDouble(newValue)
-//
-//            val selected = selectedSeries!!.getSeries()
-//            val backup = ChartData.importedBackup.get(selected)
-//
-//            if (yAxis) {
-//
-//                for (i in 0..selected.getData().size - 1) {
-//                    selected.getData().get(i).setYValue(backup.getData().get(i).getYValue().toDouble() * factor)
-//                }
-//                selectedSeries!!.setyAxisFactor(factor)
-//            } else {
-//
-//                for (i in 0..selected.getData().size - 1) {
-//                    selected.getData().get(i).setXValue(backup.getData().get(i).getXValue().toDouble() * factor)
-//                }
-//                selectedSeries!!.setxAxisFactor(factor)
-//            }
-//
-//        } catch (ignored: RuntimeException) {
-//            // нет смысла тут что-то делать, в процессе ввода могут получаться значения, которые не парсятся.
-//            // Главное, чтобы конечное число было корректным
-//        }
-
     }
 
     fun enableUsing(selectedSeries: ExtendedSeries) {
@@ -713,8 +657,8 @@ class SeriesManagerController {
                 disable(xAxisFactorTextField, yAxisFactorTextField)
                 disable(removeButton)
             }
-            xAxisFactorTextField.text = xAxisFactor.toString()
-            yAxisFactorTextField.text = yAxisFactor.toString()
+            xAxisFactorTextField.text = previousXAxisFactor.toString()
+            yAxisFactorTextField.text = previousYAxisFactor.toString()
             colorPicker.value = Color.valueOf(color)
             visibleCheckBox.isSelected = visible
         }
@@ -728,7 +672,3 @@ class SeriesManagerController {
         disable(removeButton)
     }
 }
-
-
-
-

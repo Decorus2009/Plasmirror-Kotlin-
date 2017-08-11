@@ -233,7 +233,7 @@ class LightParametersController {
 
     @FXML private lateinit var angleLabel: Label
     @FXML private lateinit var polarizationLabel: Label
-    @FXML private lateinit var polarizationChoiceBox: ChoiceBox<String>
+    @FXML lateinit var polarizationChoiceBox: ChoiceBox<String>
     @FXML lateinit var angleTextField: TextField
 
     private val path = Paths.get(".${File.separator}data${File.separator}inner${File.separator}state_parameters${File.separator}light_parameters.txt")
@@ -313,19 +313,3 @@ class StructureDescriptionController {
 
     fun writeStructureDescription() = writeToFile(path, text = structureDescriptionTextArea.text)
 }
-
-
-fun disable(vararg labels: Label) = labels.forEach { it.isDisable = true }
-fun <T> disable(vararg choiceBoxes: ChoiceBox<T>) = choiceBoxes.forEach { it.isDisable = true }
-fun disable(vararg textFields: TextField) = textFields.forEach { it.isDisable = true }
-fun disable(vararg checkBoxes: CheckBox) = checkBoxes.forEach { it.isDisable = true }
-fun disable(vararg buttons: Button) = buttons.forEach { it.isDisable = true }
-fun disable(vararg colorPickers: ColorPicker) = colorPickers.forEach { it.isDisable = true }
-
-fun enable(vararg labels: Label) = labels.forEach { it.isDisable = false }
-fun <T> enable(vararg choiceBoxes: ChoiceBox<T>) = choiceBoxes.forEach { it.isDisable = false }
-fun enable(vararg textFields: TextField) = textFields.forEach { it.isDisable = false }
-fun enable(vararg checkBoxes: CheckBox) = checkBoxes.forEach { it.isDisable = false }
-fun enable(vararg buttons: Button) = buttons.forEach { it.isDisable = false }
-fun enable(vararg colorPickers: ColorPicker) = colorPickers.forEach { it.isDisable = false }
-

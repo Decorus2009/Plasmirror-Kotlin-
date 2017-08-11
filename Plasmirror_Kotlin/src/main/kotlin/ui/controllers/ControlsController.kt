@@ -31,9 +31,10 @@ class ControlsController {
                     val startTime = nanoTime()
                     compute()
                     val stopTime = nanoTime()
-                    computationTimeLabel.text = "Computation time: ${String.format(Locale.US, "%.2f", (stopTime - startTime).toDouble() / 1E6)}, ms"
+                    computationTimeLabel.text = "Computation time: ${String.format(Locale.US, "%.2f", (stopTime - startTime).toDouble() / 1E6)} ms"
                 }
                 mainController.lineChartController.updateLineChart()
+//                mainController.lineChartController.deselectAll()
             }
         }
     }

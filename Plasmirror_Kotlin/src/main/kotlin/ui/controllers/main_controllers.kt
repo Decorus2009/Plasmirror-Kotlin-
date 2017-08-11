@@ -2,11 +2,12 @@ package ui.controllers
 
 import MainApp
 import core.State
+import javafx.application.Platform
 import javafx.fxml.FXML
 
 class RootController {
 
-    //    @FXML lateinit var menuController: MenuController
+    @FXML lateinit var menuController: MenuController
     @FXML lateinit var mainController: MainController
 
     lateinit var mainApp: MainApp
@@ -21,6 +22,7 @@ class RootController {
         mainController is "lateinit" due to it's initialized through the reflection (@FXML)
         BEFORE the root controller initialization.
          */
+        menuController.rootController = this
         mainController.rootController = this
     }
 }
@@ -37,6 +39,10 @@ class MainController {
     @FXML private lateinit var xAxisRangeController: XAxisRangeController
     @FXML private lateinit var yAxisRangeController: YAxisRangeController
     @FXML lateinit var seriesManagerController: SeriesManagerController
+
+    lateinit var exportMultipleDialogController: ExportMultipleDialogController
+
+//    @FXML lateinit var menuController: MenuController
 
 //    @FXML private val computationTimeLabel: Label
 
@@ -57,8 +63,9 @@ class MainController {
         xAxisRangeController.mainController = this
         yAxisRangeController.mainController = this
         seriesManagerController.mainController = this
-
+//        menuController.mainController = this
         State.mainController = this
+
         State.run {
             set()
             compute()
@@ -70,6 +77,7 @@ class MainController {
 //        yAxisRangeController.setMainController(this)
 //        globalParametersController.setMainController(this)
     }
+
 
 //    fun writeChangingsToFiles() {
 //

@@ -26,20 +26,21 @@ import ui.controllers.RootController
 
 class MainApp : Application() {
 
-    //    private lateinit var primaryStage: Stage
+    lateinit var primaryStage: Stage
 //    private lateinit var rootLayout: AnchorPane
-    @FXML private lateinit var rootLayoutController: RootController
+    @FXML private lateinit var rootController: RootController
     private lateinit var rootLayout: AnchorPane
 
     companion object {
         @JvmStatic fun main(args: Array<String>) {
-
             launch(MainApp::class.java)
         }
     }
 
     @Throws(Exception::class)
     override fun start(primaryStage: Stage) {
+        this.primaryStage = primaryStage
+
 //        val rootLayout = FXMLLoader.load<Parent>(MainApp.javaClass.getResource("fxml/rootLayout.fxml"))
 //        primaryStage.title = "Plasmirror v1.0"
 //        primaryStage.scene = Scene(rootLayout)
@@ -48,7 +49,8 @@ class MainApp : Application() {
         val loader = FXMLLoader()
         loader.location = MainApp::class.java.getResource("fxml/Root.fxml")
         rootLayout = loader.load<AnchorPane>()
-        rootLayoutController = loader.getController()
+        rootController = loader.getController()
+        rootController.mainApp = this
 
 
         /*

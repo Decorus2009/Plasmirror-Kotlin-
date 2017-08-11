@@ -76,8 +76,6 @@ class YAxisRangeController {
         with(mainController.lineChartController.yAxis) {
             val converter = NumberStringConverter(Locale.ROOT)
             fromTextField.let {
-
-
                 it.text = lowerBound.toString()
                 it.textProperty().bindBidirectional(lowerBoundProperty(), converter)
                 it.textProperty().addListener { _, _, newValue ->
