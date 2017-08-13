@@ -14,9 +14,6 @@ class RootController {
     @FXML
     fun initialize() {
         println("Root controller set")
-
-//        menuLayoutController.setRootController(this)
-
         /*
         mainController is "lateinit" due to it's initialized through the reflection (@FXML)
         BEFORE the root controller initialization.
@@ -38,20 +35,8 @@ class MainController {
     @FXML private lateinit var xAxisRangeController: XAxisRangeController
     @FXML private lateinit var yAxisRangeController: YAxisRangeController
     @FXML lateinit var seriesManagerController: SeriesManagerController
-
     @FXML lateinit var multipleExportDialogController: MultipleExportDialogController
 
-//    @FXML lateinit var menuController: MenuController
-
-//    @FXML private val computationTimeLabel: Label
-
-//    fun setRootController(rootController: RootController) {
-//        this.rootController = rootController
-//    }
-
-
-    // TODO подумать, как, не нажимая кнопку calculationButton, запустить расчет при изменени value в choiceBox для поляризации
-    // это можно сделать через listener, как в SeriesManagerController
     @FXML
     fun initialize() {
         println("Main controller set")
@@ -62,25 +47,17 @@ class MainController {
         xAxisRangeController.mainController = this
         yAxisRangeController.mainController = this
         seriesManagerController.mainController = this
-//        menuController.mainController = this
-        State.mainController = this
 
         State.run {
+            mainController = this@MainController
             set()
             compute()
         }
         lineChartController.updateLineChart()
-
-//        graphManagerController.setMainController(this)
-//        xAxisRangeController.setMainController(this)
-//        yAxisRangeController.setMainController(this)
-//        globalParametersController.setMainController(this)
     }
 
-
-//    fun writeChangingsToFiles() {
-//
-//        globalParametersController.writeGlobalParamsToFiles()
-//        structureDescriptionController.writeStructureDescriptionToFile()
-//    }
+    fun writeParametersChangingsToFiles() {
+        globalParametersController.writeGlobalParameters()
+        structureDescriptionController.writeStructureDescription()
+    }
 }

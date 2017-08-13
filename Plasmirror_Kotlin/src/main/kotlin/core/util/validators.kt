@@ -20,131 +20,89 @@ import ui.controllers.*
 
 enum class ValidateResult { SUCCESS, FAILURE }
 
-object Validator {
-    fun validateAndSetStateUsing(mainController: MainController) = mainController.run {
-        println("Validating")
-        validateAndSetOpticalParametersUsing(globalParametersController)
-        validateAndBuildStructure(structureDescriptionController)
+object StateValidator {
+    fun validateAndSetStateUsing(mainController: MainController): ValidateResult {
+        with(mainController) {
+            if (validateAndSetOpticalParametersUsing(globalParametersController) == SUCCESS
+                    && validateAndBuildStructure(structureDescriptionController) == SUCCESS) {
+                return SUCCESS
+            }
+        }
+        return FAILURE
     }
 }
 
-object MultipleExportDialogParametersValidator {
-    fun validateRegime(): ValidateResult {
-        if ((regime == EPS || regime == N) && State.mainController.multipleExportDialogController.anglesSelected()) {
-            alert(headerText = "Computation regime for multiple export error",
-                    contentText = "For permittivity or refractive index computation temperature range must be selected")
-            return FAILURE
-        }
-        return SUCCESS
-    }
-
-    fun validateAngles(): ValidateResult {
-        try {
-            with(State.mainController.multipleExportDialogController) {
-                angleFrom = angleFromTextField.text.toDouble()
-                angleTo = angleToTextField.text.toDouble()
-                angleStep = angleStepTextField.text.toDouble()
-                /* angles allowed range */
-                fun Double.isNotAllowed() = this !in 0.0..89.99999999
-                if (angleFrom.isNotAllowed() || angleTo.isNotAllowed() || angleStep.isNotAllowed()
-                        || angleFrom > angleTo || angleStep > angleTo || angleStep == 0.0) {
-                    alert(headerText = "Angle Range Error", contentText = "Provide Correct Angle Range")
-                    return FAILURE
-                }
-            }
-        } catch (e: NumberFormatException) {
-            alert(headerText = "Angle Range Error", contentText = "Provide Correct Angle Range")
-            return FAILURE
-        }
-        return SUCCESS
-    }
-
-    fun validateTemperatures(): ValidateResult {
-        try {
-            with(State.mainController.multipleExportDialogController) {
-                temperatureFrom = temperatureFromTextField.text.toDouble()
-                temperatureTo = temperatureToTextField.text.toDouble()
-                temperatureStep = temperatureStepTextField.text.toDouble()
-                if (temperatureFrom <= 0.0 || temperatureTo <= 0.0 || temperatureStep <= 0.0 || temperatureFrom > temperatureTo || temperatureStep > temperatureTo) {
-                    alert(headerText = "Temperature Range Error", contentText = "Provide Correct Temperature Range")
-                    return FAILURE
-                }
-            }
-        } catch (e: NumberFormatException) {
-            alert(headerText = "Temperature Range Error", contentText = "Provide Correct Temperature Range")
-            return FAILURE
-        }
-        return SUCCESS
-    }
-
-    fun validateChosenDirectory(): ValidateResult {
-        if (State.mainController.multipleExportDialogController.chosenDirectory == null) {
-            alert(headerText = "Directory error", contentText = "Choose a directory")
-            return FAILURE
-        }
-        return SUCCESS
-    }
-}
 
 private object OpticalParametersValidator {
-
-    @Throws(StateException::class)
-    fun validateAndSetOpticalParametersUsing(globalParametersController: GlobalParametersController) =
-            with(globalParametersController) {
-                validateRefractiveIndicesUsing(mediumParametersController)
-                validateAngleUsing(lightParametersController)
-                validateCalculationRangeUsing(computationRangeController)
+    fun validateAndSetOpticalParametersUsing(globalParametersController: GlobalParametersController): ValidateResult {
+        with(globalParametersController) {
+            if (validateRefractiveIndicesUsing(mediumParametersController) == SUCCESS
+                    && validateAngleUsing(lightParametersController) == SUCCESS
+                    && validateCalculationRangeUsing(computationRangeController) == SUCCESS) {
+                return SUCCESS
             }
-
-    @Throws(StateException::class)
-    private fun validateRefractiveIndicesUsing(mediumParametersController: MediumParametersController) =
-            with(mediumParametersController) {
-                try {
-                    leftMediumChoiceBox.run {
-                        /* left medium == OTHER */
-                        if (value == items[2]) {
-                            n_left = Cmplx(n_leftRealTextField.text.toDouble(),
-                                    n_leftImaginaryTextField.text.toDouble())
-                        }
-                    }
-                    rightMediumChoiceBox.run {
-                        /* right medium == OTHER */
-                        if (value == items[2]) {
-                            n_right = Cmplx(n_rightRealTextField.text.toDouble(),
-                                    n_rightImaginaryTextField.text.toDouble())
-                        }
-                    }
-                } catch (e: NumberFormatException) {
-                    throw StateException("Wrong medium refractive index format")
-                }
-            }
-
-    @Throws(StateException::class)
-    private fun validateAngleUsing(lightParametersController: LightParametersController) {
-        try {
-            angle = lightParametersController.angleTextField.text.toDouble()
-            if (angle < 0.0 || angle >= 90.0) {
-                throw StateException("Wrong angle value")
-            }
-        } catch (e: NumberFormatException) {
-            throw StateException("Wrong angle value format")
         }
+        return FAILURE
     }
 
-    @Throws(StateException::class)
-    private fun validateCalculationRangeUsing(computationRangeController: ComputationRangeController) =
+    /**
+     * Negative refractive index values are allowed
+     */
+    private fun validateRefractiveIndicesUsing(mediumParametersController: MediumParametersController): ValidateResult {
+        with(mediumParametersController) {
             try {
-                with(computationRangeController) {
-                    wavelengthFrom = wavelengthFromTextField.text.toDouble()
-                    wavelengthTo = wavelengthToTextField.text.toDouble()
-                    wavelengthStep = wavelengthStepTextField.text.toDouble()
-                    if (wavelengthFrom < 0.0 || wavelengthTo <= 0.0 || wavelengthStep <= 0.0 || wavelengthFrom > wavelengthTo) {
-                        throw StateException("Wrong calculation range format")
+                with(leftMediumChoiceBox) {
+                    /* left medium == OTHER */
+                    if (value == items[2]) {
+                        n_left = Cmplx(n_leftRealTextField.text.toDouble(), n_leftImaginaryTextField.text.toDouble())
+                    }
+                }
+                with(rightMediumChoiceBox) {
+                    /* right medium == OTHER */
+                    if (value == items[2]) {
+                        n_right = Cmplx(n_rightRealTextField.text.toDouble(), n_rightImaginaryTextField.text.toDouble())
                     }
                 }
             } catch (e: NumberFormatException) {
-                throw StateException("Wrong calculation range format")
+                alert(headerText = "Refractive index value error", contentText = "Provide correct refractive index")
+                return FAILURE
             }
+        }
+        return SUCCESS
+    }
+
+    private fun validateAngleUsing(lightParametersController: LightParametersController): ValidateResult {
+        try {
+            angle = lightParametersController.angleTextField.text.toDouble()
+            if (angle.isNotAllowed()) {
+                alert(headerText = "Angle value error", contentText = "Provide correct angle")
+                return FAILURE
+            }
+        } catch (e: NumberFormatException) {
+            alert(headerText = "Angle value error", contentText = "Provide correct angle")
+            return FAILURE
+        }
+        return SUCCESS
+    }
+
+    private fun validateCalculationRangeUsing(computationRangeController: ComputationRangeController): ValidateResult {
+        try {
+            with(computationRangeController) {
+                wavelengthFrom = wavelengthFromTextField.text.toDouble()
+                wavelengthTo = wavelengthToTextField.text.toDouble()
+                wavelengthStep = wavelengthStepTextField.text.toDouble()
+                if (wavelengthFrom < 0.0 || wavelengthTo <= 0.0
+                        || wavelengthStep <= 0.0 || wavelengthFrom > wavelengthTo || wavelengthStep >= wavelengthTo) {
+                    alert(headerText = "Wavelength range error", contentText = "Provide correct wavelength range")
+                    return FAILURE
+                }
+            }
+        } catch (e: NumberFormatException) {
+            alert(headerText = "Wavelength range error", contentText = "Provide correct wavelength range")
+            return FAILURE
+        }
+        return SUCCESS
+    }
 }
 
 /**
@@ -170,14 +128,18 @@ private object StructureValidator {
      * @param structureDescriptionController controller to get its text field
      * containing structure description text representation
      */
-    @Throws(StructureDescriptionException::class)
-    fun validateAndBuildStructure(structureDescriptionController: StructureDescriptionController) {
-
-        val lines = toLines(structureDescriptionController.structureDescriptionTextArea.text)
-        val tokenizedLines = linesToTokenizedLines(lines)
-        validateTokenizedLines(tokenizedLines)
-        val structureDescription = buildStructureDescription(tokenizedLines)
-        structure = buildStructure(structureDescription)
+    fun validateAndBuildStructure(structureDescriptionController: StructureDescriptionController): ValidateResult {
+        try {
+            val lines = toLines(structureDescriptionController.structureDescriptionTextArea.text)
+            val tokenizedLines = linesToTokenizedLines(lines)
+            validateTokenizedLines(tokenizedLines)
+            val structureDescription = buildStructureDescription(tokenizedLines)
+            structure = buildStructure(structureDescription)
+        } catch(e: StructureDescriptionException) {
+            alert(headerText = "Structure description error", contentText = e.message ?: "")
+            return FAILURE
+        }
+        return SUCCESS
     }
 
     /**
@@ -188,9 +150,10 @@ private object StructureValidator {
      * @return structure representation as lines
      */
     @Throws(StructureDescriptionException::class)
-    private fun toLines(structure: String): List<String> = structure.lines().filter { it.isNotBlank() }.run {
-        if (isNotEmpty()) return this
-        throw StructureDescriptionException("Empty structure description")
+    private fun toLines(structure: String): List<String> = structure.lines().filter { it.isNotBlank() }.apply {
+        //        if (isEmpty()) {
+//            throw StructureDescriptionException("Empty structure description")
+//        }
     }
 
     /**
@@ -199,135 +162,125 @@ private object StructureValidator {
      * @param lines structure representation as lines
      * @return list of tokenized lines (each tokenized line is a list of tokens)
      */
-    private fun linesToTokenizedLines(lines: List<String>): List<List<String>> {
-
-        val tokenizedLines = mutableListOf<List<String>>()
-        lines
-                .map { it.trim() }
-                .filter { !it.startsWith("//") }
-                .apply {
-                    forEach {
-                        /*
-                                                it.replace(Regex("\\s*x\\s*"), "x")
-                                                it.replace(Regex("\\s*X\\s*"), "x")
-                                                it.replace(Regex("\\s*,\\s*"), " ")
-                                                it.replace(Regex("\\(\\s*"), "(")
-                                                it.replace(Regex("\\s*;\\s*"), ";")
-                                                it.replace(Regex("\\s*\\)"), ")")
-                        */
-                        it.replace(Regex("\\s*"), "")
-                        it.replace(Regex("[Xx]"), "x")
-
-                        tokenizedLines.add(it.split(","))
+    private fun linesToTokenizedLines(lines: List<String>) = mutableListOf<List<String>>().apply {
+        lines.map { it.trim() }.filter { it.startsWith("//").not() }
+                .map { it.replace(Regex("\\s*"), "") }
+                .map { it.replace(Regex("[Xx]"), "x") }
+                .let {
+                    if (it.isEmpty()) {
+                        throw StructureDescriptionException("Empty structure description")
                     }
+                    if ((regime == EPS || regime == N) && it.filter { it[0].isDigit() }.size != 1) {
+                        throw StructureDescriptionException("Structure must contain only one layer for this regime")
+                    }
+                    /* last expression is a return value of 'let' and must be a List<String> */
+                    it
                 }
-        return tokenizedLines
+                .forEach { add(it.split(",")) }
     }
 
     /**
      * Validates each tokenized line representing symbolic description of a layer
      *
-     * @param lines structure representation as lines
+     * @param tokenizedLines structure representation as lines
      */
     @Throws(StructureDescriptionException::class)
     private fun validateTokenizedLines(tokenizedLines: List<List<String>>) {
-
         /**
          * Structure description should start with period repeat number
          */
-        if (!tokenizedLines[0][0].startsWith("x")) {
+        if (tokenizedLines[0][0].startsWith("x").not()) {
             throw StructureDescriptionException("Structure description should start with period repeat description")
         }
-
         /**
          * 2 or more consecutive period descriptions
          */
         (1..tokenizedLines.size - 1)
                 .filter { tokenizedLines[it - 1][0].contains("x") && tokenizedLines[it][0].contains("x") }
-                .forEach { throw StructureDescriptionException("Two period repeat descriptions are found together") }
-
+                .forEach {
+                    throw StructureDescriptionException("Two period repeat descriptions are found together")
+                }
         /**
          * Check period description format
          */
-        tokenizedLines.flatMap { it }.filter { it.contains(Regex("^[x][0-9]+$")) }.run {
-
+        with(tokenizedLines.flatMap { it }.filter { it.contains(Regex("^[x][0-9]+$")) }) {
             /**
              * There must be a period repeat description using format "x123"
              */
             if (isEmpty()) {
                 throw StructureDescriptionException("Period repeat description does not match the specified format")
             }
-
             /**
              * Each period repeat number should be parsed to Int
              */
-            map { it.substring(1) }
-                    .forEach { repeat ->
-                        try {
-                            repeat.toInt()
-                        } catch (e: NumberFormatException) {
-                            throw StructureDescriptionException("Period repeat number error")
-                        }
-                    }
-        }
-
-
-        /**
-         * Check the SERIESType parameter to correspond to the appropriate number of parameters for layer
-         */
-        tokenizedLines
-                .filter { !it[0].startsWith("x") } // exclude period lines
-                .forEach {
-                    try {
-                        val type = it[0].toInt()
-                        if (type <= 0 || parameterNumbers[type] != it.size) {
-                            throw StructureDescriptionException("Wrong layer SERIESType format")
-                        }
-                    } catch (e: NumberFormatException) {
-                        throw StructureDescriptionException("Wrong layer SERIESType format")
-                    }
+            map { it.substring(1) }.forEach { repeat ->
+                try {
+                    repeat.toInt()
+                } catch (e: NumberFormatException) {
+                    throw StructureDescriptionException("Period repeat number error")
                 }
-
+            }
+        }
+        /**
+         * Check that structure contains at least one layer
+         */
+        with(tokenizedLines.flatMap { it }.filter { it.contains(Regex("^[x][0-9]+$")).not() }) {
+            if (isEmpty()) {
+                throw StructureDescriptionException("Structure must contain a single layer at least")
+            }
+        }
+        /**
+         * Check the layer type parameter to correspond to the appropriate number of parameters for a layer
+         */
+        tokenizedLines.filter { it[0].startsWith("x").not() }.forEach {
+            try {
+                val type = it[0].toInt()
+                if (type !in parameterNumbers.keys || parameterNumbers[type] != it.size) {
+                    throw StructureDescriptionException("Invalid layer type or incorrect number of parameters for a layer")
+                }
+            } catch (e: NumberFormatException) {
+                throw StructureDescriptionException("Invalid layer type or incorrect number of layer parameters")
+            }
+        }
         /**
          * Check complex parameters format
          */
-        tokenizedLines.flatMap { it }.run {
-
+        with(tokenizedLines.flatMap { it }) {
             /**
              * Complex parameter description should contain both "(" and ")"
              */
             forEach {
-                if ((it.contains("(") && !it.contains(")")) || (!it.contains("(") && it.contains(")"))) {
+                if ((it.contains("(") && it.contains(")").not()) || (it.contains("(").not() && it.contains(")"))) {
                     throw StructureDescriptionException("Invalid complex parameter value format")
                 }
             }
-
             /**
              * Complex numbers must use the format of "(a; b)"
-             * and should be parsed to real: Double and imag: Double
+             * and should be parsed to real: Double and imaginary: Double
              */
-            filter { it.contains("(") && it.contains(")") }.forEach {
-                it.replace(Regex("\\("), "")
-                it.replace(Regex("\\)"), "")
-
-                it.split(";").forEach {
-                    try {
-                        this[0].toDouble() // real
-                        this[1].toDouble() // imag
-                    } catch (e: NumberFormatException) {
-                        throw StructureDescriptionException("Period repeat number error")
+            filter { it.contains("(") && it.contains(")") }
+                    .map { it.replace(Regex("\\("), "") }
+                    .map { it.replace(Regex("\\)"), "") }
+                    .forEach {
+                        it.split(";").forEach {
+                            try {
+                                this[0].toDouble() // real
+                                this[1].toDouble() // imaginary
+                            } catch (e: NumberFormatException) {
+                                throw StructureDescriptionException("Complex number format error")
+                            }
+                        }
                     }
-                }
-            }
         }
-
         /**
          * Check double parameters format
          * Each parameter value should be parsed to Double
          */
-        tokenizedLines
-                .flatMap { it }
-                .filter { !(it.contains(Regex("^[x][0-9]+$"))) && !(it.contains("(") && it.contains(")")) } // exclude complex and period
+        tokenizedLines.flatMap { it }
+                /* exclude complex and period */
+                .filter {
+                    (it.contains(Regex("^[x][0-9]+$"))).not() && (it.contains("(") && it.contains(")")).not()
+                }
                 .forEach { value ->
                     try {
                         value.toDouble()
@@ -337,43 +290,37 @@ private object StructureValidator {
                 }
     }
 
-
     /**
      * Builds the StructureDescription object using the tokenized data for layers
      *
-     * @param lines structure representation as lines
+     * @param tokenizedLines structure representation as lines
      * @return structure description object
      */
-    private fun buildStructureDescription(tokenizedLines: List<List<String>>): StructureDescription {
-
-        val structureDescription = StructureDescription()
-        val blockDescriptions = structureDescription.blockDescriptions
-        var layerInd = 0
-
-        tokenizedLines.run {
-            while (layerInd < size) {
-                blockDescriptions += BlockDescription(repeat = this[layerInd][0].substring(1))
-                layerInd++
-
-                // lazy eval. Need to check layerInd < size FIRST. Otherwise IndexOutOfBoundsException!!!
-                while (layerInd < size && this[layerInd].isRepeat().not()) {
+    private fun buildStructureDescription(tokenizedLines: List<List<String>>) = StructureDescription().apply {
+        val blockDescriptions = blockDescriptions
+        var layerIndex = 0
+        with(tokenizedLines) {
+            while (layerIndex < size) {
+                blockDescriptions += BlockDescription(repeat = this[layerIndex][0].substring(1))
+                layerIndex++
+                /* lazy evaluation. Need to check layerIndex < size FIRST. Otherwise IndexOutOfBoundsException!!! */
+                while (layerIndex < size && this[layerIndex].isRepeat().not()) {
                     /**
-                     * add LayerDescriptions to the last BlockDescription
+                     * Add LayerDescriptions to the last BlockDescription
                      */
                     blockDescriptions[blockDescriptions.size - 1].layerDescriptions +=
-                            LayerDescription(type = this[layerInd][0], description = this[layerInd].subList(1, this[layerInd].size))
-
-                    layerInd++
+                            LayerDescription(type = this[layerIndex][0],
+                                    description = this[layerIndex].subList(1, this[layerIndex].size))
+                    layerIndex++
                 }
             }
         }
-        return structureDescription
     }
 
     /**
      * Builds structure object using the given structure description object
      *
-     * @param structure description object
+     * @param structureDescription description object
      * @return structure object
      */
     private fun buildStructure(structureDescription: StructureDescription) =
@@ -386,11 +333,75 @@ private object StructureValidator {
 }
 
 
+object MultipleExportDialogParametersValidator {
+    fun validateRegime(): ValidateResult {
+        if ((regime == EPS || regime == N) && State.mainController.multipleExportDialogController.anglesSelected()) {
+            alert(headerText = "Computation regime for multiple export error",
+                    contentText = "For permittivity or refractive index computation temperature range must be selected")
+            return FAILURE
+        }
+        return SUCCESS
+    }
+
+    fun validateAngles(): ValidateResult {
+        try {
+            with(State.mainController.multipleExportDialogController) {
+                angleFrom = angleFromTextField.text.toDouble()
+                angleTo = angleToTextField.text.toDouble()
+                angleStep = angleStepTextField.text.toDouble()
+                /* angles allowed range */
+                if (angleFrom.isNotAllowed() || angleTo.isNotAllowed() || angleStep.isNotAllowed()
+                        || angleFrom > angleTo || angleStep > angleTo || angleStep == 0.0) {
+                    alert(headerText = "Angle range error", contentText = "Provide correct angle range")
+                    return FAILURE
+                }
+            }
+        } catch (e: NumberFormatException) {
+            alert(headerText = "Angle range error", contentText = "Provide correct angle range")
+            return FAILURE
+        }
+        return SUCCESS
+    }
+
+    fun validateTemperatures(): ValidateResult {
+        try {
+            with(State.mainController.multipleExportDialogController) {
+                temperatureFrom = temperatureFromTextField.text.toDouble()
+                temperatureTo = temperatureToTextField.text.toDouble()
+                temperatureStep = temperatureStepTextField.text.toDouble()
+                if (temperatureFrom <= 0.0 || temperatureTo <= 0.0 || temperatureStep <= 0.0 || temperatureFrom > temperatureTo || temperatureStep > temperatureTo) {
+                    alert(headerText = "Temperature range error", contentText = "Provide correct temperature range")
+                    return FAILURE
+                }
+            }
+        } catch (e: NumberFormatException) {
+            alert(headerText = "Temperature range error", contentText = "Provide correct temperature range")
+            return FAILURE
+        }
+        return SUCCESS
+    }
+
+    fun validateChosenDirectory(): ValidateResult {
+        if (State.mainController.multipleExportDialogController.chosenDirectory == null) {
+            alert(headerText = "Directory error", contentText = "Choose a directory")
+            return FAILURE
+        }
+        return SUCCESS
+    }
+}
+
+
 class StructureDescriptionException(message: String) : RuntimeException(message)
 
 
-class StateException(message: String) : RuntimeException(message)
+/**
+ * Check angle value
+ */
+private fun Double.isNotAllowed() = this !in 0.0..89.99999999
 
+/**
+ * Show alert
+ */
 private fun alert(title: String = "Error", headerText: String, contentText: String) = with(Alert(Alert.AlertType.ERROR)) {
     this.title = title
     this.headerText = headerText

@@ -1,7 +1,11 @@
 package core.layers
 
-import core.State.wlCurrent
-import core.util.*
+import core.State.wavelengthCurrent
+import core.util.AlGaAsPermittivity.n_AlGaAs
+import core.util.Cmplx
+import core.util.Layer
+import core.util.Mtrx
+import core.util.cosThetaInLayer
 import org.apache.commons.math3.complex.Complex
 import org.apache.commons.math3.complex.Complex.NaN
 import java.lang.Math.PI
@@ -17,7 +21,7 @@ abstract class SimpleLayer(d: Double) : Layer(d) {
     override val matrix: Mtrx
         get() {
             val cos = cosThetaInLayer(n)
-            var phi = Cmplx(2.0 * PI * d / wlCurrent) * n * cos
+            var phi = Cmplx(2.0 * PI * d / wavelengthCurrent) * n * cos
 
             if (phi.imaginary < 0) {
                 phi *= -1.0
@@ -40,9 +44,7 @@ abstract class SimpleLayer(d: Double) : Layer(d) {
  */
 class GaAs(d: Double) : SimpleLayer(d) {
     override var n = Cmplx(NaN)
-        get() {
-            return n_GaAs(wlCurrent)!!
-        }
+        get() = n_AlGaAs(wavelengthCurrent, x = 0.0)
 }
 
 
@@ -53,12 +55,9 @@ class GaAs(d: Double) : SimpleLayer(d) {
  * @param x AlAs concentration
  */
 class AlGaAs(d: Double,
-             private val k: Double, private val x: Double) : SimpleLayer(d) {
+             private val k: Double, val x: Double) : SimpleLayer(d) {
     override var n = Cmplx(NaN)
-        get() {
-            val nReal = n_AlGaAs(wlCurrent, x)
-            return Cmplx(nReal, k * nReal)
-        }
+        get() = n_AlGaAs(wavelengthCurrent, x)
 }
 
 

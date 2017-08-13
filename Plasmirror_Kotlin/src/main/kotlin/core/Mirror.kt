@@ -39,9 +39,6 @@ class Mirror(val structure: Structure, val leftMediumLayer: Layer, val rightMedi
     fun computeAbsorption(): Double = 1.0 - computeReflection() - computeTransmission()
 
     fun computePermittivity(): Cmplx {
-        if (!isASingleLayer) {
-            throw StructureDescriptionException("Structure must contain only one layer")
-        }
         val layer = structure.blocks[0].layers[0]
         val n = layer.n
         /**
@@ -51,12 +48,7 @@ class Mirror(val structure: Structure, val leftMediumLayer: Layer, val rightMedi
         return n * n
     }
 
-    fun computeRefractiveIndex(): Cmplx {
-        if (!isASingleLayer) {
-            throw StructureDescriptionException("Structure must contain only one layer")
-        }
-        return structure.blocks[0].layers[0].n
-    }
+    fun computeRefractiveIndex(): Cmplx = structure.blocks[0].layers[0].n
 
     private fun r(): Cmplx {
         val mirrorMatrix = matrix

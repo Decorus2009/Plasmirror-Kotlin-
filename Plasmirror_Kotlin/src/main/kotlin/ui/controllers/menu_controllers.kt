@@ -68,7 +68,7 @@ class MenuController {
                 it.showSaveDialog(rootController.mainApp.primaryStage)
             }
             if (file != null) {
-                writeTo(file)
+                writeComputedDataTo(file)
             }
         }
 
@@ -220,7 +220,7 @@ class MultipleExportDialogController {
                                     set()
                                     compute()
                                 }
-                                writeTo(File("${chosenDirectory!!.canonicalPath}$separator${buildExportFileName()}.txt"))
+                                writeComputedDataTo(File("${chosenDirectory!!.canonicalPath}$separator${buildExportFileName()}.txt"))
                                 currentAngle += angleStep
                             }
 

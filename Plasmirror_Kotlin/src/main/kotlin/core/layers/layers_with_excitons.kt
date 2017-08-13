@@ -1,8 +1,9 @@
 package core.layers
 
 import core.State.polarization
-import core.State.wlCurrent
+import core.State.wavelengthCurrent
 import core.util.*
+import core.util.AlGaAsPermittivity.n_AlGaAs
 import core.util.Polarization.P
 import org.apache.commons.math3.complex.Complex.I
 import org.apache.commons.math3.complex.Complex.NaN
@@ -19,15 +20,14 @@ abstract class LayerExciton(d: Double,
                             protected var w0: Double,
                             protected var gamma0: Double,
                             protected var gamma: Double) : Layer(d) {
-
     override val matrix: Mtrx
         get() {
             val cos = cosThetaInLayer(n)
-            val phi = Cmplx(2.0 * PI * d / wlCurrent) * n * cos
+            val phi = Cmplx(2.0 * PI * d / wavelengthCurrent) * n * cos
 
             // TODO проверить поляризацию (в VisMirror (GaAs) было S)
             val gamma0e = if (polarization === P) gamma0 * cos.real else gamma0 * (cos.pow(-1.0)).real
-            val S = Cmplx(gamma0e) / Cmplx(toEnergy(wlCurrent) - w0, gamma)
+            val S = Cmplx(gamma0e) / Cmplx(toEnergy(wavelengthCurrent) - w0, gamma)
 
             val matrix = Mtrx()
 
@@ -45,9 +45,10 @@ abstract class LayerExciton(d: Double,
  * refractiveIndex is taken from the interpolation table for the given wavelength
  */
 class GaAsExciton(d: Double, w0: Double, gamma0: Double, gamma: Double) : LayerExciton(d, w0, gamma0, gamma) {
-
     override var n = Cmplx(NaN)
-        get() = n_GaAs(wlCurrent)!!
+//        get() = n_GaAs(wavelengthCurrent)!!
+        get() = n_AlGaAs(wavelengthCurrent, x = 0.0)
+
 }
 
 
@@ -58,13 +59,15 @@ class GaAsExciton(d: Double, w0: Double, gamma0: Double, gamma: Double) : LayerE
  * @param x AlAs concentration
  */
 class AlGaAsExciton(d: Double,
-                    private val k: Double, private val x: Double,
+                    private val k: Double, val x: Double,
                     w0: Double, gamma0: Double, gamma: Double) : LayerExciton(d, w0, gamma0, gamma) {
     override var n = Cmplx(NaN)
-        get() {
-            val nReal = n_AlGaAs(wlCurrent, x)
-            return Cmplx(nReal, k * nReal)
-        }
+//        get() {
+//            val nReal = n_AlGaAs(wavelengthCurrent, x)
+//            return Cmplx(nReal, k * nReal)
+//        }
+        get() = n_AlGaAs(wavelengthCurrent, x)
+
 }
 
 

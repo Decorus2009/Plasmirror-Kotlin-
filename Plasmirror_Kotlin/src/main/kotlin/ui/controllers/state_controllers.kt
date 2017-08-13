@@ -14,19 +14,16 @@ import core.util.Polarization.P
 import core.util.Polarization.S
 import core.util.Regime
 import core.util.Regime.*
-import core.util.writeToFile
 import javafx.fxml.FXML
 import javafx.scene.control.ChoiceBox
 import javafx.scene.control.Label
 import javafx.scene.control.TextArea
 import javafx.scene.control.TextField
-import java.io.File
+import java.io.File.separator
 import java.nio.file.Files
 import java.nio.file.Paths
 import kotlin.streams.toList
 
-
-// TODO Files.Files.lines(path)
 
 class GlobalParametersController {
 
@@ -41,10 +38,17 @@ class GlobalParametersController {
     @FXML
     fun initialize() {
         println("Global parameters controller set")
-
         regimeController.globalParametersController = this
         temperatureController.globalParametersController = this
         computationRangeController.globalParametersController = this
+    }
+
+    fun writeGlobalParameters() {
+        regimeController.writeRegime()
+//        temperatureController.writeTemperature()
+        mediumParametersController.writeMediumParametersToFile()
+        lightParametersController.writeLightParameters()
+        computationRangeController.writeComputationRange()
     }
 }
 
@@ -55,7 +59,7 @@ class RegimeController {
     @FXML private lateinit var regimeChoiceBox: ChoiceBox<String>
 
     var regimeBefore: Regime? = null
-    private val path = Paths.get(".${File.separator}data${File.separator}inner${File.separator}state_parameters${File.separator}regime.txt")
+    private val path = Paths.get(".${separator}data${separator}inner${separator}state_parameters${separator}regime.txt")
 
     @FXML
     fun initialize() {
@@ -63,9 +67,7 @@ class RegimeController {
         /* set initial value */
         /* lines.size should be == 1 */
         val lines = Files.lines(path).toList().filter { it.isNotBlank() }
-
         regime = Regime.valueOf(lines[0])
-
         with(regimeChoiceBox) {
             value = when (regime) {
                 R -> items[0]
@@ -74,9 +76,7 @@ class RegimeController {
                 EPS -> items[3]
                 N -> items[4]
             }
-
             selectionModel.selectedItemProperty().addListener { _, oldValue, newValue ->
-
                 val newRegime = Regime.valueOf(newValue.toUpperCase())
                 regime = newRegime
                 regimeBefore = Regime.valueOf(oldValue.toUpperCase())
@@ -89,13 +89,12 @@ class RegimeController {
                         mediumParametersController.disableAll()
                         lightParametersController.disableAll()
                     }
-//                mainController.lineChartController.updateAxisesNames()                    // TODO
                 }
             }
         }
     }
 
-    fun writeRegime() = writeToFile(path, text = "${State.regime}")
+    fun writeRegime() = "${State.regime}".writeTo(path.toFile())
 }
 
 class TemperatureController {
@@ -109,7 +108,6 @@ class TemperatureController {
     @FXML
     fun initialize() {
         println("Temperature controller set")
-
         /* set initial values */
         T_TextField.isDisable = true
 
@@ -130,7 +128,7 @@ class MediumParametersController {
     @FXML lateinit var leftMediumChoiceBox: ChoiceBox<String>
     @FXML lateinit var rightMediumChoiceBox: ChoiceBox<String>
 
-    private val path = Paths.get(".${File.separator}data${File.separator}inner${File.separator}state_parameters${File.separator}medium_parameters.txt")
+    private val path = Paths.get(".${separator}data${separator}inner${separator}state_parameters${separator}medium_parameters.txt")
 
     @FXML
     fun initialize() {
@@ -156,7 +154,6 @@ class MediumParametersController {
                     items[2]
                 }
             }
-
             selectionModel.selectedItemProperty().addListener { _, _, _ ->
                 leftMedium = Medium.valueOf(value.toUpperCase())
                 if (leftMedium == OTHER) {
@@ -166,7 +163,6 @@ class MediumParametersController {
                 }
             }
         }
-
         rightMedium = Medium.valueOf(lines[3])
         with(rightMediumChoiceBox) {
             value = when (rightMedium) {
@@ -184,7 +180,6 @@ class MediumParametersController {
                     items[2]
                 }
             }
-
             selectionModel.selectedItemProperty().addListener { _, _, _ ->
                 rightMedium = Medium.valueOf(value.toUpperCase())
                 if (rightMedium == OTHER) {
@@ -194,26 +189,6 @@ class MediumParametersController {
                 }
             }
         }
-    }
-
-    fun writeMediaParametersToFile() {
-
-        val output = StringBuilder()
-
-        output.run {
-            append(leftMedium.toString()).append("\n")
-            when (leftMedium) {
-                OTHER -> with(n_left) { append(real).append("\n").append(imaginary).append("\n") }
-                else -> append("-\n-\n")
-            }
-
-            append(rightMedium.toString()).append("\n")
-            when (rightMedium) {
-                OTHER -> with(n_right) { append(real).append("\n").append(imaginary).append("\n") }
-                else -> append("-\n-\n")
-            }
-        }
-        writeToFile(path, text = output.toString())
     }
 
     fun disableAll() {
@@ -232,8 +207,21 @@ class MediumParametersController {
             enable(n_rightRealTextField, n_rightImaginaryTextField)
         }
     }
-}
 
+    fun writeMediumParametersToFile() = StringBuilder().apply {
+        append(leftMedium.toString()).append("\n")
+        when (leftMedium) {
+            OTHER -> with(n_left) { append(real).append("\n").append(imaginary).append("\n") }
+            else -> append("-\n-\n")
+        }
+
+        append(rightMedium.toString()).append("\n")
+        when (rightMedium) {
+            OTHER -> with(n_right) { append(real).append("\n").append(imaginary).append("\n") }
+            else -> append("-\n-\n")
+        }
+    }.toString().writeTo(path.toFile())
+}
 
 class LightParametersController {
 
@@ -242,7 +230,7 @@ class LightParametersController {
     @FXML lateinit var polarizationChoiceBox: ChoiceBox<String>
     @FXML lateinit var angleTextField: TextField
 
-    private val path = Paths.get(".${File.separator}data${File.separator}inner${File.separator}state_parameters${File.separator}light_parameters.txt")
+    private val path = Paths.get(".${separator}data${separator}inner${separator}state_parameters${separator}light_parameters.txt")
 
     @FXML
     fun initialize() {
@@ -274,7 +262,7 @@ class LightParametersController {
         enable(angleTextField)
     }
 
-    fun writeLightParameters() = writeToFile(path, text = "${State.polarization}\n${State.angle}")
+    fun writeLightParameters() = "${State.polarization}\n${State.angle}".writeTo(path.toFile())
 }
 
 class ComputationRangeController {
@@ -285,7 +273,7 @@ class ComputationRangeController {
     @FXML lateinit var wavelengthToTextField: TextField
     @FXML lateinit var wavelengthStepTextField: TextField
 
-    private val path = Paths.get(".${File.separator}data${File.separator}inner${File.separator}state_parameters${File.separator}computation_range.txt")
+    private val path = Paths.get(".${separator}data${separator}inner${separator}state_parameters${separator}computation_range.txt")
 
     @FXML
     fun initialize() {
@@ -299,23 +287,23 @@ class ComputationRangeController {
         wavelengthStepTextField.text = lines[2]
     }
 
-    fun writeComputationRange() = writeToFile(path, text = "${State.wavelengthFrom}\n${State.wavelengthTo}\n${State.wavelengthStep}")
+    fun writeComputationRange() = "${State.wavelengthFrom}\n${State.wavelengthTo}\n${State.wavelengthStep}".writeTo(path.toFile())
 }
 
 class StructureDescriptionController {
 
     @FXML lateinit var structureDescriptionTextArea: TextArea
 
-    private val path = Paths.get(".${File.separator}data${File.separator}inner${File.separator}state_parameters${File.separator}structure.txt")
+    private val path = Paths.get(".${separator}data${separator}inner${separator}state_parameters${separator}structure.txt")
 
     @FXML
     fun initialize() {
         println("Structure description controller set")
-        /* set initial values */
+        /* set initial value */
         structureDescriptionTextArea.text = Files.lines(path).toList()
                 .filter { it.isNotBlank() }
                 .reduce { text, line -> text + "\n" + line }
     }
 
-    fun writeStructureDescription() = writeToFile(path, text = structureDescriptionTextArea.text)
+    fun writeStructureDescription() = structureDescriptionTextArea.text.writeTo(path.toFile())
 }

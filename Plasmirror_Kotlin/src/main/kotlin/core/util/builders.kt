@@ -9,18 +9,13 @@ import kotlin.Double.Companion.POSITIVE_INFINITY
 
 object StructureBuilder {
 
-    @Throws(StructureDescriptionException::class)
     fun build(structureDescription: StructureDescription): Structure {
-
         val blocks = mutableListOf<Block>()
 
         structureDescription.blockDescriptions.forEach {
-
             val repeat = it.repeat.toInt()
             val layers = mutableListOf<Layer>()
-
             it.layerDescriptions.forEach { layerDescription ->
-
                 val type = layerDescription.type.toInt()
                 with(layerDescription.description) {
                     val layer = when (type) {
@@ -40,7 +35,8 @@ object StructureBuilder {
 
                                 9 ->
 */
-                        else -> throw StructureDescriptionException("Unknown layer SERIESType")
+                        /* must never be reached because of validating procedure */
+                        else -> return@with
                     }
                     layers += layer
                 }
@@ -55,7 +51,7 @@ object StructureBuilder {
     private fun List<String>.parseComplexAt(i: Int): Cmplx = this[i].toComplex()
 
     private fun String.toComplex(): Cmplx {
-        val (real, imaginary) = this.replace(Regex("[()]"), "").split(";").map { it.toDouble() }
+        val (real, imaginary) = replace(Regex("[()]"), "").split(";").map { it.toDouble() }
         return Cmplx(real, imaginary)
     }
 }

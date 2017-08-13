@@ -3,43 +3,26 @@ package ui.controllers
 import core.State
 import core.State.absorption
 import core.State.permittivity
+import core.State.polarization
 import core.State.reflection
 import core.State.refractiveIndex
 import core.State.regime
 import core.State.transmission
+import core.State.wavelengthFrom
+import core.State.wavelengthTo
 import core.util.Regime.*
 import javafx.scene.control.*
 import java.io.File
 import java.util.*
 
 fun buildExportFileName() = StringBuilder().apply {
-    append("calculation_${State.regime}_${State.wavelengthFrom}_${State.wavelengthTo}")
-    if (State.regime == R || State.regime == T || State.regime == A) {
-        append("_${State.polarization}-POL_^${String.format(Locale.US, "%04.1f", State.angle)}_deg")
+    append("computation_${regime}_${wavelengthFrom}_$wavelengthTo")
+    if (regime == R || regime == T || regime == A) {
+        append("_$polarization-POL_^${String.format(Locale.US, "%04.1f", State.angle)}_deg")
     }
 }.toString()
 
-//fun writeTo(file: File) = file.writeText(StringBuilder().apply {
-//    val columnSeparator = "    "
-//    with(LineChartState.computed.extendedSeriesReal.series.data) {
-//        indices.forEach { i ->
-//            append(String.format(Locale.US, "%.8f", this[i].xValue.toDouble()))
-//            append(columnSeparator)
-//            append(String.format(Locale.US, "%.8f", this[i].yValue.toDouble()))
-//
-//            with(LineChartState.computed.extendedSeriesImaginary.series.data) {
-//                if (isNotEmpty()) {
-//                    append(columnSeparator)
-//                    append(kotlin.String.format(Locale.US, "%.8f", this[i].yValue.toDouble()))
-//                }
-//            }
-//            append(System.lineSeparator())
-//        }
-//    }
-//}.toString())
-
-fun writeTo(file: File) = file.writeText(StringBuilder().apply {
-
+fun writeComputedDataTo(file: File) = StringBuilder().apply {
     val computedReal: List<Double>
     var computedImaginary: List<Double> = emptyList()
 
@@ -56,10 +39,6 @@ fun writeTo(file: File) = file.writeText(StringBuilder().apply {
             refractiveIndex.map { it.real }.toList()
         }
     }
-//
-//    println(computedReal.size)
-//    println(computedImaginary.size)
-//
 
     val columnSeparator = "    "
     with(computedReal) {
@@ -71,14 +50,15 @@ fun writeTo(file: File) = file.writeText(StringBuilder().apply {
             with(computedImaginary) {
                 if (isNotEmpty()) {
                     append(columnSeparator)
-                    append(kotlin.String.format(Locale.US, "%.8f", this[i]))
+                    append(String.format(Locale.US, "%.8f", this[i]))
                 }
             }
             append(System.lineSeparator())
         }
     }
-}.toString())
+}.toString().writeTo(file)
 
+fun String.writeTo(file: File) = file.writeText(this)
 
 fun disable(vararg labels: Label) = labels.forEach { it.isDisable = true }
 fun <T> disable(vararg choiceBoxes: ChoiceBox<T>) = choiceBoxes.forEach { it.isDisable = true }
