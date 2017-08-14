@@ -27,8 +27,12 @@ abstract class LayerExciton(d: Double,
             val cos = cosThetaInLayer(n)
             val phi = Cmplx(2.0 * PI * d / wavelengthCurrent) * n * cos
 
-            // TODO проверить поляризацию (в VisMirror (GaAs) было S)
-            val gamma0e = if (polarization === P) gamma0 * cos.real else gamma0 * (cos.pow(-1.0)).real
+            /* TODO проверить поляризацию (в VisMirror (GaAs) было S) */
+            val gamma0e = if (polarization === P) {
+                gamma0 * cos.real
+            } else {
+                gamma0 * (cos.pow(-1.0)).real
+            }
             val S = Cmplx(gamma0e) / Cmplx(toEnergy(wavelengthCurrent) - w0, gamma)
 
             val matrix = Mtrx()
@@ -40,6 +44,25 @@ abstract class LayerExciton(d: Double,
 
             return matrix
         }
+
+
+//    override val matrix: Mtrx
+//        get() = Mtrx().apply {
+//            val cos = cosThetaInLayer(n)
+//            val phi = Cmplx(2.0 * PI * d / wavelengthCurrent) * n * cos
+//            /* TODO проверить поляризацию (в VisMirror (GaAs) было S) */
+//            val gamma0e = if (polarization === P) {
+//                gamma0 * cos.real
+//            } else {
+//                gamma0 * (cos.pow(-1.0)).real
+//            }
+//            val S = Cmplx(gamma0e) / Cmplx(toEnergy(wavelengthCurrent) - w0, gamma)
+//
+//            this[0, 0] = Cmplx((phi * I).exp()) * Cmplx(1.0 + S.imaginary, -S.real)
+//            this[0, 1] = Cmplx(S.imaginary, -S.real)
+//            this[1, 0] = Cmplx(-S.imaginary, S.real)
+//            this[1, 1] = Cmplx((phi * I * -1.0).exp()) * Cmplx(1.0 - S.imaginary, S.real)
+//        }
 }
 
 /**

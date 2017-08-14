@@ -301,7 +301,7 @@ class StructureDescriptionController {
         println("Structure description controller set")
         /* set initial value */
         structureDescriptionTextArea.text = Files.lines(path).toList()
-                .filter { it.isNotBlank() }
+//                .filter { it.isNotBlank() }
                 .reduce { text, line -> text + "\n" + line }
     }
 

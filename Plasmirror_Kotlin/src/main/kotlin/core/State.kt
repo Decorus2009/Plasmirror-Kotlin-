@@ -38,7 +38,6 @@ object State {
     val refractiveIndex = mutableListOf<Cmplx>()
 
     fun set(): ValidateResult {
-        println("State set")
         if (validateAndSetStateUsing(mainController) == SUCCESS) {
             clearPreviousComputation()
             buildMirror()

@@ -38,9 +38,9 @@ class ControlsController {
                          Write to file last successful computation parameters
                          */
                         mainController.writeParametersChangingsToFiles()
+                        mainController.lineChartController.updateLineChart()
                     }
                 }
-                mainController.lineChartController.updateLineChart()
             }
         }
     }

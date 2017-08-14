@@ -18,7 +18,9 @@ import core.util.ValidateResult.SUCCESS
 import javafx.scene.control.Alert
 import ui.controllers.*
 
+
 enum class ValidateResult { SUCCESS, FAILURE }
+
 
 object StateValidator {
     fun validateAndSetStateUsing(mainController: MainController): ValidateResult {
@@ -143,14 +145,20 @@ private object StructureValidator {
     }
 
     /**
-     * Maps structure string representation to the list of lines.
+     * Maps structure string representation to the list of lines ignoring everything under multi-line comments
+     * (it's convenient to remove symbols under multi-line comments here, before breaking structure into separate lines).
      * Each line is a symbolic description of a layer
+     *
+     * (?s) activates Pattern.DOTALL notation.
+     * "In dotall mode, the expression . matches any character, including a line terminator.
+     * By default this expression does not match line terminators."
      *
      * @param structure structure string representation
      * @return structure representation as lines
      */
     @Throws(StructureDescriptionException::class)
-    private fun toLines(structure: String): List<String> = structure.lines().filter { it.isNotBlank() }
+    private fun toLines(structure: String): List<String> =
+            structure.replace(Regex("(?s)/\\*.*\\*/"), "").lines().filter { it.isNotBlank() }
 
     /**
      * Tokenizes each line of the structure
@@ -159,20 +167,13 @@ private object StructureValidator {
      * @return list of tokenized lines (each tokenized line is a list of tokens)
      */
     private fun linesToTokenizedLines(lines: List<String>) = mutableListOf<List<String>>().apply {
-        lines.map { it.trim() }.filter { it.startsWith("//").not() }
+        lines.map { it.trim() }.filterNot { it.startsWith("//") }
                 .map { it.replace(Regex("\\s*"), "") }
-                .map { it.replace(Regex("[Xx]"), "x") }
-                .let {
-                    if (it.isEmpty()) {
-                        throw StructureDescriptionException("Empty structure description")
-                    }
-                    if ((regime == EPS || regime == N) && it.filter { it[0].isDigit() }.size != 1) {
-                        throw StructureDescriptionException("Structure must contain only one layer for this regime")
-                    }
-                    /* last expression is a return value of 'let' and must be a List<String> */
-                    it
-                }
-                .forEach { add(it.split(",")) }
+                .map { it.toLowerCase() }
+                /**
+                 remove names of layer parameters ("type=", "d=", "k=", "x=")
+                 */
+                .forEach { add(it.split(",").map { it.replace(Regex(".*=+"), "") }) }
     }
 
     /**
@@ -181,33 +182,37 @@ private object StructureValidator {
      * @param tokenizedLines structure representation as lines
      */
     @Throws(StructureDescriptionException::class)
-    private fun validateTokenizedLines(tokenizedLines: List<List<String>>) {
+    private fun validateTokenizedLines(tokenizedLines: List<List<String>>) = with(tokenizedLines) {
         /**
-         * Structure description should start with period repeat number
+         Structure description is empty
          */
-        if (tokenizedLines[0][0].startsWith("x").not()) {
+        if (isEmpty()) {
+            throw StructureDescriptionException("Empty structure description")
+        }
+        /**
+         Structure description should start with period repeat number
+         */
+        if (this[0][0].startsWith("x").not()) {
             throw StructureDescriptionException("Structure description should start with period repeat description")
         }
         /**
-         * 2 or more consecutive period descriptions
+         2 or more consecutive period descriptions
          */
-        (1..tokenizedLines.size - 1)
-                .filter { tokenizedLines[it - 1][0].contains("x") && tokenizedLines[it][0].contains("x") }
-                .forEach {
-                    throw StructureDescriptionException("Two period repeat descriptions are found together")
-                }
+        (1..size - 1).filter { this[it - 1][0].contains("x") && this[it][0].contains("x") }.forEach {
+            throw StructureDescriptionException("Two period repeat descriptions are found together")
+        }
         /**
-         * Check period description format
+         Check period description format
          */
-        with(tokenizedLines.flatMap { it }.filter { it.contains(Regex("^[x][0-9]+$")) }) {
+        with(flatMap { it }.filter { it.contains(Regex("^[x][0-9]+$")) }) {
             /**
-             * There must be a period repeat description using format "x123"
+             There must be a period repeat description using format "x123"
              */
             if (isEmpty()) {
                 throw StructureDescriptionException("Period repeat description does not match the specified format")
             }
             /**
-             * Each period repeat number should be parsed to Int
+             Each period repeat number should be parsed to Int
              */
             map { it.substring(1) }.forEach { repeat ->
                 try {
@@ -218,36 +223,35 @@ private object StructureValidator {
             }
         }
         /**
-         * Check that structure contains at least one layer
+         Check that structure contains at least one layer
          */
-        with(tokenizedLines.flatMap { it }.filter { it.contains(Regex("^[x][0-9]+$")).not() }) {
+        with(flatMap { it }.filterNot { it.contains("x") }) {
             if (isEmpty()) {
                 throw StructureDescriptionException("Structure must contain a single layer at least")
             }
         }
         /**
-         * Check the layer type parameter to correspond to the appropriate number of parameters for a layer
+         Check that structure contains only one layer for EPS and N regimes
+         (check that tokenizedLines contains only one List<String> with layer parameters)
          */
-        tokenizedLines.filter { it[0].startsWith("x").not() }.forEach {
+        if ((regime == EPS || regime == N) && filterNot { it.all { it.contains("x") } }.size != 1) {
+            throw StructureDescriptionException("Structure must contain only one layer for this regime")
+        }
+        /**
+         Check the layer type parameter to correspond to the appropriate number of parameters for a layer
+         */
+        filterNot { it[0].startsWith("x") }.forEach {
             val type = it[0]
             if (type !in parameterNumbers.keys || parameterNumbers[type] != it.size) {
                 throw StructureDescriptionException("Invalid layer type or incorrect number of parameters for a layer")
             }
-//            try {
-//                val type = it[0].toInt()
-//                if (type !in parameterNumbers.keys || parameterNumbers[type] != it.size) {
-//                    throw StructureDescriptionException("Invalid layer type or incorrect number of parameters for a layer")
-//                }
-//            } catch (e: NumberFormatException) {
-//                throw StructureDescriptionException("Invalid layer type or incorrect number of layer parameters")
-//            }
         }
         /**
-         * Check complex parameters format
+         Check complex and double parameters format
          */
-        with(tokenizedLines.flatMap { it }) {
+        with(flatMap { it }) {
             /**
-             * Complex parameter description should contain both "(" and ")"
+             Complex parameter description should contain both "(" and ")"
              */
             forEach {
                 if ((it.contains("(") && it.contains(")").not()) || (it.contains("(").not() && it.contains(")"))) {
@@ -255,8 +259,8 @@ private object StructureValidator {
                 }
             }
             /**
-             * Complex numbers must use the format of "(a; b)"
-             * and should be parsed to real: Double and imaginary: Double
+             Complex numbers must use the format of "(a; b)"
+             and should be parsed to real: Double and imaginary: Double
              */
             filter { it.contains("(") && it.contains(")") }
                     .map { it.replace(Regex("\\("), "") }
@@ -271,25 +275,18 @@ private object StructureValidator {
                             }
                         }
                     }
+            /**
+             Check double parameters format. Each parameter value should be parsed to Double.
+             Exclude complex, period and type
+             */
+            filterNot { it.contains("x") || it.contains("(") || it.contains("-") }.forEach { value ->
+                try {
+                    value.toDouble()
+                } catch (e: NumberFormatException) {
+                    throw StructureDescriptionException("Invalid parameter value format")
+                }
+            }
         }
-        /**
-         * Check double parameters format
-         * Each parameter value should be parsed to Double
-         */
-        tokenizedLines.flatMap { it }
-                /* exclude complex and period */
-                .filter {
-                    (it.contains(Regex("^[x][0-9]+$"))).not()
-                            && (it.contains("(") && it.contains(")")).not()
-                            && (it.contains("-")).not()
-                }
-                .forEach { value ->
-                    try {
-                        value.toDouble()
-                    } catch (e: NumberFormatException) {
-                        throw StructureDescriptionException("Invalid parameter value format")
-                    }
-                }
     }
 
     /**
@@ -308,7 +305,7 @@ private object StructureValidator {
                 /* lazy evaluation. Need to check layerIndex < size FIRST. Otherwise IndexOutOfBoundsException!!! */
                 while (layerIndex < size && this[layerIndex].isRepeat().not()) {
                     /**
-                     * Add LayerDescriptions to the last BlockDescription
+                     Add LayerDescriptions to the last BlockDescription
                      */
                     blockDescriptions[blockDescriptions.size - 1].layerDescriptions +=
                             LayerDescription(type = this[layerIndex][0],
