@@ -4,6 +4,8 @@ import core.State.polarization
 import core.State.wavelengthCurrent
 import core.util.*
 import core.util.AlGaAsPermittivity.n_AlGaAs
+import core.util.EpsType.ADACHI
+import core.util.EpsType.GAUSS
 import core.util.Polarization.P
 import org.apache.commons.math3.complex.Complex.I
 import org.apache.commons.math3.complex.Complex.NaN
@@ -44,30 +46,31 @@ abstract class LayerExciton(d: Double,
  * GaAs with excitons
  * refractiveIndex is taken from the interpolation table for the given wavelength
  */
-class GaAsExciton(d: Double, w0: Double, gamma0: Double, gamma: Double) : LayerExciton(d, w0, gamma0, gamma) {
+class GaAsExciton(d: Double, w0: Double, gamma0: Double, gamma: Double,
+                  val eps_type: EpsType) : LayerExciton(d, w0, gamma0, gamma) {
     override var n = Cmplx(NaN)
-//        get() = n_GaAs(wavelengthCurrent)!!
-        get() = n_AlGaAs(wavelengthCurrent, x = 0.0)
-
+        get() = n_AlGaAs(wavelengthCurrent, x = 0.0, eps_type = eps_type)
 }
 
 
 /**
  * AlGaAs with excitons
  *
- * @param k refractiveIndex = (Re(refractiveIndex); Im(refractiveIndex) = k * Re(refractiveIndex)) Re(refractiveIndex) is from Adachi
+ * @param k n = (Re(n); Im(n) = k * Re(n)) Re(n) is from Adachi
  * @param x AlAs concentration
  */
 class AlGaAsExciton(d: Double,
                     private val k: Double, val x: Double,
-                    w0: Double, gamma0: Double, gamma: Double) : LayerExciton(d, w0, gamma0, gamma) {
+                    w0: Double, gamma0: Double, gamma: Double,
+                    val eps_type: EpsType) : LayerExciton(d, w0, gamma0, gamma) {
     override var n = Cmplx(NaN)
-//        get() {
-//            val nReal = n_AlGaAs(wavelengthCurrent, x)
-//            return Cmplx(nReal, k * nReal)
-//        }
-        get() = n_AlGaAs(wavelengthCurrent, x)
-
+        get() {
+            if (eps_type == ADACHI) {
+                val n_AlGaAs = n_AlGaAs(wavelengthCurrent, x, eps_type)
+                return Cmplx(n_AlGaAs.real, n_AlGaAs.real * k)
+            }
+            return n_AlGaAs(wavelengthCurrent, x, eps_type)
+        }
 }
 
 

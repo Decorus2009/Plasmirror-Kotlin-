@@ -1,6 +1,7 @@
 package core
 
 import core.util.*
+import core.util.Medium.*
 import core.util.Regime.*
 import core.util.StateValidator.validateAndSetStateUsing
 import core.util.ValidateResult.FAILURE
@@ -11,7 +12,6 @@ import java.util.*
 object State {
 
     lateinit var mainController: MainController
-    val GaAs_n = mutableMapOf<Double, Cmplx>()
 
     var wavelengthFrom: Double = 0.0
     var wavelengthTo: Double = 0.0
@@ -24,12 +24,10 @@ object State {
 
     lateinit var leftMedium: Medium
     lateinit var rightMedium: Medium
-
     lateinit var n_left: Cmplx
     lateinit var n_right: Cmplx
 
     lateinit var structure: Structure
-
     lateinit var mirror: Mirror
 
     var wavelength = mutableListOf<Double>()
@@ -41,10 +39,9 @@ object State {
 
     fun set(): ValidateResult {
         println("State set")
-        clearPreviousComputation()
         if (validateAndSetStateUsing(mainController) == SUCCESS) {
+            clearPreviousComputation()
             buildMirror()
-            AlGaAsPermittivity.preprocessIntersections()
             return SUCCESS
         }
         return FAILURE

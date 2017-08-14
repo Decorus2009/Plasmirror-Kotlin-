@@ -17,33 +17,27 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="notes.txt" pinned="false" current-in-tab="false">
-        <entry file="file://$APPLICATION_PLUGINS_DIR$/scratches/notes.txt">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="46">
-              <caret line="2" column="14" lean-forward="false" selection-start-line="2" selection-start-column="0" selection-end-line="2" selection-end-column="14" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="ControlsController.kt" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/kotlin/ui/controllers/ControlsController.kt">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-8">
-              <caret line="37" column="38" lean-forward="false" selection-start-line="37" selection-start-column="38" selection-end-line="37" selection-end-column="38" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
       <file leaf-file-name="State.kt" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/kotlin/core/State.kt">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="69">
-              <caret line="9" column="0" lean-forward="false" selection-start-line="9" selection-start-column="0" selection-end-line="9" selection-end-column="0" />
+            <state relative-caret-position="350">
+              <caret line="85" column="33" lean-forward="true" selection-start-line="85" selection-start-column="33" selection-end-line="85" selection-end-column="33" />
               <folding>
-                <element signature="e#14#251#0" expanded="true" />
+                <element signature="e#14#277#0" expanded="true" />
+                <element signature="n#!!block;n#clearPreviousComputation#0;n#!!block;n#State#0" expanded="false" />
+                <element signature="n#!!block;n#compute#0;n#!!block;n#State#0" expanded="false" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="builders.kt" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/src/main/kotlin/core/util/builders.kt">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="-708">
+              <caret line="47" column="173" lean-forward="false" selection-start-line="47" selection-start-column="173" selection-end-line="47" selection-end-column="173" />
+              <folding>
+                <element signature="e#19#263#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -52,22 +46,23 @@
       <file leaf-file-name="optics_util.kt" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/kotlin/core/util/optics_util.kt">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="442">
-              <caret line="391" column="23" lean-forward="true" selection-start-line="391" selection-start-column="23" selection-end-line="391" selection-end-column="23" />
+            <state relative-caret-position="-218">
+              <caret line="79" column="112" lean-forward="false" selection-start-line="79" selection-start-column="112" selection-end-line="79" selection-end-column="112" />
               <folding>
-                <element signature="e#19#235#0" expanded="true" />
+                <element signature="e#19#237#0" expanded="true" />
                 <element signature="n#!!doc;n#toEnergy#0" expanded="false" />
-                <element signature="n#!!doc;n#n_GaAs#0" expanded="false" />
                 <element signature="n#!!doc;n#cosThetaInLayer#0" expanded="false" />
                 <element signature="n#!!block;n#cosThetaInLayer#0" expanded="false" />
                 <element signature="n#!!block;n#round#0" expanded="false" />
-                <element signature="n#!!block;n#epsAdachi#0;n#!!block;n#AlGaAsPermittivity#0" expanded="false" />
-                <element signature="n#!!block;n#nAdachi#0;n#!!block;n#AlGaAsPermittivity#0" expanded="false" />
-                <element signature="n#!!block;n#nGauss#0;n#!!block;n#AlGaAsPermittivity#0" expanded="false" />
-                <element signature="n#!!block;n#eps_1#0;n#!!block;n#AlGaAsPermittivity#0" expanded="false" />
-                <element signature="n#!!block;n#eps_2#0;n#!!block;n#AlGaAsPermittivity#0" expanded="false" />
-                <element signature="n#!!block;n#eps_3#0;n#!!block;n#AlGaAsPermittivity#0" expanded="false" />
-                <element signature="n#!!block;n#eps_4#0;n#!!block;n#AlGaAsPermittivity#0" expanded="false" />
+                <element signature="e#1364#1768#2" expanded="false" />
+                <marker date="1502705910000" expanded="false" signature="2696:3212" ph="{...}" />
+                <marker date="1502705910000" expanded="false" signature="4551:5418" ph="/** Finds intersection point for both approaches ...*/" />
+                <marker date="1502705910000" expanded="false" signature="5463:6823" ph="{...}" />
+                <marker date="1502705910000" expanded="false" signature="6869:7005" ph="{...}" />
+                <marker date="1502705910000" expanded="false" signature="7366:8266" ph="{...}" />
+                <marker date="1502705910000" expanded="false" signature="8319:8804" ph="{...}" />
+                <marker date="1502705910000" expanded="false" signature="8857:9648" ph="{...}" />
+                <marker date="1502705910000" expanded="false" signature="9701:10221" ph="{...}" />
               </folding>
             </state>
           </provider>
@@ -76,12 +71,32 @@
       <file leaf-file-name="validators.kt" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/kotlin/core/util/validators.kt">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="797">
-              <caret line="396" column="0" lean-forward="false" selection-start-line="396" selection-start-column="0" selection-end-line="396" selection-end-column="0" />
+            <state relative-caret-position="240">
+              <caret line="167" column="21" lean-forward="true" selection-start-line="167" selection-start-column="21" selection-end-line="167" selection-end-column="21" />
               <folding>
                 <element signature="e#19#596#0" expanded="true" />
-                <element signature="n#!!block;n#OpticalParametersValidator#0" expanded="false" />
+                <element signature="n#!!block;n#MultipleExportDialogParametersValidator#0" expanded="false" />
               </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="notes.txt" pinned="false" current-in-tab="false">
+        <entry file="file://$APPLICATION_PLUGINS_DIR$/scratches/notes.txt">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="46">
+              <caret line="2" column="11" lean-forward="true" selection-start-line="2" selection-start-column="11" selection-end-line="2" selection-end-column="11" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="chart_controllers.kt" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/main/kotlin/ui/controllers/chart_controllers.kt">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="170">
+              <caret line="240" column="0" lean-forward="false" selection-start-line="240" selection-start-column="0" selection-end-line="240" selection-end-column="0" />
+              <folding />
             </state>
           </provider>
         </entry>
@@ -89,41 +104,34 @@
       <file leaf-file-name="simple_layers.kt" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/kotlin/core/layers/simple_layers.kt">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="187">
-              <caret line="40" column="3" lean-forward="true" selection-start-line="40" selection-start-column="3" selection-end-line="40" selection-end-column="3" />
+            <state relative-caret-position="897">
+              <caret line="61" column="58" lean-forward="false" selection-start-line="61" selection-start-column="58" selection-end-line="61" selection-end-column="58" />
               <folding>
+                <element signature="e#21#277#0" expanded="true" />
                 <element signature="n#!!block;n#SimpleLayer#0" expanded="false" />
               </folding>
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="main_controllers.kt" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/kotlin/ui/controllers/main_controllers.kt">
+      <file leaf-file-name="layers_with_excitons.kt" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/main/kotlin/core/layers/layers_with_excitons.kt">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-8">
-              <caret line="58" column="24" lean-forward="false" selection-start-line="58" selection-start-column="24" selection-end-line="58" selection-end-column="24" />
+            <state relative-caret-position="-1">
+              <caret line="51" column="53" lean-forward="false" selection-start-line="51" selection-start-column="53" selection-end-line="51" selection-end-column="53" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="structure.txt" pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/data/inner/state_parameters/structure.txt">
+      <file leaf-file-name="layers_with_plasmons.kt" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/main/kotlin/core/layers/layers_with_plasmons.kt">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="46">
-              <caret line="2" column="1" lean-forward="false" selection-start-line="2" selection-start-column="1" selection-end-line="2" selection-end-column="1" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="regime.txt" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/data/inner/state_parameters/regime.txt">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="0">
-              <caret line="0" column="1" lean-forward="false" selection-start-line="0" selection-start-column="1" selection-end-line="0" selection-end-column="1" />
-              <folding />
+            <state relative-caret-position="265">
+              <caret line="42" column="54" lean-forward="false" selection-start-line="42" selection-start-column="54" selection-end-line="42" selection-end-column="54" />
+              <folding>
+                <element signature="e#21#256#0" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -139,10 +147,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>import</find>
-      <find>MainState.</find>
-      <find>pathSeparator</find>
-      <find>? = null</find>
       <find>polari</find>
       <find>State.</find>
       <find>mainCo</find>
@@ -169,6 +173,10 @@
       <find>Empty structure description</find>
       <find>@JvmStatic</find>
       <find>StateException</find>
+      <find>val epsType: EpsType = GAUSS</find>
+      <find>val epsType: EpsType</find>
+      <find>epsType</find>
+      <find>parameter value fo</find>
     </findStrings>
     <replaceStrings>
       <replace>allExtendedSeries</replace>
@@ -177,6 +185,9 @@
       <replace>Files.lines(</replace>
       <replace>regime</replace>
       <replace>wavelength</replace>
+      <replace>val epsType: EpsType</replace>
+      <replace>val eps_type: EpsType</replace>
+      <replace>eps_type</replace>
     </replaceStrings>
     <dirStrings>
       <dir>$PROJECT_DIR$/../../../CSC/Projects/IdeaProjects/Mirror/MyMirror/src/main/java</dir>
@@ -210,19 +221,20 @@
         <option value="$PROJECT_DIR$/src/main/kotlin/ui/controllers/main_controllers.kt" />
         <option value="$PROJECT_DIR$/src/main/kotlin/ui/controllers/util.kt" />
         <option value="$PROJECT_DIR$/../../Util/AlGaAs_permittivity/src/main/kotlin/AlGaAs_permittivity.kt" />
-        <option value="$PROJECT_DIR$/src/main/kotlin/core/layers/layers_with_excitons.kt" />
-        <option value="$PROJECT_DIR$/src/main/kotlin/core/layers/layers_with_plasmons.kt" />
-        <option value="$PROJECT_DIR$/src/main/kotlin/core/util/builders.kt" />
         <option value="$PROJECT_DIR$/src/main/kotlin/core/Mirror.kt" />
         <option value="$PROJECT_DIR$/src/main/kotlin/Main.kt" />
         <option value="$PROJECT_DIR$/data/inner/state_parameters/regime.txt" />
         <option value="$PROJECT_DIR$/src/main/kotlin/ui/controllers/ControlsController.kt" />
-        <option value="$APPLICATION_PLUGINS_DIR$/scratches/notes.txt" />
-        <option value="$PROJECT_DIR$/src/main/kotlin/core/util/validators.kt" />
-        <option value="$PROJECT_DIR$/src/main/kotlin/core/State.kt" />
-        <option value="$PROJECT_DIR$/src/main/kotlin/core/layers/simple_layers.kt" />
-        <option value="$PROJECT_DIR$/src/main/kotlin/core/util/optics_util.kt" />
         <option value="$PROJECT_DIR$/data/inner/state_parameters/structure.txt" />
+        <option value="$PROJECT_DIR$/data/inner/state_parameters/medium_parameters.txt" />
+        <option value="$PROJECT_DIR$/src/main/kotlin/core/State.kt" />
+        <option value="$PROJECT_DIR$/src/main/kotlin/core/util/optics_util.kt" />
+        <option value="$PROJECT_DIR$/src/main/kotlin/core/layers/layers_with_excitons.kt" />
+        <option value="$PROJECT_DIR$/src/main/kotlin/core/layers/simple_layers.kt" />
+        <option value="$PROJECT_DIR$/src/main/kotlin/core/layers/layers_with_plasmons.kt" />
+        <option value="$PROJECT_DIR$/src/main/kotlin/core/util/builders.kt" />
+        <option value="$PROJECT_DIR$/src/main/kotlin/core/util/validators.kt" />
+        <option value="$APPLICATION_PLUGINS_DIR$/scratches/notes.txt" />
       </list>
     </option>
   </component>
@@ -289,62 +301,6 @@
             </PATH_ELEMENT>
             <PATH_ELEMENT>
               <option name="myItemId" value="main" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="resources" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="Plasmirror_Kotlin" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="Plasmirror_Kotlin" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="src" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="main" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="resources" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="fxml" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="Plasmirror_Kotlin" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="Plasmirror_Kotlin" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="src" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="main" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="resources" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="css" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
@@ -915,8 +871,6 @@
     <option name="FILTER_TARGETS" value="false" />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/data/computed_multiple/calculation_R_600.0_1001.0_S-POL_^20.0_deg.txt" />
-    <entry file="file://$PROJECT_DIR$/data/computed_multiple/calculation_R_600.0_1001.0_S-POL_^30.0_deg.txt" />
     <entry file="jar:///Library/Java/JavaVirtualMachines/jdk1.8.0_101.jdk/Contents/Home/src.zip!/java/io/File.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="179">
@@ -1073,14 +1027,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/kotlin/core/util/descriptions.kt">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/main/resources/css/chart.css">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="2607">
@@ -1093,14 +1039,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="-18">
           <caret line="10" column="26" lean-forward="false" selection-start-line="10" selection-start-column="19" selection-end-line="10" selection-end-column="26" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/kotlin/core/util/structures.kt">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-9">
-          <caret line="16" column="33" lean-forward="false" selection-start-line="16" selection-start-column="33" selection-end-line="16" selection-end-column="33" />
           <folding />
         </state>
       </provider>
@@ -1137,29 +1075,11 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/kotlin/core/layers/layers_with_excitons.kt">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="552">
-          <caret line="31" column="27" lean-forward="false" selection-start-line="31" selection-start-column="27" selection-end-line="31" selection-end-column="27" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/../../Util/AlGaAs_permittivity/src/main/kotlin/AlGaAs_permittivity.kt">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="-810">
           <caret line="1" column="0" lean-forward="false" selection-start-line="1" selection-start-column="0" selection-end-line="2" selection-end-column="0" />
           <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/kotlin/core/layers/layers_with_plasmons.kt">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="804">
-          <caret line="49" column="0" lean-forward="false" selection-start-line="49" selection-start-column="0" selection-end-line="49" selection-end-column="0" />
-          <folding>
-            <element signature="e#21#267#0" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -1182,14 +1102,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/kotlin/core/util/builders.kt">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-279">
-          <caret line="11" column="0" lean-forward="false" selection-start-line="11" selection-start-column="0" selection-end-line="11" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/main/kotlin/core/Mirror.kt">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="-8">
@@ -1203,24 +1115,8 @@
         <state relative-caret-position="-8">
           <caret line="41" column="40" lean-forward="false" selection-start-line="41" selection-start-column="40" selection-end-line="41" selection-end-column="40" />
           <folding>
-            <element signature="e#0#236#0" expanded="true" />
+            <element signature="e#0#236#0" expanded="false" />
           </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/kotlin/ui/controllers/ControlsController.kt">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-8">
-          <caret line="37" column="38" lean-forward="false" selection-start-line="37" selection-start-column="38" selection-end-line="37" selection-end-column="38" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/kotlin/ui/controllers/main_controllers.kt">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-8">
-          <caret line="58" column="24" lean-forward="false" selection-start-line="58" selection-start-column="24" selection-end-line="58" selection-end-column="24" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1232,35 +1128,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$APPLICATION_PLUGINS_DIR$/scratches/notes.txt">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="46">
-          <caret line="2" column="14" lean-forward="false" selection-start-line="2" selection-start-column="0" selection-end-line="2" selection-end-column="14" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/kotlin/core/State.kt">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="69">
-          <caret line="9" column="0" lean-forward="false" selection-start-line="9" selection-start-column="0" selection-end-line="9" selection-end-column="0" />
-          <folding>
-            <element signature="e#14#251#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/kotlin/core/util/validators.kt">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="797">
-          <caret line="396" column="0" lean-forward="false" selection-start-line="396" selection-start-column="0" selection-end-line="396" selection-end-column="0" />
-          <folding>
-            <element signature="e#19#596#0" expanded="true" />
-            <element signature="n#!!block;n#OpticalParametersValidator#0" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/main/kotlin/core/util/global_enums.kt">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="46">
@@ -1269,43 +1136,152 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/kotlin/core/util/optics_util.kt">
+    <entry file="file://$PROJECT_DIR$/src/main/kotlin/core/util/descriptions.kt">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="442">
-          <caret line="391" column="23" lean-forward="true" selection-start-line="391" selection-start-column="23" selection-end-line="391" selection-end-column="23" />
-          <folding>
-            <element signature="e#19#235#0" expanded="true" />
-            <element signature="n#!!doc;n#toEnergy#0" expanded="false" />
-            <element signature="n#!!doc;n#n_GaAs#0" expanded="false" />
-            <element signature="n#!!doc;n#cosThetaInLayer#0" expanded="false" />
-            <element signature="n#!!block;n#cosThetaInLayer#0" expanded="false" />
-            <element signature="n#!!block;n#round#0" expanded="false" />
-            <element signature="n#!!block;n#epsAdachi#0;n#!!block;n#AlGaAsPermittivity#0" expanded="false" />
-            <element signature="n#!!block;n#nAdachi#0;n#!!block;n#AlGaAsPermittivity#0" expanded="false" />
-            <element signature="n#!!block;n#nGauss#0;n#!!block;n#AlGaAsPermittivity#0" expanded="false" />
-            <element signature="n#!!block;n#eps_1#0;n#!!block;n#AlGaAsPermittivity#0" expanded="false" />
-            <element signature="n#!!block;n#eps_2#0;n#!!block;n#AlGaAsPermittivity#0" expanded="false" />
-            <element signature="n#!!block;n#eps_3#0;n#!!block;n#AlGaAsPermittivity#0" expanded="false" />
-            <element signature="n#!!block;n#eps_4#0;n#!!block;n#AlGaAsPermittivity#0" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/kotlin/core/layers/simple_layers.kt">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="187">
-          <caret line="40" column="3" lean-forward="true" selection-start-line="40" selection-start-column="3" selection-end-line="40" selection-end-column="3" />
-          <folding>
-            <element signature="n#!!block;n#SimpleLayer#0" expanded="false" />
-          </folding>
+        <state relative-caret-position="46">
+          <caret line="2" column="27" lean-forward="false" selection-start-line="2" selection-start-column="27" selection-end-line="2" selection-end-column="27" />
+          <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/data/inner/state_parameters/structure.txt">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="46">
-          <caret line="2" column="1" lean-forward="false" selection-start-line="2" selection-start-column="1" selection-end-line="2" selection-end-column="1" />
+        <state relative-caret-position="23">
+          <caret line="1" column="3" lean-forward="false" selection-start-line="1" selection-start-column="3" selection-end-line="1" selection-end-column="3" />
           <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/kotlin/ui/controllers/main_controllers.kt">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="179">
+          <caret line="52" column="0" lean-forward="false" selection-start-line="52" selection-start-column="0" selection-end-line="52" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/kotlin/core/util/structures.kt">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-64">
+          <caret line="9" column="3" lean-forward="true" selection-start-line="9" selection-start-column="3" selection-end-line="9" selection-end-column="3" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/kotlin/ui/controllers/ControlsController.kt">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="115">
+          <caret line="16" column="0" lean-forward="false" selection-start-line="16" selection-start-column="0" selection-end-line="16" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/kotlin/ui/controllers/chart_controllers.kt">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="170">
+          <caret line="240" column="0" lean-forward="false" selection-start-line="240" selection-start-column="0" selection-end-line="240" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/data/inner/state_parameters/medium_parameters.txt">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="138">
+          <caret line="6" column="0" lean-forward="false" selection-start-line="6" selection-start-column="0" selection-end-line="6" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/kotlin/core/State.kt">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="350">
+          <caret line="85" column="33" lean-forward="true" selection-start-line="85" selection-start-column="33" selection-end-line="85" selection-end-column="33" />
+          <folding>
+            <element signature="e#14#277#0" expanded="true" />
+            <element signature="n#!!block;n#clearPreviousComputation#0;n#!!block;n#State#0" expanded="false" />
+            <element signature="n#!!block;n#compute#0;n#!!block;n#State#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/kotlin/core/util/optics_util.kt">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-218">
+          <caret line="79" column="112" lean-forward="false" selection-start-line="79" selection-start-column="112" selection-end-line="79" selection-end-column="112" />
+          <folding>
+            <element signature="e#19#237#0" expanded="true" />
+            <element signature="n#!!doc;n#toEnergy#0" expanded="false" />
+            <element signature="n#!!doc;n#cosThetaInLayer#0" expanded="false" />
+            <element signature="n#!!block;n#cosThetaInLayer#0" expanded="false" />
+            <element signature="n#!!block;n#round#0" expanded="false" />
+            <element signature="e#1364#1768#2" expanded="false" />
+            <marker date="1502705910000" expanded="false" signature="2696:3212" ph="{...}" />
+            <marker date="1502705910000" expanded="false" signature="4551:5418" ph="/** Finds intersection point for both approaches ...*/" />
+            <marker date="1502705910000" expanded="false" signature="5463:6823" ph="{...}" />
+            <marker date="1502705910000" expanded="false" signature="6869:7005" ph="{...}" />
+            <marker date="1502705910000" expanded="false" signature="7366:8266" ph="{...}" />
+            <marker date="1502705910000" expanded="false" signature="8319:8804" ph="{...}" />
+            <marker date="1502705910000" expanded="false" signature="8857:9648" ph="{...}" />
+            <marker date="1502705910000" expanded="false" signature="9701:10221" ph="{...}" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/kotlin/core/layers/layers_with_excitons.kt">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-1">
+          <caret line="51" column="53" lean-forward="false" selection-start-line="51" selection-start-column="53" selection-end-line="51" selection-end-column="53" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/kotlin/core/layers/simple_layers.kt">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="897">
+          <caret line="61" column="58" lean-forward="false" selection-start-line="61" selection-start-column="58" selection-end-line="61" selection-end-column="58" />
+          <folding>
+            <element signature="e#21#277#0" expanded="true" />
+            <element signature="n#!!block;n#SimpleLayer#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/kotlin/core/layers/layers_with_plasmons.kt">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="265">
+          <caret line="42" column="54" lean-forward="false" selection-start-line="42" selection-start-column="54" selection-end-line="42" selection-end-column="54" />
+          <folding>
+            <element signature="e#21#256#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$APPLICATION_PLUGINS_DIR$/scratches/notes.txt">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="46">
+          <caret line="2" column="11" lean-forward="true" selection-start-line="2" selection-start-column="11" selection-end-line="2" selection-end-column="11" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/kotlin/core/util/validators.kt">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="240">
+          <caret line="167" column="21" lean-forward="true" selection-start-line="167" selection-start-column="21" selection-end-line="167" selection-end-column="21" />
+          <folding>
+            <element signature="e#19#596#0" expanded="true" />
+            <element signature="n#!!block;n#MultipleExportDialogParametersValidator#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/kotlin/core/util/builders.kt">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-708">
+          <caret line="47" column="173" lean-forward="false" selection-start-line="47" selection-start-column="173" selection-end-line="47" selection-end-column="173" />
+          <folding>
+            <element signature="e#19#263#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>

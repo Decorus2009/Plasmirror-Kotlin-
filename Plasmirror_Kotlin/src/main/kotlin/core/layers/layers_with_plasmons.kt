@@ -1,9 +1,9 @@
 package core.layers
 
 import core.State.wavelengthCurrent
-import core.util.AlGaAsPermittivity
 import core.util.AlGaAsPermittivity.eps_AlGaAs
 import core.util.Cmplx
+import core.util.EpsType
 import core.util.toEnergy
 import org.apache.commons.math3.complex.Complex.NaN
 import java.lang.Math.sqrt
@@ -19,10 +19,9 @@ import java.lang.Math.sqrt
  */
 class EffectiveMedium(d: Double,
                       val x: Double,
-                      private val wPlasma: Double,
-                      private val gammaPlasma: Double,
-                      private val f: Double,
-                      private val eps_inf: Double = 1.0) : SimpleLayer(d) {
+                      private val wPlasma: Double, private val gammaPlasma: Double,
+                      private val f: Double, private val eps_inf: Double = 1.0,
+                      val eps_type: EpsType) : SimpleLayer(d) {
 
     override var n = Cmplx(NaN)
         get() {
@@ -41,7 +40,7 @@ class EffectiveMedium(d: Double,
     private fun eps_eff(wavelength: Double): Cmplx {
         val f = Cmplx(f)
         val eps_m = eps_m(wavelength)
-        val eps_s = eps_AlGaAs(wavelength, x)
+        val eps_s = eps_AlGaAs(wavelength, x, eps_type)
         val numerator = f * 2.0 * (eps_m - eps_s) + eps_m + (eps_s * 2.0)
         val denominator = (eps_s * 2.0) + eps_m + (f * (eps_s - eps_m))
         return eps_s * (numerator / denominator)

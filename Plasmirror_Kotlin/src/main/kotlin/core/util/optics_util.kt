@@ -1,53 +1,29 @@
 package core.util
 
 import core.State
-import core.State.GaAs_n
 import core.State.angle
 import core.layers.*
+import core.util.EpsType.*
 import org.apache.commons.math3.complex.Complex.ONE
 import org.apache.commons.math3.complex.Complex.ZERO
 import java.lang.Math.*
+
+
+enum class Medium { AIR, GAAS, OTHER }
+
+enum class Polarization { S, P }
+
+enum class Regime { R, T, A, EPS, N }
+
+enum class EpsType { ADACHI, GAUSS, GAUSS_ADACHI }
+
 
 /**
  * @param wavelength wavelength
  */
 fun toEnergy(wavelength: Double) = 1239.8 / wavelength
 
-/**
- * Adachi approximation for Al(x)Ga(1-x)As dielectric function
- * @param wavelength wavelength
- * @param x AlAs concentration
- * *
- * @return n_AlGaAs
- */
-//fun n_AlGaAs(wavelength: Double, x: Double): Double {
-//    var w = toEnergy(wavelength)
-//    val delta = 0.34 - 0.04 * x // eV
-//    val Eg = 1.425 + 1.155 * x + 0.37 * x * x
-//    val A = 6.3 + 19.0 * x
-//    val B = 9.4 - 10.2 * x
-//
-//    if (w > Eg) {
-//        w = Eg
-//    }
-//
-//    val hi = w / Eg
-//    val hi_so = w / (Eg + delta)
-//
-//    val f: (Double) -> Double = { (2.0 - sqrt(1 + it) - sqrt(1 - it)) / (it * it) }
-//    return sqrt(A * (f.invoke(hi) + 0.5 * pow(Eg / (Eg + delta), 1.5) * f.invoke(hi_so)) + B)
-//}
-
-/**
- * @param wavelength wavelength
- *
- * @return n_GaAs
- */
-fun n_GaAs(wavelength: Double): Cmplx? = when {
-    wavelength < 240.0 -> GaAs_n[240.0]
-    wavelength > 1800.0 -> GaAs_n[1800.0]
-    else -> GaAs_n[wavelength.round()]
-}
+fun cosThetaIncident() = Cmplx(cos(angle * PI / 180.0))
 
 /**
  *  Snell law
@@ -63,8 +39,6 @@ fun cosThetaInLayer(n2: Cmplx): Cmplx {
     return Cmplx((Cmplx(ONE) - sin2_sq).sqrt())
 }
 
-fun cosThetaIncident() = Cmplx(cos(angle * PI / 180.0))
-
 fun Double.round(): Double {
     val precision = 7.0
     val power = pow(10.0, precision).toInt()
@@ -79,7 +53,7 @@ fun Double.round(): Double {
  */
 object AlGaAsPermittivity {
 
-    val AdachiGaussIntersections = mutableMapOf<Double, Double>()
+    val GaussAdachiIntersections = mutableMapOf<Double, Double>()
 
     fun preprocessIntersections() = with(State.mirror) {
         (structure.blocks.flatMap { it.layers } + leftMediumLayer + rightMediumLayer).forEach {
@@ -91,6 +65,69 @@ object AlGaAsPermittivity {
             }
         }
     }
+
+    /**
+     * If w < intersection energy, returns permittivity computed by the Adachi'85 approximation
+     * (with imaginary part computed by the Gauss approximation)
+     * Else returns permittivity computed using the Gauss approximation
+     */
+    fun eps_AlGaAs(wavelength: Double, x: Double, eps_type: EpsType) = when(eps_type) {
+        ADACHI -> epsAdachi(toEnergy(wavelength), x)
+        GAUSS -> epsGauss(toEnergy(wavelength), x)
+        GAUSS_ADACHI -> epsGaussAdachi(toEnergy(wavelength), x)
+    }
+
+    fun n_AlGaAs(wavelength: Double, x: Double, eps_type: EpsType) = eps_to_n(eps_AlGaAs(wavelength, x, eps_type))
+
+    /**
+     * Permittivity (Adachi)
+     * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+     */
+    private fun epsAdachi(w: Double, x: Double) = n_to_eps(nAdachi(w, x))
+
+    private fun nAdachi(w: Double, x: Double): Cmplx {
+        var w_ = w
+        val Eg = 1.425 + 1.155 * x + 0.37 * x * x
+        /* nonrecursive */
+        if (w_ > Eg) {
+            w_ = Eg
+        }
+        val delta = 0.34 - 0.04 * x // eV
+        val A = 6.3 + 19.0 * x
+        val B = 9.4 - 10.2 * x
+        val hi = w_ / Eg
+        val hi_so = w_ / (Eg + delta)
+        val f: (Double) -> Double = { (2.0 - sqrt(1 + it) - sqrt(1 - it)) / (it * it) }
+        return Cmplx(sqrt(A * (f.invoke(hi) + 0.5 * pow(Eg / (Eg + delta), 1.5) * f.invoke(hi_so)) + B))
+    }
+    /** * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+
+    /**
+     * Permittivity (Gauss)
+     * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+     */
+    private fun epsGauss(w: Double, x: Double) = eps_inf(x) + eps_1(w, x) + eps_2(w, x) + eps_3(w, x) + eps_4(w, x)
+
+    private fun nGauss(w: Double, x: Double) = eps_to_n(epsGauss(w, x))
+    /** * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+
+    /**
+     * Permittivity (Gauss-Adachi)
+     * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+     */
+    private fun epsGaussAdachi(w: Double, x: Double): Cmplx {
+        if (GaussAdachiIntersections[x] == null) {
+            findIntersection(x)
+        }
+        return if (w < GaussAdachiIntersections[x]!!) {
+            Cmplx(epsAdachi(w, x).real, epsGauss(w, x).imaginary)
+        } else {
+            epsGauss(w, x)
+        }
+    }
+
+    private fun nGaussAdachi(w: Double, x: Double) = eps_to_n(epsGaussAdachi(w, x))
+    /** * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
     /**
      * Finds intersection point for both approaches
@@ -138,83 +175,26 @@ object AlGaAsPermittivity {
         val upperBound = E0(x)
         val nGaussReal = w.indices.map { nGauss[it].real }
         val nAdachiReal = w.indices.map { nAdachi[it].real }
-        AdachiGaussIntersections.putIfAbsent(x, w.indices
+        GaussAdachiIntersections.putIfAbsent(x, w.indices
                 .map { Diff(w[it], diff = abs(nGaussReal[it] - nAdachiReal[it])) }
                 .filter { it.w > 1.4 && it.w < upperBound }.minBy { it.diff }!!.w)
     }
 
-    /**
-     * If w < intersection energy, returns permittivity computed by the Adachi'85 approximation
-     * (with imaginary part computed by the Gauss approximation)
-     * Else returns permittivity computed using the Gauss approximation
-     */
-    fun eps_AlGaAs(wavelength: Double, x: Double): Cmplx {
-        if (AdachiGaussIntersections[x] == null) {
-            println("Finding intersection for $x")
-            findIntersection(x)
-        }
-        val w = toEnergy(wavelength)
-        return if (w < AdachiGaussIntersections[x]!!) {
-            Cmplx(epsAdachi(w, x).real, epsGauss(w, x).imaginary)
-        } else {
-            epsGauss(w, x)
-        }
-    }
-
-    fun n_AlGaAs(wavelength: Double, x: Double): Cmplx {
-        val eps = eps_AlGaAs(wavelength, x)
+    private fun eps_to_n(eps: Cmplx): Cmplx {
         val n = sqrt((eps.abs() + eps.real) / 2.0)
         val k = sqrt((eps.abs() - eps.real) / 2.0)
         return Cmplx(n, k)
     }
 
-    /**
-     * Permittivity (Adachi)
-     * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
-     */
-    private fun epsAdachi(w: Double, x: Double): Cmplx {
-        val nAdachi = nAdachi(w, x)
-        return Cmplx(nAdachi * nAdachi)
-    }
-
-    private fun nAdachi(w: Double, x: Double): Cmplx {
-        var w_ = w
-        val Eg = 1.425 + 1.155 * x + 0.37 * x * x
-        /* nonrecursive */
-        if (w_ > Eg) {
-            w_ = Eg
-        }
-        val delta = 0.34 - 0.04 * x // eV
-        val A = 6.3 + 19.0 * x
-        val B = 9.4 - 10.2 * x
-        val hi = w_ / Eg
-        val hi_so = w_ / (Eg + delta)
-        val f: (Double) -> Double = { (2.0 - sqrt(1 + it) - sqrt(1 - it)) / (it * it) }
-        return Cmplx(sqrt(A * (f.invoke(hi) + 0.5 * pow(Eg / (Eg + delta), 1.5) * f.invoke(hi_so)) + B))
-    }
-    /** * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+    private fun n_to_eps(n: Cmplx) = Cmplx(n * n)
 
 
     /**
-     * Permittivity (Gauss)
+     * Permittivity (Gauss) details
      * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
      */
     /**
-     * @param w Energy (eV)
-     * @param x Al concentration
-     * @return AlGaAs permittivity for w and x
-     */
-    private fun epsGauss(w: Double, x: Double) = eps_inf(x) + eps_1(w, x) + eps_2(w, x) + eps_3(w, x) + eps_4(w, x)
-
-    private fun nGauss(w: Double, x: Double): Cmplx {
-        val epsGauss = epsGauss(w, x)
-        val nGauss = sqrt((epsGauss.abs() + epsGauss.real) / 2.0)
-        val kGauss = sqrt((epsGauss.abs() - epsGauss.real) / 2.0)
-        return Cmplx(nGauss, kGauss)
-    }
-
-    /**
-     * AlGaAs permittivity components. Look at the paper
+     * AlGaAs Gauss permittivity components. Look at the paper
      */
     private fun eps_1(w: Double, x: Double): Cmplx {
         val A = A(x)
@@ -376,21 +356,3 @@ object AlGaAsPermittivity {
     private fun E4(x: Double) = parameterCubic(x, doubleArrayOf(4.860, 4.976, -0.229, 0.081))
     /** * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 }
-
-enum class Medium {
-    AIR, GAAS, OTHER
-}
-
-enum class Polarization {
-    S, P
-}
-
-enum class Regime {
-    R, T, A, EPS, N
-}
-
-enum class PermittivityComputationType {
-    ADACHI, GAUSS, ADACHI_GAUSS
-}
-
-

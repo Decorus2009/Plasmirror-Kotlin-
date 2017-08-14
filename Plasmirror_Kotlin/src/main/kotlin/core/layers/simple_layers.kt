@@ -1,11 +1,9 @@
 package core.layers
 
 import core.State.wavelengthCurrent
+import core.util.*
 import core.util.AlGaAsPermittivity.n_AlGaAs
-import core.util.Cmplx
-import core.util.Layer
-import core.util.Mtrx
-import core.util.cosThetaInLayer
+import core.util.EpsType.ADACHI
 import org.apache.commons.math3.complex.Complex
 import org.apache.commons.math3.complex.Complex.NaN
 import java.lang.Math.PI
@@ -42,22 +40,27 @@ abstract class SimpleLayer(d: Double) : Layer(d) {
  * GaAs
  * refractiveIndex is taken from the interpolation table for the given wavelength
  */
-class GaAs(d: Double) : SimpleLayer(d) {
+class GaAs(d: Double, val eps_Type: EpsType) : SimpleLayer(d) {
     override var n = Cmplx(NaN)
-        get() = n_AlGaAs(wavelengthCurrent, x = 0.0)
+        get() = n_AlGaAs(wavelengthCurrent, x = 0.0, eps_type = eps_Type)
 }
 
 
 /**
  * AlGaAs
  *
- * @param k refractiveIndex = (Re(refractiveIndex); Im(refractiveIndex) = k * Re(refractiveIndex)) Re(refractiveIndex) is from Adachi
+ * @param k n = (Re(n); Im(n) = k * Re(n)) Re(n) is from Adachi
  * @param x AlAs concentration
  */
-class AlGaAs(d: Double,
-             private val k: Double, val x: Double) : SimpleLayer(d) {
+class AlGaAs(d: Double, private val k: Double, val x: Double, val eps_type: EpsType) : SimpleLayer(d) {
     override var n = Cmplx(NaN)
-        get() = n_AlGaAs(wavelengthCurrent, x)
+        get() {
+            if (eps_type == ADACHI) {
+                val n_AlGaAs = n_AlGaAs(wavelengthCurrent, x, eps_type)
+                return Cmplx(n_AlGaAs.real, n_AlGaAs.real * k)
+            }
+            return n_AlGaAs(wavelengthCurrent, x, eps_type)
+        }
 }
 
 

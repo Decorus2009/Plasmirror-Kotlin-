@@ -111,15 +111,15 @@ private object OpticalParametersValidator {
  */
 private object StructureValidator {
     private var parameterNumbers = mapOf(
-            1 to 2,
-            2 to 4,
-            3 to 3,
-            4 to 5,
-            5 to 7,
-            6 to 6,
-            7 to 6,
-            8 to 6,
-            9 to 5
+            "1-1" to 2, "1-2" to 2, "1-3" to 2,
+            "2-1" to 4, "2-2" to 4, "2-3" to 4,
+            "3" to 3,
+            "4-1" to 5, "4-2" to 5, "4-2" to 5,
+            "5-1" to 7, "5-2" to 7, "5-2" to 7,
+            "6" to 6,
+            "7-1" to 6, "7-2" to 6, "7-3" to 6,
+            "8" to 6,
+            "9" to 5
     )
 
     /**
@@ -150,11 +150,7 @@ private object StructureValidator {
      * @return structure representation as lines
      */
     @Throws(StructureDescriptionException::class)
-    private fun toLines(structure: String): List<String> = structure.lines().filter { it.isNotBlank() }.apply {
-        //        if (isEmpty()) {
-//            throw StructureDescriptionException("Empty structure description")
-//        }
-    }
+    private fun toLines(structure: String): List<String> = structure.lines().filter { it.isNotBlank() }
 
     /**
      * Tokenizes each line of the structure
@@ -233,14 +229,18 @@ private object StructureValidator {
          * Check the layer type parameter to correspond to the appropriate number of parameters for a layer
          */
         tokenizedLines.filter { it[0].startsWith("x").not() }.forEach {
-            try {
-                val type = it[0].toInt()
-                if (type !in parameterNumbers.keys || parameterNumbers[type] != it.size) {
-                    throw StructureDescriptionException("Invalid layer type or incorrect number of parameters for a layer")
-                }
-            } catch (e: NumberFormatException) {
-                throw StructureDescriptionException("Invalid layer type or incorrect number of layer parameters")
+            val type = it[0]
+            if (type !in parameterNumbers.keys || parameterNumbers[type] != it.size) {
+                throw StructureDescriptionException("Invalid layer type or incorrect number of parameters for a layer")
             }
+//            try {
+//                val type = it[0].toInt()
+//                if (type !in parameterNumbers.keys || parameterNumbers[type] != it.size) {
+//                    throw StructureDescriptionException("Invalid layer type or incorrect number of parameters for a layer")
+//                }
+//            } catch (e: NumberFormatException) {
+//                throw StructureDescriptionException("Invalid layer type or incorrect number of layer parameters")
+//            }
         }
         /**
          * Check complex parameters format
@@ -279,7 +279,9 @@ private object StructureValidator {
         tokenizedLines.flatMap { it }
                 /* exclude complex and period */
                 .filter {
-                    (it.contains(Regex("^[x][0-9]+$"))).not() && (it.contains("(") && it.contains(")")).not()
+                    (it.contains(Regex("^[x][0-9]+$"))).not()
+                            && (it.contains("(") && it.contains(")")).not()
+                            && (it.contains("-")).not()
                 }
                 .forEach { value ->
                     try {
