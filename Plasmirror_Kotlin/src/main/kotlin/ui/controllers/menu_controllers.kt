@@ -4,9 +4,9 @@ package ui.controllers
 import MainApp
 import core.State
 import core.State.polarization
-import core.util.MultipleExportDialogParametersValidator
-import core.util.Polarization
-import core.util.ValidateResult.SUCCESS
+import core.MultipleExportDialogParametersValidator
+import core.Polarization
+import core.ValidateResult.SUCCESS
 import javafx.fxml.FXML
 import javafx.fxml.FXMLLoader
 import javafx.scene.Scene
@@ -183,7 +183,7 @@ class MultipleExportDialogController {
         directoryButton.setOnMouseClicked {
             with(DirectoryChooser()) {
                 initialDirectory = File(".${separator}data${separator}computed_multiple")
-                /*
+                /**
                 Need to pass Window or Stage. There's no access to any Stage object from this controller
                 Solution: any Node from fxml that has fx:id
                 http://stackoverflow.com/questions/25491732/how-do-i-open-the-javafx-filechooser-from-a-controller-class
@@ -198,7 +198,7 @@ class MultipleExportDialogController {
                 if (validateRegime() == SUCCESS && validateChosenDirectory() == SUCCESS) {
                     if (anglesSelected()) {
                         if (validateAngles() == SUCCESS) {
-                            /*
+                            /**
                             Computation process runs through the setting fields in GUI (angle, polarization, etc.).
                             After that the validation takes place parsing these GUI fields and setting actual inner
                             parameters in program (State.angle, State.polarization, etc.).
@@ -223,7 +223,6 @@ class MultipleExportDialogController {
                                 writeComputedDataTo(File("${chosenDirectory!!.canonicalPath}$separator${buildExportFileName()}.txt"))
                                 currentAngle += angleStep
                             }
-
                             with(State.mainController.globalParametersController.lightParametersController) {
                                 angleTextField.text = initialAngle
                                 polarizationChoiceBox.value = initialPolarization
@@ -263,9 +262,7 @@ class HelpInfoController {
 
     @FXML
     fun initialize() {
-        helpTextArea.text = Files.lines(path).toList()
-                .filter { it.isNotBlank() }
-                .reduce { text, line -> text + "\n" + line }
+        helpTextArea.text = Files.lines(path).toList().filter { it.isNotBlank() }.reduce { text, line -> text + "\n" + line }
     }
 }
 

@@ -10,7 +10,7 @@ import core.State.regime
 import core.State.transmission
 import core.State.wavelengthFrom
 import core.State.wavelengthTo
-import core.util.Regime.*
+import core.Regime.*
 import javafx.scene.control.*
 import java.io.File
 import java.util.*

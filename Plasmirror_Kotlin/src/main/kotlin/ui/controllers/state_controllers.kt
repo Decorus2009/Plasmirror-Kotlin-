@@ -7,13 +7,13 @@ import core.State.n_right
 import core.State.polarization
 import core.State.regime
 import core.State.rightMedium
-import core.util.Medium
-import core.util.Medium.*
-import core.util.Polarization
-import core.util.Polarization.P
-import core.util.Polarization.S
-import core.util.Regime
-import core.util.Regime.*
+import core.Medium
+import core.Medium.*
+import core.Polarization
+import core.Polarization.P
+import core.Polarization.S
+import core.Regime
+import core.Regime.*
 import javafx.fxml.FXML
 import javafx.scene.control.ChoiceBox
 import javafx.scene.control.Label
@@ -111,7 +111,7 @@ class TemperatureController {
         /* set initial values */
         T_TextField.isDisable = true
 
-        // TODO read from file
+        /* TODO read from file */
     }
 }
 
@@ -300,9 +300,8 @@ class StructureDescriptionController {
     fun initialize() {
         println("Structure description controller set")
         /* set initial value */
-        structureDescriptionTextArea.text = Files.lines(path).toList()
-//                .filter { it.isNotBlank() }
-                .reduce { text, line -> text + "\n" + line }
+        structureDescriptionTextArea.selectedText
+        structureDescriptionTextArea.text = Files.lines(path).toList().reduce { text, line -> text + "\n" + line }
     }
 
     fun writeStructureDescription() = structureDescriptionTextArea.text.writeTo(path.toFile())

@@ -6,7 +6,7 @@ import core.State.mainController
 import core.State.regime
 import core.State.wavelengthTo
 import core.State.wavelengthFrom
-import core.util.Regime.*
+import core.Regime.*
 import javafx.application.Platform
 import javafx.event.EventHandler
 import javafx.fxml.FXML
@@ -26,6 +26,7 @@ import javafx.scene.paint.Color
 import javafx.scene.shape.Rectangle
 import javafx.scene.shape.StrokeType
 import javafx.util.StringConverter
+import javafx.util.converter.NumberStringConverter
 import org.gillius.jfxutils.JFXUtil
 import org.gillius.jfxutils.chart.ChartPanManager
 import org.gillius.jfxutils.chart.ChartZoomManager
@@ -380,6 +381,7 @@ class LineChartController {
             .filter { it is Label }.map { it as Label }
 }
 
+
 object LineChartState {
 
     private val colors = mapOf(
@@ -536,7 +538,6 @@ object LineChartState {
 }
 
 
-
 class SeriesManagerController {
 
     lateinit var mainController: MainController
@@ -591,9 +592,9 @@ class SeriesManagerController {
             }
         }
 
-        visibleCheckBox.let {
-            it.isSelected = true
-            it.setOnAction {
+        with(visibleCheckBox) {
+            isSelected = true
+            setOnAction {
                 selectedSeries.visible = selectedSeries.visible.not()
                 mainController.lineChartController.setVisibilityBy(selectedSeries)
             }
@@ -642,5 +643,121 @@ class SeriesManagerController {
         disable(colorPicker)
         disable(visibleCheckBox)
         disable(removeButton)
+    }
+}
+
+
+class XAxisRangeController {
+
+    lateinit var mainController: MainController
+
+    @FXML private lateinit var fromTextField: TextField
+    @FXML private lateinit var toTextField: TextField
+    @FXML private lateinit var tickTextField: TextField
+
+    /**
+     * Platform.runLater due to the mainController is not initialized during this.initialize()
+     *
+     * Using of Locale.ROOT is explained here http://stackoverflow.com/a/5236096/7149251
+     *
+     * Here I use StringConverter<Number> parametrized with Number
+     * due to different properties (incompatible) StringProperty and DoubleProperty
+     * http://stackoverflow.com/questions/21450328/how-to-bind-two-different-javafx-properties-string-and-double-with-stringconve
+     *
+     * toDouble parsing is here in listeners, not in validators due to the real-time response
+     */
+    @FXML
+    fun initialize() = Platform.runLater {
+        with(mainController.lineChartController.xAxis) {
+            val converter = NumberStringConverter(Locale.ROOT)
+            with(fromTextField) {
+                text = lowerBound.toString()
+                textProperty().bindBidirectional(lowerBoundProperty(), converter)
+                textProperty().addListener { _, _, newValue ->
+                    try {
+                        lowerBound = newValue.toDouble()
+                    } catch (ignored: NumberFormatException) {
+                    }
+                }
+            }
+            with(toTextField) {
+                text = upperBound.toString()
+                textProperty().bindBidirectional(upperBoundProperty(), converter)
+                textProperty().addListener { _, _, newValue ->
+                    try {
+                        upperBound = newValue.toDouble()
+                    } catch (ignored: NumberFormatException) {
+                    }
+                }
+            }
+            with(tickTextField) {
+                text = tickUnit.toString()
+                textProperty().bindBidirectional(tickUnitProperty(), converter)
+                textProperty().addListener { _, _, newValue ->
+                    try {
+                        tickUnit = newValue.toDouble()
+                    } catch (ignored: NumberFormatException) {
+                    }
+                }
+            }
+        }
+    }
+}
+
+
+class YAxisRangeController {
+
+    lateinit var mainController: MainController
+
+    @FXML private lateinit var fromTextField: TextField
+    @FXML private lateinit var toTextField: TextField
+    @FXML private lateinit var tickTextField: TextField
+
+    /**
+     * Platform.runLater due to the mainController is not initialized during this.initialize()
+     *
+     * Using of Locale.ROOT is explained here http://stackoverflow.com/a/5236096/7149251
+     *
+     * Here I use StringConverter<Number> parametrized with Number
+     * due to different properties (incompatible) StringProperty and DoubleProperty
+     * http://stackoverflow.com/questions/21450328/how-to-bind-two-different-javafx-properties-string-and-double-with-stringconve
+     *
+     * toDouble parsing is here in listeners, not in validators due to the real-time response
+     */
+    @FXML
+    fun initialize() = Platform.runLater {
+        with(mainController.lineChartController.yAxis) {
+            val converter = NumberStringConverter(Locale.ROOT)
+            with(fromTextField) {
+                text = lowerBound.toString()
+                textProperty().bindBidirectional(lowerBoundProperty(), converter)
+                textProperty().addListener { _, _, newValue ->
+                    try {
+                        lowerBound = newValue.toDouble()
+                    } catch (ignored: NumberFormatException) {
+                    }
+                }
+            }
+            with(toTextField) {
+                text = upperBound.toString()
+                textProperty().bindBidirectional(upperBoundProperty(), converter)
+                textProperty().addListener { _, _, newValue ->
+                    try {
+                        upperBound = newValue.toDouble()
+                    } catch (ignored: NumberFormatException) {
+                    }
+                }
+            }
+            with(tickTextField) {
+                text = tickUnit.toString()
+                textProperty().bindBidirectional(tickUnitProperty(), converter)
+                textProperty().addListener { _, _, newValue ->
+                    try {
+                        tickUnit = newValue.toDouble()
+                    } catch (ignored: NumberFormatException) {
+                    }
+                }
+            }
+        }
     }
 }

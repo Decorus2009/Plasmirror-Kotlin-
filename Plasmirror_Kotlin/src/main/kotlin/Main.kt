@@ -41,9 +41,6 @@ class MainApp : Application() {
         with(Scene(rootLayout)) {
             stylesheets.add("css/chart.css")
             primaryStage.scene = this
-            primaryStage.setOnCloseRequest {
-//                rootController.mainController.writeParametersChangingsToFiles()
-            }
             primaryStage.show()
         }
     }

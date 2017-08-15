@@ -2,7 +2,15 @@ package ui.controllers
 
 import MainApp
 import core.State
+import core.ValidateResult
+import javafx.application.Platform
 import javafx.fxml.FXML
+import javafx.scene.control.Button
+import javafx.scene.control.Label
+import javafx.scene.input.KeyCode
+import javafx.scene.input.KeyCodeCombination
+import javafx.scene.input.KeyCombination
+import java.util.*
 
 class RootController {
 
@@ -14,7 +22,7 @@ class RootController {
     @FXML
     fun initialize() {
         println("Root controller set")
-        /*
+        /**
         mainController is "lateinit" due to it's initialized through the reflection (@FXML)
         BEFORE the root controller initialization.
          */
@@ -27,7 +35,6 @@ class RootController {
 class MainController {
 
     lateinit var rootController: RootController
-    private lateinit var mainApp: MainApp
     @FXML lateinit var structureDescriptionController: StructureDescriptionController
     @FXML lateinit var globalParametersController: GlobalParametersController
     @FXML lateinit var lineChartController: LineChartController
@@ -40,7 +47,6 @@ class MainController {
     @FXML
     fun initialize() {
         println("Main controller set")
-
         globalParametersController.mainController = this
         controlsController.mainController = this
         lineChartController.mainController = this
@@ -48,7 +54,7 @@ class MainController {
         yAxisRangeController.mainController = this
         seriesManagerController.mainController = this
 
-        State.run {
+        with(State) {
             mainController = this@MainController
             set()
             compute()
@@ -61,3 +67,38 @@ class MainController {
         structureDescriptionController.writeStructureDescription()
     }
 }
+
+
+class ControlsController {
+
+    lateinit var mainController: MainController
+    @FXML private lateinit var computationTimeLabel: Label
+    @FXML private lateinit var computeButton: Button
+
+    @FXML
+    fun initialize() {
+        with(computeButton) {
+            Platform.runLater {
+                scene.accelerators
+                        .put(KeyCodeCombination(KeyCode.SPACE, KeyCombination.SHORTCUT_DOWN), Runnable(this::fire))
+            }
+            setOnAction {
+                with(State) {
+                    if (set() == ValidateResult.SUCCESS) {
+                        val startTime = System.nanoTime()
+                        compute()
+                        val stopTime = System.nanoTime()
+                        computationTimeLabel.text =
+                                "Computation time: ${kotlin.String.format(Locale.US, "%.2f", (stopTime - startTime).toDouble() / 1E6)} ms"
+                        /**
+                        Write to file last successful computation parameters
+                         */
+                        mainController.writeParametersChangingsToFiles()
+                        mainController.lineChartController.updateLineChart()
+                    }
+                }
+            }
+        }
+    }
+}
+

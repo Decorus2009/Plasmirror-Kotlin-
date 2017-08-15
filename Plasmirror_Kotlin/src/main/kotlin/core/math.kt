@@ -1,0 +1,72 @@
+package core
+
+import org.apache.commons.math3.complex.Complex
+import org.apache.commons.math3.complex.Complex.*
+import org.apache.commons.math3.complex.ComplexField
+import org.apache.commons.math3.linear.Array2DRowFieldMatrix
+import org.apache.commons.math3.linear.FieldMatrix
+
+class Complex_(real: Double, imaginary: Double) : Complex(real, imaginary) {
+
+    constructor(real: Double) : this(real, 0.0)
+    constructor(complex: Complex) : this(complex.real, complex.imaginary)
+
+    operator fun plus(that: Complex?) = Complex_(this.add(that!!))
+    operator fun plus(that: Double) = Complex_(this.add(that))
+    operator fun plus(that: Complex_) = Complex_(this.add(that))
+
+    operator fun minus(that: Complex?) = Complex_(this.subtract(that!!))
+    operator fun minus(that: Double) = Complex_(this.subtract(that))
+    operator fun minus(that: Complex_) = Complex_(this.subtract(that))
+
+    operator fun times(that: Complex?) = Complex_(this.multiply(that!!))
+    operator fun times(that: Double) = Complex_(this.multiply(that))
+    operator fun times(that: Complex_) = Complex_(this.multiply(that))
+
+    operator fun div(that: Complex?) = Complex_(this.divide(that!!))
+    operator fun div(that: Double) = Complex_(this.divide(that))
+    operator fun div(that: Complex_) = Complex_(this.divide(that))
+}
+
+
+/**
+ * 2 x 2 matrix of complex numbers
+ */
+class Matrix_(val matrix: FieldMatrix<Complex> = Array2DRowFieldMatrix(ComplexField.getInstance(), 2, 2)) {
+
+    operator fun get(i: Int, j: Int): Complex_ = Complex_(matrix.getEntry(i, j))
+
+    operator fun set(i: Int, j: Int, value: Complex_) = matrix.setEntry(i, j, value)
+
+    fun setDiagonal(value: Complex_) {
+        matrix.setEntry(0, 0, value)
+        matrix.setEntry(1, 1, value)
+    }
+
+    fun setAntiDiagonal(value: Complex_) {
+        matrix.setEntry(0, 1, value)
+        matrix.setEntry(1, 0, value)
+    }
+
+    operator fun times(that: Matrix_) = Matrix_(matrix.multiply(that.matrix))
+
+    fun pow(value: Int) = Matrix_(matrix.power(value))
+
+    fun det(): Complex_ {
+        val diagMultiplied = matrix.getEntry(0, 0).multiply(matrix.getEntry(1, 1))
+        val antiDiagMultiplied = matrix.getEntry(0, 1).multiply(matrix.getEntry(1, 0))
+        return Complex_(diagMultiplied.subtract(antiDiagMultiplied))
+    }
+
+    companion object {
+        fun emptyMatrix() = Matrix_().apply {
+            setDiagonal(Complex_(NaN))
+            setAntiDiagonal(Complex_(NaN))
+        }
+
+        fun unaryMatrix() = Matrix_().apply {
+            setDiagonal(Complex_(ONE))
+            setAntiDiagonal(Complex_(ZERO))
+        }
+    }
+}
