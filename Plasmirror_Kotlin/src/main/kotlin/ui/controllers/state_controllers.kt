@@ -1,12 +1,5 @@
 package ui.controllers
 
-import core.State
-import core.State.leftMedium
-import core.State.n_left
-import core.State.n_right
-import core.State.polarization
-import core.State.regime
-import core.State.rightMedium
 import core.Medium
 import core.Medium.*
 import core.Polarization
@@ -14,14 +7,25 @@ import core.Polarization.P
 import core.Polarization.S
 import core.Regime
 import core.Regime.*
+import core.State
+import core.State.leftMedium
+import core.State.n_left
+import core.State.n_right
+import core.State.polarization
+import core.State.regime
+import core.State.rightMedium
 import javafx.fxml.FXML
 import javafx.scene.control.ChoiceBox
 import javafx.scene.control.Label
-import javafx.scene.control.TextArea
 import javafx.scene.control.TextField
+import javafx.scene.layout.AnchorPane
+import org.fxmisc.richtext.CodeArea
+import org.fxmisc.richtext.model.StyleSpans
+import org.fxmisc.richtext.model.StyleSpansBuilder
 import java.io.File.separator
 import java.nio.file.Files
 import java.nio.file.Paths
+import java.util.regex.Pattern
 import kotlin.streams.toList
 
 
@@ -269,9 +273,9 @@ class ComputationRangeController {
 
     lateinit var globalParametersController: GlobalParametersController
 
-    @FXML lateinit var wavelengthFromTextField: TextField
-    @FXML lateinit var wavelengthToTextField: TextField
-    @FXML lateinit var wavelengthStepTextField: TextField
+    @FXML lateinit var fromTextField: TextField
+    @FXML lateinit var toTextField: TextField
+    @FXML lateinit var stepTextField: TextField
 
     private val path = Paths.get(".${separator}data${separator}inner${separator}state_parameters${separator}computation_range.txt")
 
@@ -282,9 +286,9 @@ class ComputationRangeController {
         /* lines.size should be == 3 */
         val lines = Files.lines(path).toList().filter { it.isNotBlank() }
 
-        wavelengthFromTextField.text = lines[0]
-        wavelengthToTextField.text = lines[1]
-        wavelengthStepTextField.text = lines[2]
+        fromTextField.text = lines[0]
+        toTextField.text = lines[1]
+        stepTextField.text = lines[2]
     }
 
     fun writeComputationRange() = "${State.wavelengthFrom}\n${State.wavelengthTo}\n${State.wavelengthStep}".writeTo(path.toFile())
@@ -292,17 +296,56 @@ class ComputationRangeController {
 
 class StructureDescriptionController {
 
-    @FXML lateinit var structureDescriptionTextArea: TextArea
+    @FXML
+    private var anchorPane = AnchorPane()
+    val structureDescriptionCodeArea = CodeArea()
 
     private val path = Paths.get(".${separator}data${separator}inner${separator}state_parameters${separator}structure.txt")
 
     @FXML
-    fun initialize() {
-        println("Structure description controller set")
-        /* set initial value */
-        structureDescriptionTextArea.selectedText
-        structureDescriptionTextArea.text = Files.lines(path).toList().reduce { text, line -> text + "\n" + line }
+    fun initialize() = with(structureDescriptionCodeArea) {
+        anchorPane.children.add(this)
+        AnchorPane.setTopAnchor(this, 0.0)
+        AnchorPane.setBottomAnchor(this, 0.0)
+        AnchorPane.setRightAnchor(this, 0.0)
+        AnchorPane.setLeftAnchor(this, 0.0)
+
+        richChanges().filter { it.inserted != it.removed }.subscribe { setStyleSpans(0, computeHighlighting(text)) }
+        style = """
+                -fx-font-family: system;
+                -fx-font-size: 11pt;
+                -fx-highlight-fill: #dbdddd;
+                -fx-highlight-text-fill: #dbdddd;
+        """
+        replaceText(0, 0, Files.lines(path).toList().reduce { text, line -> text + "\n" + line })
     }
 
-    fun writeStructureDescription() = structureDescriptionTextArea.text.writeTo(path.toFile())
+    fun writeStructureDescription() = structureDescriptionCodeArea.text.writeTo(path.toFile())
+
+    /**
+     * Code in this method is used using Java style as in the example (to be able to understand what's going on here)
+     */
+    private fun computeHighlighting(text: String): StyleSpans<Collection<String>> {
+        val COMMENT_PATTERN = "//[^\n]*" + "|" + "/\\*(.|\\R)*?\\*/"
+        val NAME_PATTERN = "\\w+\\s*=\\s*+"
+        val REPEAT_PATTERN = "\\s*[xX]\\s*[0-9]+\\s*"
+        val PATTERN = Pattern.compile("(?<COMMENT>$COMMENT_PATTERN)|(?<NAME>$NAME_PATTERN)|(?<REPEAT>$REPEAT_PATTERN)")
+
+        val matcher = PATTERN.matcher(text)
+        var lastKwEnd = 0
+        val spansBuilder = StyleSpansBuilder<Collection<String>>()
+        while (matcher.find()) {
+            val styleClass = (when {
+                matcher.group("COMMENT") != null -> "comment"
+                matcher.group("NAME") != null -> "name"
+                matcher.group("REPEAT") != null -> "repeat"
+                else -> null
+            })!! /* never happens */
+            spansBuilder.add(kotlin.collections.emptyList<String>(), matcher.start() - lastKwEnd)
+            spansBuilder.add(setOf(styleClass), matcher.end() - matcher.start())
+            lastKwEnd = matcher.end()
+        }
+        spansBuilder.add(kotlin.collections.emptyList<String>(), text.length - lastKwEnd)
+        return spansBuilder.create()
+    }
 }

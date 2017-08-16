@@ -26,38 +26,31 @@ class JavaKeywords : Application() {
         codeArea.replaceText(0, 0, sampleCode)
 
         val scene = Scene(StackPane(VirtualizedScrollPane(codeArea)), 600.0, 400.0)
-    //        scene.stylesheets.add(JavaKeywordsAsync::class.java!!.getResource("java-keywords.css").toExternalForm())
+            scene.stylesheets.add("java-keywords.css")
         primaryStage.scene = scene
         primaryStage.title = "Java Keywords Demo"
         primaryStage.show()
     }
 
     companion object {
-
-        private val KEYWORDS = arrayOf("abstract", "assert", "boolean", "break", "byte", "case", "catch", "char", "class", "const", "continue", "default", "do", "double", "else", "enum", "extends", "final", "finally", "float", "for", "goto", "if", "implements", "import", "instanceof", "int", "interface", "long", "native", "new", "package", "private", "protected", "public", "return", "short", "static", "strictfp", "super", "switch", "synchronized", "this", "throw", "throws", "transient", "try", "void", "volatile", "while")
-
-        private val KEYWORD_PATTERN = "\\b(" + KEYWORDS.joinToString("|") + ")\\b"
-        private val PAREN_PATTERN = "\\(|\\)"
-        private val BRACE_PATTERN = "\\{|\\}"
-        private val BRACKET_PATTERN = "\\[|\\]"
-        private val SEMICOLON_PATTERN = "\\;"
-        private val STRING_PATTERN = "\"([^\"\\\\]|\\\\.)*\""
         private val COMMENT_PATTERN = "//[^\n]*" + "|" + "/\\*(.|\\R)*?\\*/"
+        private val NAME_PATTERN = "\\w+\\s*=\\s*+"
+        private val REPEAT_PATTERN = "\\s*[xX]\\s*[0-9]+\\s*"
+        private val PATTERN = Pattern.compile("(?<COMMENT>$COMMENT_PATTERN)|(?<NAME>$NAME_PATTERN)|(?<REPEAT>$REPEAT_PATTERN)")
+        private val sampleCode =
+                """x1
+type = 2-2, d = 1000, k = 0.005, x = 0.31
 
-        private val PATTERN = Pattern.compile(
-                "(?<KEYWORD>" + KEYWORD_PATTERN + ")"
-                        + "|(?<PAREN>" + PAREN_PATTERN + ")"
-                        + "|(?<BRACE>" + BRACE_PATTERN + ")"
-                        + "|(?<BRACKET>" + BRACKET_PATTERN + ")"
-                        + "|(?<SEMICOLON>" + SEMICOLON_PATTERN + ")"
-                        + "|(?<STRING>" + STRING_PATTERN + ")"
-                        + "|(?<COMMENT>" + COMMENT_PATTERN + ")"
-        )
 
-        private val sampleCode = arrayOf("package com.example;", "", "import java.util.*;", "", "public class Foo extends Bar implements Baz {", "", "    /*", "     * multi-line comment", "     */", "    public static void main(String[] args) {", "        // single-line comment", "        for(String arg: args) {", "            if(arg.length() != 0)", "                System.out.println(arg);", "            else", "                System.err.println(\"Warning: empty string as argument\");", "        }", "    }", "", "}").joinToString("\n")
-
+/*
+x24
+2-1, 12.15, 0.005, 0.0
+//8, 10, 0.31, 7.38, 0.18, 5
+*/
+"""
 
         @JvmStatic fun main(args: Array<String>) = Application.launch(JavaKeywords::class.java)
+
 
         private fun computeHighlighting(text: String): StyleSpans<Collection<String>> {
             val matcher = PATTERN.matcher(text)
@@ -65,13 +58,9 @@ class JavaKeywords : Application() {
             val spansBuilder = StyleSpansBuilder<Collection<String>>()
             while (matcher.find()) {
                 val styleClass = (when {
-                    matcher.group("KEYWORD") != null -> "keyword"
-                    matcher.group("PAREN") != null -> "paren"
-                    matcher.group("BRACE") != null -> "brace"
-                    matcher.group("BRACKET") != null -> "bracket"
-                    matcher.group("SEMICOLON") != null -> "semicolon"
-                    matcher.group("STRING") != null -> "string"
                     matcher.group("COMMENT") != null -> "comment"
+                    matcher.group("NAME") != null -> "name"
+                    matcher.group("REPEAT") != null -> "repeat"
                     else -> null
                 })!! /* never happens */
                 spansBuilder.add(emptyList<String>(), matcher.start() - lastKwEnd)

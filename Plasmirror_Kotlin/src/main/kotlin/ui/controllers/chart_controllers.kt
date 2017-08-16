@@ -352,26 +352,37 @@ class LineChartController {
 
     /* TODO fix this */
     private fun rescale() = with(mainController.globalParametersController.regimeController) {
-        xAxis.let {
-            it.lowerBound = wavelengthFrom
-            it.upperBound = wavelengthTo
-            it.tickUnit = 50.0
+        with(xAxis) {
+            lowerBound = wavelengthFrom
+            upperBound = wavelengthTo
+            tickUnit = 50.0
+            tickUnit = when {
+                upperBound - lowerBound >= 4000.0 -> 500.0
+                upperBound - lowerBound in 3000.0..4000.0 -> 250.0
+                upperBound - lowerBound in 2000.0..3000.0 -> 200.0
+                upperBound - lowerBound in 1000.0..2000.0 -> 100.0
+                upperBound - lowerBound in 500.0..1000.0 -> 50.0
+                upperBound - lowerBound in 200.0..500.0 -> 25.0
+                upperBound - lowerBound in 200.0..500.0 -> 20.0
+                upperBound - lowerBound < 200.0 -> 10.0
+                else -> 5.0
+            }
         }
-        yAxis.let {
+        with(yAxis) {
             if (regime == R || regime == A || regime == T) {
-                it.lowerBound = 0.0
-                it.upperBound = 1.0
-                it.tickUnit = 0.1
+                lowerBound = 0.0
+                upperBound = 1.0
+                tickUnit = 0.1
             } else if (regime == EPS) {
-                it.lowerBound = -5.0
-                it.upperBound = 20.0
-                it.tickUnit = 1.0
-                it.isAutoRanging = false
+                lowerBound = -5.0
+                upperBound = 15.0
+                tickUnit = 2.0
+                isAutoRanging = false
             } else if (regime == N) {
-                it.lowerBound = -3.0
-                it.upperBound = 5.0
-                it.tickUnit = 0.5
-                it.isAutoRanging = false
+                lowerBound = -1.0
+                upperBound = 4.5
+                tickUnit = 0.5
+                isAutoRanging = false
             }
         }
     }

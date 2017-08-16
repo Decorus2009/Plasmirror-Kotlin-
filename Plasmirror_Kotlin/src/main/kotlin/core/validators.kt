@@ -89,9 +89,9 @@ private object OpticalParametersValidator {
     private fun validateCalculationRangeUsing(computationRangeController: ComputationRangeController): ValidateResult {
         try {
             with(computationRangeController) {
-                wavelengthFrom = wavelengthFromTextField.text.toDouble()
-                wavelengthTo = wavelengthToTextField.text.toDouble()
-                wavelengthStep = wavelengthStepTextField.text.toDouble()
+                wavelengthFrom = fromTextField.text.toDouble()
+                wavelengthTo = toTextField.text.toDouble()
+                wavelengthStep = stepTextField.text.toDouble()
                 if (wavelengthFrom < 0.0 || wavelengthTo <= 0.0
                         || wavelengthStep <= 0.0 || wavelengthFrom > wavelengthTo || wavelengthStep >= wavelengthTo) {
                     alert(headerText = "Wavelength range error", contentText = "Provide correct wavelength range")
@@ -131,7 +131,7 @@ private object StructureValidator {
      */
     fun validateAndBuildStructure(structureDescriptionController: StructureDescriptionController): ValidateResult {
         try {
-            val lines = toLines(structureDescriptionController.structureDescriptionTextArea.text)
+            val lines = toLines(structureDescriptionController.structureDescriptionCodeArea.text)
             val tokenizedLines = linesToTokenizedLines(lines)
             validateTokenizedLines(tokenizedLines)
             val structureDescription = buildStructureDescription(tokenizedLines)
@@ -172,7 +172,7 @@ private object StructureValidator {
                 /**
                 remove names of layer parameters ("type=", "d=", "k=", "x=")
                  */
-                .forEach { add(it.split(",").map { it.replace(Regex(".*=+"), "") }) }
+                .forEach { add(it.split(",").map { it.replace(Regex(".+=+"), "") }) }
     }
 
     /**
