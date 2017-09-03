@@ -24,13 +24,12 @@ abstract class LayerExciton(d: Double,
     override val matrix: Matrix_
         get() = Matrix_().apply {
             val cos = cosThetaInLayer(n)
-            val phi = Complex_(2.0 * PI * d / wavelengthCurrent) * n * cos
             /* TODO проверить поляризацию (в VisMirror (GaAs) было S) */
-            val gamma0e = if (polarization === P) {
-                gamma0 * cos.real
-            } else {
-                gamma0 * (cos.pow(-1.0)).real
+            val gamma0e = when (polarization) {
+                P -> gamma0 * cos.real
+                else -> gamma0 * (cos.pow(-1.0)).real
             }
+            val phi = Complex_(2.0 * PI * d / wavelengthCurrent) * n * cos
             val S = Complex_(gamma0e) / Complex_(toEnergy(wavelengthCurrent) - w0, gamma)
 
             this[0, 0] = Complex_((phi * I).exp()) * Complex_(1.0 + S.imaginary, -S.real)
@@ -48,6 +47,8 @@ class GaAsExciton(d: Double, w0: Double, gamma0: Double, gamma: Double,
                   val eps_type: EpsType) : LayerExciton(d, w0, gamma0, gamma) {
     override var n = Complex_(NaN)
         get() = n_AlGaAs(wavelengthCurrent, x = 0.0, eps_type = eps_type)
+
+    override fun parameters() = listOf(d, w0, gamma0, gamma)
 }
 
 
@@ -69,6 +70,8 @@ class AlGaAsExciton(d: Double,
             }
             return n_AlGaAs(wavelengthCurrent, x, eps_type)
         }
+
+    override fun parameters() = listOf(d, k, x, w0, gamma0, gamma)
 }
 
 
@@ -82,6 +85,8 @@ class ConstRefractiveIndexLayerExciton(d: Double,
                                        w0: Double, gamma0: Double, gamma: Double) : LayerExciton(d, w0, gamma0, gamma) {
     override var n = Complex_(NaN)
         get() = const_n
+
+    override fun parameters() = listOf(d, const_n, w0, gamma0, gamma)
 }
 
 

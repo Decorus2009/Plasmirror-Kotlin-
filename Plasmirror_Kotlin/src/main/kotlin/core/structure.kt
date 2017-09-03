@@ -1,11 +1,11 @@
 package core
 
+import core.Complex_.Companion.ONE
+import core.EpsType.*
+import core.Medium.*
 import core.State.n_left
 import core.State.n_right
 import core.layers.*
-import core.EpsType.*
-import core.Medium.*
-import org.apache.commons.math3.complex.Complex.ONE
 import kotlin.Double.Companion.POSITIVE_INFINITY
 
 
@@ -66,14 +66,13 @@ object StructureBuilder {
 
                         "6" -> ConstRefractiveIndexLayerExciton(d = parseAt(i = 0), const_n = parseComplexAt(i = 1), w0 = parseAt(i = 2), gamma0 = parseAt(i = 3), gamma = parseAt(i = 4))
 
-                        "7-1" -> EffectiveMedium(d = parseAt(i = 0), x = parseAt(i = 1), wPlasma = parseAt(i = 2), gammaPlasma = parseAt(i = 3), f = parseAt(i = 4), eps_type = ADACHI)
-                        "7-2" -> EffectiveMedium(d = parseAt(i = 0), x = parseAt(i = 1), wPlasma = parseAt(i = 2), gammaPlasma = parseAt(i = 3), f = parseAt(i = 4), eps_type = GAUSS)
-                        "7-3" -> EffectiveMedium(d = parseAt(i = 0), x = parseAt(i = 1), wPlasma = parseAt(i = 2), gammaPlasma = parseAt(i = 3), f = parseAt(i = 4), eps_type = GAUSS_ADACHI)
-/*
-                                8 ->
+                        "7-1" -> EffectiveMedium(d = parseAt(i = 0), k = parseAt(i = 1), x = parseAt(i = 2), w_plasma = parseAt(i = 3), gamma_plasma = parseAt(i = 4), f = parseAt(i = 5), eps_inf = parseAt(i = 6), eps_type = ADACHI)
+                        "7-2" -> EffectiveMedium(d = parseAt(i = 0), k = parseAt(i = 1), x = parseAt(i = 2), w_plasma = parseAt(i = 3), gamma_plasma = parseAt(i = 4), f = parseAt(i = 5), eps_inf = parseAt(i = 6), eps_type = GAUSS)
+                        "7-3" -> EffectiveMedium(d = parseAt(i = 0), k = parseAt(i = 1), x = parseAt(i = 2), w_plasma = parseAt(i = 3), gamma_plasma = parseAt(i = 4), f = parseAt(i = 5), eps_inf = parseAt(i = 6), eps_type = GAUSS_ADACHI)
 
-                                9 ->
-*/
+                        "8-1" -> NanoparticlesLayer(d = parseAt(i = 0), k = parseAt(i = 1), x = parseAt(i = 2), latticeFactor = parseAt(i = 3), w_plasma = parseAt(i = 4), gamma_plasma = parseAt(i = 5), eps_inf = parseAt(i = 6), eps_type = ADACHI)
+                        "8-2" -> NanoparticlesLayer(d = parseAt(i = 0), k = parseAt(i = 1), x = parseAt(i = 2), latticeFactor = parseAt(i = 3), w_plasma = parseAt(i = 4), gamma_plasma = parseAt(i = 5), eps_inf = parseAt(i = 6), eps_type = GAUSS)
+                        "8-3" -> NanoparticlesLayer(d = parseAt(i = 0), k = parseAt(i = 1), x = parseAt(i = 2), latticeFactor = parseAt(i = 3), w_plasma = parseAt(i = 4), gamma_plasma = parseAt(i = 5), eps_inf = parseAt(i = 6), eps_type = GAUSS_ADACHI)
                     /* must never be reached because of validating procedure */
                         else -> return@with
                     }
@@ -103,12 +102,12 @@ object MirrorBuilder {
     fun build(structure: Structure,
               leftMedium: Medium, rightMedium: Medium): Mirror {
         val leftMediumLayer = when (leftMedium) {
-            AIR -> ConstRefractiveIndexLayer(d = POSITIVE_INFINITY, const_n = Complex_(ONE))
+            AIR -> ConstRefractiveIndexLayer(d = POSITIVE_INFINITY, const_n = ONE)
             GAAS -> GaAs(d = POSITIVE_INFINITY, eps_Type = GAUSS)
             OTHER -> ConstRefractiveIndexLayer(d = POSITIVE_INFINITY, const_n = n_left)
         }
         val rightMediumLayer = when (rightMedium) {
-            AIR -> ConstRefractiveIndexLayer(d = POSITIVE_INFINITY, const_n = Complex_(ONE))
+            AIR -> ConstRefractiveIndexLayer(d = POSITIVE_INFINITY, const_n = ONE)
             GAAS -> GaAs(d = POSITIVE_INFINITY, eps_Type = GAUSS)
             OTHER -> ConstRefractiveIndexLayer(d = POSITIVE_INFINITY, const_n = n_right)
         }

@@ -375,8 +375,8 @@ class LineChartController {
                 tickUnit = 0.1
             } else if (regime == EPS) {
                 lowerBound = -5.0
-                upperBound = 15.0
-                tickUnit = 2.0
+                upperBound = 20.0
+                tickUnit = 5.0
                 isAutoRanging = false
             } else if (regime == N) {
                 lowerBound = -1.0

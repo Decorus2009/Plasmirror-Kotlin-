@@ -8,6 +8,13 @@ import org.apache.commons.math3.linear.FieldMatrix
 
 class Complex_(real: Double, imaginary: Double) : Complex(real, imaginary) {
 
+    companion object {
+        val I = Complex_(0.0, 1.0)
+        val ONE = Complex_(1.0, 0.0)
+        val ZERO = Complex_(0.0, 0.0)
+        val NaN = Complex_(Complex.NaN)
+    }
+
     constructor(real: Double) : this(real, 0.0)
     constructor(complex: Complex) : this(complex.real, complex.imaginary)
 
@@ -26,6 +33,8 @@ class Complex_(real: Double, imaginary: Double) : Complex(real, imaginary) {
     operator fun div(that: Complex?) = Complex_(this.divide(that!!))
     operator fun div(that: Double) = Complex_(this.divide(that))
     operator fun div(that: Complex_) = Complex_(this.divide(that))
+
+    operator fun unaryMinus() = Complex_(-real, -imaginary)
 }
 
 
@@ -49,6 +58,19 @@ class Matrix_(val matrix: FieldMatrix<Complex> = Array2DRowFieldMatrix(ComplexFi
     }
 
     operator fun times(that: Matrix_) = Matrix_(matrix.multiply(that.matrix))
+    operator fun times(that: Complex_) = Matrix_.apply {
+        set(0, 0, get(0, 0) * that)
+        set(0, 1, get(0, 1) * that)
+        set(1, 0, get(1, 0) * that)
+        set(1, 1, get(1, 1) * that)
+    }
+
+    operator fun div(that: Complex_) = Matrix_.apply {
+        set(0, 0, get(0, 0) / that)
+        set(0, 1, get(0, 1) / that)
+        set(1, 0, get(1, 0) / that)
+        set(1, 1, get(1, 1) / that)
+    }
 
     fun pow(value: Int) = Matrix_(matrix.power(value))
 

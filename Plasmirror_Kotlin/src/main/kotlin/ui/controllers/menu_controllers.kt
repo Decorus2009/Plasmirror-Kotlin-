@@ -13,12 +13,15 @@ import javafx.scene.Scene
 import javafx.scene.control.*
 import javafx.scene.input.KeyCode
 import javafx.scene.input.KeyCode.E
+import javafx.scene.input.KeyCode.F
 import javafx.scene.input.KeyCode.I
 import javafx.scene.input.KeyCodeCombination
 import javafx.scene.input.KeyCombination.SHIFT_DOWN
 import javafx.scene.input.KeyCombination.SHORTCUT_DOWN
 import javafx.scene.input.KeyEvent
 import javafx.scene.layout.AnchorPane
+import javafx.scene.layout.GridPane
+import javafx.scene.layout.VBox
 import javafx.stage.DirectoryChooser
 import javafx.stage.FileChooser
 import javafx.stage.Stage
@@ -38,6 +41,7 @@ class MenuController {
     @FXML private lateinit var exportMenuItem: MenuItem
     @FXML private lateinit var exportMultipleMenuItem: MenuItem
     @FXML private lateinit var helpMenuItem: MenuItem
+    @FXML private lateinit var fitterMenuItem: MenuItem
 
     @FXML
     fun initialize() {
@@ -45,6 +49,7 @@ class MenuController {
         importMultipleMenuItem.accelerator = KeyCodeCombination(I, SHORTCUT_DOWN, SHIFT_DOWN)
         exportMenuItem.accelerator = KeyCodeCombination(E, SHORTCUT_DOWN)
         exportMultipleMenuItem.accelerator = KeyCodeCombination(E, SHORTCUT_DOWN, SHIFT_DOWN)
+        fitterMenuItem.accelerator = KeyCodeCombination(F, SHORTCUT_DOWN)
 
         importMenuItem.setOnAction {
             val file = initFileChooser(".${separator}data${separator}for_import")
@@ -91,6 +96,24 @@ class MenuController {
             }
         }
 
+        fitterMenuItem.setOnAction {
+            val page = with(FXMLLoader()) {
+                location = MainApp::class.java.getResource("fxml/fitter/Fitter.fxml")
+                load<ScrollPane>()
+            }
+            with(Stage()) {
+                title = "MainFitterController"
+//                isAlwaysOnTop = true
+                scene = Scene(page)
+                addEventHandler(KeyEvent.KEY_RELEASED) { event: KeyEvent ->
+                    if (KeyCode.ESCAPE == event.code) {
+                        close()
+                    }
+                }
+                showAndWait()
+            }
+        }
+
         helpMenuItem.setOnAction {
             val page = with(FXMLLoader()) {
                 location = MainApp::class.java.getResource("fxml/HelpInfo.fxml")
@@ -98,7 +121,6 @@ class MenuController {
             }
             with(Stage()) {
                 title = "Help"
-                isAlwaysOnTop = true
                 scene = Scene(page)
                 /* works after pressing directory button or switching between angle and temperature regimes. Why? */
                 addEventHandler(KeyEvent.KEY_RELEASED) { event: KeyEvent ->
@@ -258,7 +280,7 @@ class HelpInfoController {
 
     @FXML private lateinit var helpTextArea: TextArea
 
-    private val path = Paths.get("./data/inner/structure_description_help.txt")
+    private val path = Paths.get("./data/inner/help.txt")
 
     @FXML
     fun initialize() {

@@ -7,6 +7,7 @@ import core.ValidateResult.SUCCESS
 import core.layers.ConstRefractiveIndexLayer
 import core.layers.Layer
 import org.apache.commons.math3.complex.Complex
+import ui.controllers.LineChartState
 import ui.controllers.MainController
 import java.util.*
 
@@ -47,27 +48,15 @@ object State {
         return FAILURE
     }
 
-    private fun clearPreviousComputation() {
-        fun <T> clearIfNotEmpty(vararg lists: MutableList<out T>) = lists.forEach { it.run { if (isNotEmpty()) clear() } }
-
-        clearIfNotEmpty(reflection, transmission, absorption)
-        clearIfNotEmpty(permittivity, refractiveIndex)
-        /*
-        TODO Doesn't clear when using this form of extension function (without "run")
-        fun <T> MutableList<out T>.clearIfNotEmpty() = run { if (isNotEmpty()) clear() } // works
-        fun <T> MutableList<T>.clearIfNotEmpty() = { if (isNotEmpty()) clear() } // doesn't work
-         */
-    }
-
     fun compute() {
         val size = ((wavelengthTo - wavelengthFrom) / wavelengthStep).toInt() + 1
         wavelength = ArrayList<Double>(size)
         /* TODO MERGE TWO LOOPS, CHECK PERFORMANCE */
-        (0..size - 1).forEach { wavelength.add(wavelengthFrom + it * wavelengthStep) }
+        (0 until size).forEach { wavelength.add(wavelengthFrom + it * wavelengthStep) }
+
         /* TODO PARALLEL */
         (0..wavelength.size - 1).forEach {
             wavelengthCurrent = wavelength[it]
-
             with(mirror) {
                 when (regime) {
                     R -> reflection += computeReflection()
@@ -80,6 +69,35 @@ object State {
         }
 //        println("${wavelength[0]} ${reflection[0]}")
 //        for (i in 0..wavelength.size - 1) println("${wavelength[i]} ${reflection[i]}")
+
+        fun set_fit() = reflection.clear()
+
+        /**
+         * Wavelengths are already initialized.
+         */
+        fun compute_fit() = (0..wavelength.size - 1).forEach {
+            wavelengthCurrent = wavelength[it]
+            reflection += mirror.computeReflection()
+        }
+
+        fun computeDifference() {
+            val imported = LineChartState.imported[0].extendedSeriesReal.series.data
+
+
+
+        }
+    }
+
+    private fun clearPreviousComputation() {
+        fun <T> clearIfNotEmpty(vararg lists: MutableList<out T>) = lists.forEach { it.run { if (isNotEmpty()) clear() } }
+
+        clearIfNotEmpty(reflection, transmission, absorption)
+        clearIfNotEmpty(permittivity, refractiveIndex)
+        /*
+        TODO Doesn't clear when using this form of extension function (without "run")
+        fun <T> MutableList<out T>.clearIfNotEmpty() = run { if (isNotEmpty()) clear() } // works
+        fun <T> MutableList<T>.clearIfNotEmpty() = { if (isNotEmpty()) clear() } // doesn't work
+         */
     }
 
     private fun buildMirror() {
@@ -138,7 +156,6 @@ class Mirror(val structure: Structure, val leftMediumLayer: Layer, val rightMedi
         val mirrorMatrix = matrix
         return mirrorMatrix.det() / mirrorMatrix[1, 1]
     }
-
 
     /**
      * Странный алгоритм перемножения матриц. Оно происходит не последовательно!

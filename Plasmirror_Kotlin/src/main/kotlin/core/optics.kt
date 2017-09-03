@@ -1,9 +1,9 @@
 package core
 
+import core.Complex_.Companion.ONE
+import core.Complex_.Companion.ZERO
 import core.EpsType.*
 import core.State.angle
-import org.apache.commons.math3.complex.Complex.ONE
-import org.apache.commons.math3.complex.Complex.ZERO
 import java.lang.Math.*
 
 
@@ -31,10 +31,10 @@ fun cosThetaInLayer(n2: Complex_): Complex_ {
     val n1 = State.mirror.leftMediumLayer.n
 
     val cos1 = cosThetaIncident()
-    val sin1_sq = Complex_(ONE) - (cos1 * cos1)
+    val sin1_sq = ONE - (cos1 * cos1)
     val sin2_sq = sin1_sq * ((n1 / n2).pow(2.0))
 
-    return Complex_((Complex_(ONE) - sin2_sq).sqrt())
+    return Complex_((ONE - sin2_sq).sqrt())
 }
 
 fun Double.round(): Double {
@@ -173,7 +173,7 @@ object AlGaAsPermittivity {
         return Complex_(n, k)
     }
 
-    private fun n_to_eps(n: Complex_) = Complex_(n * n)
+    fun n_to_eps(n: Complex_) = Complex_(n * n)
 
 
     /**
@@ -201,9 +201,8 @@ object AlGaAsPermittivity {
         val d1 = A * pow(E0, -1.5)
         val d2 = 0.5 * pow(E0 / E0_plus_delta0, 1.5)
         val f = { y: Complex_ ->
-            val one = Complex_(ONE)
-            val c1 = (one + y).sqrt()
-            val c2 = (one - y).sqrt()
+            val c1 = (ONE + y).sqrt()
+            val c2 = (ONE - y).sqrt()
             (Complex_(2.0) - c1 - c2) / (y.pow(2.0))
         }
         return (f.invoke(hi0) + (f.invoke(hi0S) * d2)) * d1
@@ -217,9 +216,8 @@ object AlGaAsPermittivity {
         val Gamma1_Gauss = Gamma1_Gauss(w, x)
         val hi1_sq = (Complex_(w, Gamma1_Gauss) / E1).pow(2.0)
         val hi1S_sq = (Complex_(w, Gamma1_Gauss) / E1_plus_delta1).pow(2.0)
-        val one = Complex_(ONE)
-        val c1 = (B1 / hi1_sq) * ((one - hi1_sq).log()) * -1.0
-        val c2 = (B1S / hi1S_sq) * ((one - hi1S_sq).log()) * -1.0
+        val c1 = (B1 / hi1_sq) * ((ONE - hi1_sq).log()) * -1.0
+        val c2 = (B1S / hi1S_sq) * ((ONE - hi1S_sq).log()) * -1.0
         return c1 + c2
     }
 
@@ -229,8 +227,8 @@ object AlGaAsPermittivity {
         val Gamma1_Gauss = Gamma1_Gauss(w, x)
         val E1 = E1(x)
         val E1_plus_delta1 = E1_plus_delta1(x)
-        var accumulator = Complex_(ZERO)
-        var summand = Complex_(ONE)
+        var accumulator = ZERO
+        var summand = ONE
         val precision = 1E-4
         var n = 1
         /*
@@ -253,7 +251,7 @@ object AlGaAsPermittivity {
         val f = doubleArrayOf(f2(x), f3(x), f4(x))
         val E = doubleArrayOf(E2(x), E3(x), E4(x))
         val Gamma_Gauss = doubleArrayOf(Gamma2_Gauss(w, x), Gamma3_Gauss(w, x), Gamma4_Gauss(w, x))
-        var accumulator = Complex_(ZERO)
+        var accumulator = ZERO
         for (i in 0..2) {
             val numerator = Complex_(f[i] * f[i])
             val denominator = Complex_(E[i] * E[i] - w * w, -w * Gamma_Gauss[i])

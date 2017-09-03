@@ -115,12 +115,11 @@ private object StructureValidator {
             "1-1" to 2, "1-2" to 2, "1-3" to 2,
             "2-1" to 4, "2-2" to 4, "2-3" to 4,
             "3" to 3,
-            "4-1" to 5, "4-2" to 5, "4-2" to 5,
-            "5-1" to 7, "5-2" to 7, "5-2" to 7,
+            "4-1" to 5, "4-2" to 5, "4-3" to 5,
+            "5-1" to 7, "5-2" to 7, "5-3" to 7,
             "6" to 6,
-            "7-1" to 6, "7-2" to 6, "7-3" to 6,
-            "8" to 6,
-            "9" to 5
+            "7-1" to 8, "7-2" to 8, "7-3" to 8,
+            "8-1" to 8, "8-2" to 8, "8-3" to 8
     )
 
     /**
@@ -144,9 +143,16 @@ private object StructureValidator {
     }
 
     /**
-     * Maps structure string representation to the list of lines ignoring everything under multi-line comments
-     * (it's convenient to remove symbols under multi-line comments here, before breaking structure into separate lines).
-     * Each line is a symbolic description of a layer
+     * Maps structure string representation to the list of lines
+     * such that each line represents description of a layer or period.
+     * Ignore: single-line comments, multi-line comments
+     * Expand each layer description named tokens to single line:
+     *
+     *    type = 7-2, d = 10, x = 0.31,
+     *    w_plasma = 7.38, gamma_plasma = 0.18,  ---->  type = 7-2, d = 10, x = 0.31, w_plasma = 7.38, gamma_plasma = 0.18, f = 0.0017
+     *    f = 0.0017
+     *
+     * Remove empty lines
      *
      * (?s) activates Pattern.DOTALL notation.
      * "In dotall mode, the expression . matches any character, including a line terminator.
@@ -156,8 +162,25 @@ private object StructureValidator {
      * @return structure representation as lines
      */
     @Throws(StructureDescriptionException::class)
-    private fun toLines(structure: String): List<String> =
-            structure.replace(Regex("(?s)/\\*.*\\*/"), "").lines().filter { it.isNotBlank() }
+    private fun toLines(structure: String): List<String> = structure.toLowerCase()
+            /** exclude multi-line comments */
+            .replace(Regex("(?s)/\\*.*\\*/"), "")
+            /** exclude single-line comments */
+            .replace(Regex("\\s*[/]{2,}.*"), "")
+            /**
+            replace all new line characters by whitespaces
+            (the case when the structure description of some layer occupied several lines)
+             */
+            .replace(Regex("\\R*"), "")
+            /** remove all whitespaces */
+            .replace(Regex("\\s*"), "")
+            /** put period descriptions to separate lines */
+            .replace(Regex("([x][0-9]+)"), "\n\$1\n")
+            /** each line will start with the keyword "type" */
+            .replace(Regex("(type)"), "\n\$1")
+            .lines()
+            .map { it.trim() }
+            .filter { it.isNotBlank() }
 
     /**
      * Tokenizes each line of the structure
@@ -166,13 +189,8 @@ private object StructureValidator {
      * @return list of tokenized lines (each tokenized line is a list of tokens)
      */
     private fun linesToTokenizedLines(lines: List<String>) = mutableListOf<List<String>>().apply {
-        lines.map { it.trim() }.filterNot { it.startsWith("//") }
-                .map { it.replace(Regex("\\s*"), "") }
-                .map { it.toLowerCase() }
-                /**
-                remove names of layer parameters ("type=", "d=", "k=", "x=")
-                 */
-                .forEach { add(it.split(",").map { it.replace(Regex(".+=+"), "") }) }
+        /** remove names of layer parameters ("type=", "d=", "k=", "x=") */
+        lines.forEach { add(it.split(",").map { it.replace(Regex(".+=+"), "") }) }
     }
 
     /**
@@ -242,6 +260,9 @@ private object StructureValidator {
         filterNot { it[0].startsWith("x") }.forEach {
             val type = it[0]
             if (type !in parameterNumbers.keys || parameterNumbers[type] != it.size) {
+                println(type)
+                println(parameterNumbers[type])
+                println(it)
                 throw StructureDescriptionException("Invalid layer type or incorrect number of parameters for a layer")
             }
         }
