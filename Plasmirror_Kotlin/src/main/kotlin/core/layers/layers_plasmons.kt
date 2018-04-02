@@ -110,6 +110,11 @@ class NanoparticlesLayer(d: Double,
     fun r_t(wavelength: Double): Pair<Complex_, Complex_> {
         val alpha_parallel = alpha_parallel(wavelength)
         val alpha_orthogonal = alpha_orthogonal(wavelength)
+
+        /* ***************************************************************************** */
+        println("$wavelength ${alpha_parallel.real} ${alpha_parallel.imaginary} ${alpha_orthogonal.real} ${alpha_orthogonal.imaginary}")
+        /* ***************************************************************************** */
+
         val A = A(wavelength)
         val B = B(wavelength)
         val theta = Complex_(cos.acos())

@@ -286,10 +286,10 @@ private object StructureValidator {
                     .map { it.replace(Regex("\\("), "") }
                     .map { it.replace(Regex("\\)"), "") }
                     .forEach {
-                        it.split(";").forEach {
+                        it.split(";").let {
                             try {
-                                this[0].toDouble() // real
-                                this[1].toDouble() // imaginary
+                                it[0].toDouble() // real
+                                it[1].toDouble() // imaginary
                             } catch (e: NumberFormatException) {
                                 throw StructureDescriptionException("Complex number format error")
                             }

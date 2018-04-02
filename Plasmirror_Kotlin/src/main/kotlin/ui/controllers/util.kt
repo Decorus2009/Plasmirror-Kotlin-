@@ -11,6 +11,7 @@ import core.State.transmission
 import core.State.wavelengthFrom
 import core.State.wavelengthTo
 import core.Regime.*
+import core.State.wavelength
 import javafx.scene.control.*
 import java.io.File
 import java.util.*
@@ -43,7 +44,7 @@ fun writeComputedDataTo(file: File) = StringBuilder().apply {
     val columnSeparator = "    "
     with(computedReal) {
         indices.forEach { i ->
-            append(String.format(Locale.US, "%.8f", this[i]))
+            append(String.format(Locale.US, "%.8f", wavelength[i]))
             append(columnSeparator)
             append(String.format(Locale.US, "%.8f", this[i]))
 

@@ -284,7 +284,7 @@ class HelpInfoController {
 
     @FXML
     fun initialize() {
-        helpTextArea.text = Files.lines(path).toList().filter { it.isNotBlank() }.reduce { text, line -> text + "\n" + line }
+        helpTextArea.text = Files.lines(path).toList().reduce { text, line -> text + "\n" + line }
     }
 }
 
