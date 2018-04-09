@@ -52,7 +52,8 @@ class MenuController {
         fitterMenuItem.accelerator = KeyCodeCombination(F, SHORTCUT_DOWN)
 
         importMenuItem.setOnAction {
-            val file = initFileChooser(".${separator}data${separator}for_import")
+//            val file = initFileChooser(".${separator}data${separator}for_import")
+            val file = initFileChooser(".")
                     .showOpenDialog(rootController.mainApp.primaryStage)
             if (file != null) {
                 rootController.mainController.lineChartController.importFrom(file)
@@ -60,7 +61,8 @@ class MenuController {
         }
 
         importMultipleMenuItem.setOnAction {
-            val files = initFileChooser(".${separator}data${separator}for_import")
+//            val files = initFileChooser(".${separator}data${separator}for_import")
+            val files = initFileChooser(".")
                     .showOpenMultipleDialog(rootController.mainApp.primaryStage)
             if (files != null) {
                 rootController.mainController.lineChartController.importMultiple(files)
