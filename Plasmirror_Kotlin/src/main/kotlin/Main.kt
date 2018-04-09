@@ -24,7 +24,7 @@ class MainApp : Application() {
     override fun start(primaryStage: Stage) {
         this.primaryStage = primaryStage
         with(FXMLLoader()) {
-            location = MainApp::class.java.getResource("fxml/Root.fxml")
+            location = MainApp::class.java.getResource("fxml/root.fxml")
             rootLayout = load<AnchorPane>()
             rootController = getController()
             rootController.mainApp = this@MainApp
