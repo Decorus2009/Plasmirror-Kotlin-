@@ -70,7 +70,8 @@ class MenuController {
         }
 
         exportMenuItem.setOnAction {
-            val file = initFileChooser(".${separator}data${separator}computed_single").let {
+            val file = initFileChooser(".").let {
+//            val file = initFileChooser(".${separator}data${separator}computed_single").let {
                 it.initialFileName = buildExportFileName()
                 it.showSaveDialog(rootController.mainApp.primaryStage)
             }
@@ -206,7 +207,8 @@ class MultipleExportDialogController {
 
         directoryButton.setOnMouseClicked {
             with(DirectoryChooser()) {
-                initialDirectory = File(".${separator}data${separator}computed_multiple")
+//                initialDirectory = File(".${separator}data${separator}computed_multiple")
+                initialDirectory = File(".")
                 /**
                 Need to pass Window or Stage. There's no access to any Stage object from this controller
                 Solution: any Node from fxml that has fx:id
