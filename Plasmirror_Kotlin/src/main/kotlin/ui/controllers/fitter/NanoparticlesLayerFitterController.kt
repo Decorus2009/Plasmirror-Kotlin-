@@ -1,7 +1,7 @@
 package ui.controllers.fitter
 
 import core.layers.Layer
-import core.layers.NanoparticlesLayer
+import core.layers.MetallicNanoparticlesLayerPerssonModel
 import javafx.application.Platform
 import javafx.fxml.FXML
 import javafx.scene.control.CheckBox
@@ -55,7 +55,7 @@ class NanoparticlesLayerFitterController : LayerFitterController() {
             }
         }
         Platform.runLater {
-            with(layer as NanoparticlesLayer) {
+            with(layer as MetallicNanoparticlesLayerPerssonModel) {
                 d.let {
                     d_valueTextField.text = String.format(Locale.US, "%.2f", it)
                     d_fromTextField.text = String.format(Locale.US, "%.2f", it * 0.5)
@@ -134,7 +134,7 @@ class NanoparticlesLayerFitterController : LayerFitterController() {
         val eps_inf_to = eps_inf_toTextField.text.toDouble()
         val eps_inf_step = eps_inf_stepTextField.text.toDouble()
 
-        with(layer as NanoparticlesLayer) {
+        with(layer as MetallicNanoparticlesLayerPerssonModel) {
             var d = d_from
             while (d <= d_to) {
                 this.d = d

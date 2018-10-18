@@ -13,6 +13,21 @@ import core.State.polarization
 import core.State.wavelengthCurrent
 import java.lang.Math.*
 
+
+
+// abstract class MetallicNanoparticlesInAlGaAsMedium
+// inherited by EffectiveMedium, MetallicNanoparticlesLayerPerssonModel, SbNanoparticlesLayerPerssonModel
+abstract class MetallicNanoparticlesInAlGaAsMedium(d: Double,
+                                                   private val k: Double,
+                                                   private val x: Double,
+                                                   val eps_type: EpsType) : SimpleLayer(d) {
+
+
+
+
+}
+
+
 /**
  */
 /**
@@ -67,13 +82,14 @@ class EffectiveMedium(d: Double,
     }
 }
 
-class NanoparticlesLayer(d: Double,
-                         var k: Double,
-                         var x: Double,
-                         var latticeFactor: Double,
-                         var w_plasma: Double, var gamma_plasma: Double,
-                         var eps_inf: Double = 1.0,
-                         val eps_type: EpsType) : SimpleLayer(d) {
+class MetallicNanoparticlesLayerPerssonModel(d: Double,
+                                             var k: Double,
+                                             var x: Double,
+                                             var latticeFactor: Double,
+                                             var w_plasma: Double, var gamma_plasma: Double,
+                                             var eps_inf: Double = 1.0,
+                                             val eps_type: EpsType) : SimpleLayer(d) {
+
     override var n = NaN
         get() {
             if (eps_type == ADACHI) {
@@ -98,16 +114,15 @@ class NanoparticlesLayer(d: Double,
     override fun parameters() = listOf(d, k, x, latticeFactor, w_plasma, gamma_plasma, eps_inf)
 
     private val R = d / 2.0
-//    private val a = 2 * R / sqrt(0.3)
     private val a = latticeFactor * R
-    private val U0 = 9.03 / (a * a * a)
+    private val U_0 = 9.03 / (a * a * a)
     private val cos
         get() = cosThetaInLayer(n)
     private val sin
         get() = Complex_((ONE - cos * cos).sqrt())
 
 
-    fun r_t(wavelength: Double): Pair<Complex_, Complex_> {
+    private fun r_t(wavelength: Double): Pair<Complex_, Complex_> {
         val alpha_parallel = alpha_parallel(wavelength)
         val alpha_orthogonal = alpha_orthogonal(wavelength)
 
@@ -142,11 +157,11 @@ class NanoparticlesLayer(d: Double,
     }
 
     private fun alpha_parallel(wavelength: Double): Complex_ = with(alpha(wavelength)) {
-        return this / (ONE - this * 0.5 * U0)
+        return this / (ONE - this * 0.5 * U_0)
     }
 
     private fun alpha_orthogonal(wavelength: Double): Complex_ = with(alpha(wavelength)) {
-        return this / (ONE + this * U0)
+        return this / (ONE + this * U_0)
     }
 
     private fun A(wavelength: Double) = Complex_(pow(2 * PI / a, 2.0) / wavelength) * I / cos
@@ -162,6 +177,7 @@ class NanoparticlesLayer(d: Double,
         val denominator = w * (w + Complex_(0.0, gamma_plasma))
         return Complex_(eps_inf) - (numerator / denominator)
     }
+
 
     /**
      * Semiconductor matrix permittivity

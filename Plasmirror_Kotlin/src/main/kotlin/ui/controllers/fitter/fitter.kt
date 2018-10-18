@@ -100,7 +100,7 @@ class MainFitterController {
                 }
                 is EffectiveMedium -> {
                 }
-                is NanoparticlesLayer -> load<NanoparticlesLayerFitterController>(it, "fxml/fitter/NanoparticlesLayerFitter.fxml")
+                is MetallicNanoparticlesLayerPerssonModel -> load<NanoparticlesLayerFitterController>(it, "fxml/fitter/NanoparticlesLayerFitter.fxml")
             }
         }
 

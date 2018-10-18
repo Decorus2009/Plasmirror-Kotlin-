@@ -70,9 +70,9 @@ object StructureBuilder {
                         "7-2" -> EffectiveMedium(d = parseAt(i = 0), k = parseAt(i = 1), x = parseAt(i = 2), w_plasma = parseAt(i = 3), gamma_plasma = parseAt(i = 4), f = parseAt(i = 5), eps_inf = parseAt(i = 6), eps_type = GAUSS)
                         "7-3" -> EffectiveMedium(d = parseAt(i = 0), k = parseAt(i = 1), x = parseAt(i = 2), w_plasma = parseAt(i = 3), gamma_plasma = parseAt(i = 4), f = parseAt(i = 5), eps_inf = parseAt(i = 6), eps_type = GAUSS_ADACHI)
 
-                        "8-1" -> NanoparticlesLayer(d = parseAt(i = 0), k = parseAt(i = 1), x = parseAt(i = 2), latticeFactor = parseAt(i = 3), w_plasma = parseAt(i = 4), gamma_plasma = parseAt(i = 5), eps_inf = parseAt(i = 6), eps_type = ADACHI)
-                        "8-2" -> NanoparticlesLayer(d = parseAt(i = 0), k = parseAt(i = 1), x = parseAt(i = 2), latticeFactor = parseAt(i = 3), w_plasma = parseAt(i = 4), gamma_plasma = parseAt(i = 5), eps_inf = parseAt(i = 6), eps_type = GAUSS)
-                        "8-3" -> NanoparticlesLayer(d = parseAt(i = 0), k = parseAt(i = 1), x = parseAt(i = 2), latticeFactor = parseAt(i = 3), w_plasma = parseAt(i = 4), gamma_plasma = parseAt(i = 5), eps_inf = parseAt(i = 6), eps_type = GAUSS_ADACHI)
+                        "8-1" -> MetallicNanoparticlesLayerPerssonModel(d = parseAt(i = 0), k = parseAt(i = 1), x = parseAt(i = 2), latticeFactor = parseAt(i = 3), w_plasma = parseAt(i = 4), gamma_plasma = parseAt(i = 5), eps_inf = parseAt(i = 6), eps_type = ADACHI)
+                        "8-2" -> MetallicNanoparticlesLayerPerssonModel(d = parseAt(i = 0), k = parseAt(i = 1), x = parseAt(i = 2), latticeFactor = parseAt(i = 3), w_plasma = parseAt(i = 4), gamma_plasma = parseAt(i = 5), eps_inf = parseAt(i = 6), eps_type = GAUSS)
+                        "8-3" -> MetallicNanoparticlesLayerPerssonModel(d = parseAt(i = 0), k = parseAt(i = 1), x = parseAt(i = 2), latticeFactor = parseAt(i = 3), w_plasma = parseAt(i = 4), gamma_plasma = parseAt(i = 5), eps_inf = parseAt(i = 6), eps_type = GAUSS_ADACHI)
                     /* must never be reached because of validating procedure */
                         else -> return@with
                     }
