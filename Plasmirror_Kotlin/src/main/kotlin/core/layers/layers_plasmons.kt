@@ -38,7 +38,7 @@ class EffectiveMedium(d: Double,
 
 
     /**
-     * https://en.wikipedia.org/wiki/Effective_medium_approximations
+     * https://en.wikipedia.oxrg/wiki/Effective_medium_approximations
      * @return Maxwell-Garnett eps_eff
      */
     private fun eps_eff(wavelength: Double): Complex_ {
@@ -112,7 +112,7 @@ class NanoparticlesLayer(d: Double,
         val alpha_orthogonal = alpha_orthogonal(wavelength)
 
         /* ***************************************************************************** */
-        println("$wavelength ${alpha_parallel.real} ${alpha_parallel.imaginary} ${alpha_orthogonal.real} ${alpha_orthogonal.imaginary}")
+//        println("$wavelength ${alpha_parallel.real} ${alpha_parallel.imaginary} ${alpha_orthogonal.real} ${alpha_orthogonal.imaginary}")
         /* ***************************************************************************** */
 
         val A = A(wavelength)
