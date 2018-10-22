@@ -1,5 +1,7 @@
 package core
 
+import org.apache.commons.math3.analysis.interpolation.LinearInterpolator
+import org.apache.commons.math3.analysis.polynomials.PolynomialSplineFunction
 import org.apache.commons.math3.complex.Complex
 import org.apache.commons.math3.complex.Complex.*
 import org.apache.commons.math3.complex.ComplexField
@@ -89,6 +91,19 @@ class Matrix_(val matrix: FieldMatrix<Complex> = Array2DRowFieldMatrix(ComplexFi
         fun unaryMatrix() = Matrix_().apply {
             setDiagonal(Complex_(ONE))
             setAntiDiagonal(Complex_(ZERO))
+        }
+    }
+}
+
+
+object Interpolator {
+
+    fun interpolateComplex(x: List<Double>, y: List<Complex_>): Pair<PolynomialSplineFunction, PolynomialSplineFunction> {
+        with(LinearInterpolator()) {
+            val functionReal = interpolate(x.toDoubleArray(), y.map { it.real }.toDoubleArray())
+            val functionImag = interpolate(x.toDoubleArray(), y.map { it.imaginary }.toDoubleArray())
+
+            return functionReal to functionImag
         }
     }
 }

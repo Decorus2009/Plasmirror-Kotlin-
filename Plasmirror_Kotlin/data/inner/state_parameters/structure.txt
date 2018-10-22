@@ -1,15 +1,33 @@
 x1
-type = 1-1 , d = 1
-type = 2-2, d = 181, k = 0.000, x = 0.28
+type = 1-2, d = 2
+type = 2-2, d = 178, k = 0.0, x = 0.28
 
+x24
+// type = 9-1, d = 50, k = 0.3, x = 0.28, lattice_factor = 5
+type = 8-2, d = 100, k = 0.0, x = 0.28,`
+lattice_factor = 2.2,
+// tau = 0.46 fs => gamma = h_bar / tau = 0.22
+wPlasma = 101, gammaPlasma = 0.43, eps_inf  = 1
+
+type = 2-2, d = 110, k = 0.003, x = 0.28
+
+
+
+/*
 x25
-type = 8-2, d = 40, k = 0.0, x = 0.28,
-lattice_factor = 9.2,
 
+type = 8-1, d = 40, k = 0.0, x = 0.28,
+lattice_factor = 9.2,
 // tau = 0.46 fs => gamma = h_bar / tau = 0.22
 w_plasma = 13, gamma_plasma = 0.23, eps_inf  = 1
 
+
+type = 9-2, d = 40, k = 0.0, x = 0.28,
+lattice_factor = 9.2
+
 type = 2-2, d = 109.6, k = 0.00, x = 0.28
+*/
+
 
 
 // ST1279-7 P06 R0
@@ -49,5 +67,3 @@ w_plasma = 7.38, gamma_plasma = 0.2, eps_inf  = 11
 
 type = 2-2, d = 110.2, k = 0.005, x = 0.24
 */
-
-

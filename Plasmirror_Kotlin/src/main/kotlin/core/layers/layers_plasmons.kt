@@ -1,107 +1,59 @@
 package core.layers
 
 import core.*
-import core.AlGaAsPermittivity.n_AlGaAs
-import core.AlGaAsPermittivity.n_to_eps
+import core.AlGaAsPermittivity.epsAlGaAs
+import core.AlGaAsPermittivity.eps_to_n
 import core.Complex_.Companion.I
-import core.Complex_.Companion.NaN
 import core.Complex_.Companion.ONE
-import core.EpsType.ADACHI
 import core.Polarization.P
 import core.Polarization.S
 import core.State.polarization
 import core.State.wavelengthCurrent
-import java.lang.Math.*
+import java.lang.Math.PI
+import java.lang.Math.pow
 
 
-
-// abstract class MetallicNanoparticlesInAlGaAsMedium
-// inherited by EffectiveMedium, MetallicNanoparticlesLayerPerssonModel, SbNanoparticlesLayerPerssonModel
-abstract class MetallicNanoparticlesInAlGaAsMedium(d: Double,
-                                                   private val k: Double,
-                                                   private val x: Double,
-                                                   val eps_type: EpsType) : SimpleLayer(d) {
-
-
-
-
+interface MetallicClustersInAlGaAs : AlGaAsLayer {
+    val epsMatrix
+        get() = epsAlGaAs(wavelengthCurrent, k, x, epsType)
+    val epsMetal: Complex_
 }
 
 
-/**
- */
-/**
- * @param x            AlAs concentration
- * @param w_plasma      plasma frequency for NP, eV
- * @param gamma_plasma  damping constant, (h/2Pi) / tau, tau ~ 3E-15 sec
- * @param f            volume fraction of NP in SC
- */
-class EffectiveMedium(d: Double,
-                      private val k: Double,
-                      private val x: Double,
-                      private val w_plasma: Double, private val gamma_plasma: Double,
-                      private val f: Double, private val eps_inf: Double,
-                      val eps_type: EpsType) : SimpleLayer(d) {
-    override var n = Complex_(NaN)
-        get() = with(eps_eff(wavelengthCurrent)) {
-            val n = sqrt((abs() + real) / 2)
-            val k = sqrt((abs() - real) / 2)
-            return Complex_(n, k)
-        }
+interface DrudeMetalClustersInAlGaAs : MetallicClustersInAlGaAs {
+    val wPlasma: Double
+    val gammaPlasma: Double
+    val epsInf: Double
 
-    override fun parameters() = listOf(d, k, x, w_plasma, gamma_plasma, f, eps_inf)
-
-
-    /**
-     * https://en.wikipedia.oxrg/wiki/Effective_medium_approximations
-     * @return Maxwell-Garnett eps_eff
-     */
-    private fun eps_eff(wavelength: Double): Complex_ {
-        val f = Complex_(f)
-        val eps_metal = eps_metal(wavelength)
-        val n_semiconductor: Complex_ =
-                when (eps_type) {
-                    ADACHI -> with(n_AlGaAs(wavelength, x, eps_type)) { Complex_(real, real * k) }
-                    else -> n_AlGaAs(wavelength, x, eps_type)
-                }
-        val eps_semiconductor = n_to_eps(n_semiconductor)
-
-        val numerator = f * 2.0 * (eps_metal - eps_semiconductor) + eps_metal + (eps_semiconductor * 2.0)
-        val denominator = (eps_semiconductor * 2.0) + eps_metal + (f * (eps_semiconductor - eps_metal))
-        return eps_semiconductor * (numerator / denominator)
-    }
-
-    /**
-     * Drude permittivity
-     */
-    private fun eps_metal(wavelength: Double): Complex_ {
-        val w = Complex_(toEnergy(wavelength)) // eV
-        val numerator = Complex_(w_plasma * w_plasma)
-        val denominator = w * (w + Complex_(0.0, gamma_plasma))
-        return Complex_(eps_inf) - (numerator / denominator)
-    }
-}
-
-class MetallicNanoparticlesLayerPerssonModel(d: Double,
-                                             var k: Double,
-                                             var x: Double,
-                                             var latticeFactor: Double,
-                                             var w_plasma: Double, var gamma_plasma: Double,
-                                             var eps_inf: Double = 1.0,
-                                             val eps_type: EpsType) : SimpleLayer(d) {
-
-    override var n = NaN
+    override val epsMetal: Complex_
         get() {
-            if (eps_type == ADACHI) {
-                val n_AlGaAs = n_AlGaAs(wavelengthCurrent, x, eps_type)
-                return Complex_(n_AlGaAs.real, n_AlGaAs.real * k)
-            }
-            return n_AlGaAs(wavelengthCurrent, x, eps_type)
-        }
+            println("***********")
+            println(wPlasma)
+            println(gammaPlasma)
+            println(epsInf)
 
+            val w = Complex_(toEnergy(wavelengthCurrent)) // eV
+            val numerator = Complex_(wPlasma * wPlasma)
+            val denominator = w * (w + Complex_(0.0, gammaPlasma))
+            return Complex_(epsInf) - (numerator / denominator)
+        }
+}
+
+
+interface SbClustersInAlGaAs : MetallicClustersInAlGaAs {
+
+    override val epsMetal: Complex_
+        get() = SbTabulatedPermittivity.get(wavelengthCurrent)
+}
+
+
+abstract class PerssonModelForMetallicClustersInAlGaAs(d: Double, k: Double, x: Double,
+                                                       val latticeFactor: Double,
+                                                       epsType: EpsType) :
+        MetallicClustersInAlGaAs, AlGaAs(d, k, x, epsType) {
     override val matrix: Matrix_
         get() = Matrix_().apply {
-            with(r_t(wavelengthCurrent)) {
+            with(r_and_t) {
                 val r = first
                 val t = second
                 this@apply[0, 0] = (t * t - r * r) / t
@@ -110,8 +62,6 @@ class MetallicNanoparticlesLayerPerssonModel(d: Double,
                 this@apply[1, 1] = ONE / t
             }
         }
-
-    override fun parameters() = listOf(d, k, x, latticeFactor, w_plasma, gamma_plasma, eps_inf)
 
     private val R = d / 2.0
     private val a = latticeFactor * R
@@ -122,73 +72,100 @@ class MetallicNanoparticlesLayerPerssonModel(d: Double,
         get() = Complex_((ONE - cos * cos).sqrt())
 
 
-    private fun r_t(wavelength: Double): Pair<Complex_, Complex_> {
-        val alpha_parallel = alpha_parallel(wavelength)
-        val alpha_orthogonal = alpha_orthogonal(wavelength)
+    private val r_and_t: Pair<Complex_, Complex_>
+        get() {
+            val theta = Complex_(cos.acos())
 
-        /* ***************************************************************************** */
-//        println("$wavelength ${alpha_parallel.real} ${alpha_parallel.imaginary} ${alpha_orthogonal.real} ${alpha_orthogonal.imaginary}")
-        /* ***************************************************************************** */
+            val common1 = cos * cos * alphaParallel
+            val common2 = sin * sin * alphaOrthogonal
+            val common3 = ONE + B * (alphaOrthogonal - alphaParallel)
+            val common4 = A * B * alphaParallel * alphaOrthogonal * ((theta * I * 2.0).exp())
 
-        val A = A(wavelength)
-        val B = B(wavelength)
-        val theta = Complex_(cos.acos())
+            val rNumerator = when (polarization) {
+                S -> -A * common1
+                P -> -A * (common1 - common2) - common4
+            }
+            val tNumerator = when (polarization) {
+                S -> ONE - B * alphaParallel
+                P -> common3
+            }
+            val commonDenominator = when (polarization) {
+                S -> ONE - B * alphaParallel - A * common1
+                P -> common3 - A * (common1 + common2) - common4
+            }
 
-        val common1 = cos * cos * alpha_parallel
-        val common2 = sin * sin * alpha_orthogonal
-        val common3 = ONE + B * (alpha_orthogonal - alpha_parallel)
-        val common4 = A * B * alpha_parallel * alpha_orthogonal * ((theta * I * 2.0).exp())
-
-        val r = when (polarization) {
-            S -> (-A * common1) / (ONE - B * alpha_parallel - A * common1)
-            P -> (-A * (common1 - common2) - common4) / (common3 - A * (common1 + common2) - common4)
+            return rNumerator / commonDenominator to tNumerator / commonDenominator
         }
-        val t = when (polarization) {
-            S -> (ONE - B * alpha_parallel) / (ONE - B * alpha_parallel - A * common1)
-            P -> common3 / (common3 - A * (common1 + common2) - common4)
-        }
-        return r to t
-    }
 
-    private fun alpha(wavelength: Double): Complex_ {
-        val eps_metal = eps_metal(wavelength)
-        val eps_semiconductor = eps_semiconductor(wavelength)
-        return (eps_metal - eps_semiconductor) / (eps_metal + eps_semiconductor * 2.0) * pow(R, 3.0)
-    }
+    private val alpha: Complex_
+        get() = (epsMetal - epsMatrix) / (epsMetal + epsMatrix * 2.0) * pow(R, 3.0)
 
-    private fun alpha_parallel(wavelength: Double): Complex_ = with(alpha(wavelength)) {
-        return this / (ONE - this * 0.5 * U_0)
-    }
+    private val alphaParallel = with(alpha) { this / (ONE - this * 0.5 * U_0) }
 
-    private fun alpha_orthogonal(wavelength: Double): Complex_ = with(alpha(wavelength)) {
-        return this / (ONE + this * U_0)
-    }
+    private val alphaOrthogonal: Complex_ = with(alpha) { this / (ONE + this * U_0) }
 
-    private fun A(wavelength: Double) = Complex_(pow(2 * PI / a, 2.0) / wavelength) * I / cos
+    private val A = I / cos * pow(2 * PI / a, 2.0) / wavelengthCurrent
 
-    private fun B(wavelength: Double) = Complex_(pow(2 * PI / a, 2.0) / wavelength) * sin
-
-    /**
-     * Drude permittivity
-     */
-    private fun eps_metal(wavelength: Double): Complex_ {
-        val w = Complex_(toEnergy(wavelength)) // eV
-        val numerator = Complex_(w_plasma * w_plasma)
-        val denominator = w * (w + Complex_(0.0, gamma_plasma))
-        return Complex_(eps_inf) - (numerator / denominator)
-    }
-
-
-    /**
-     * Semiconductor matrix permittivity
-     */
-    private fun eps_semiconductor(wavelength: Double): Complex_ {
-        val n_semiconductor: Complex_ =
-                when (eps_type) {
-                    ADACHI -> with(n_AlGaAs(wavelength, x, eps_type)) { Complex_(real, real * k) }
-                    else -> n_AlGaAs(wavelength, x, eps_type)
-                }
-        return n_to_eps(n_semiconductor)
-    }
+    private val B = sin * pow(2 * PI / a, 2.0) / wavelengthCurrent
 }
 
+
+class PerssonModelForDrudeMetalClustersInAlGaAs(d: Double, k: Double, x: Double,
+                                                latticeFactor: Double,
+                                                override val wPlasma: Double,
+                                                override val gammaPlasma: Double,
+                                                override val epsInf: Double,
+                                                epsType: EpsType) :
+        DrudeMetalClustersInAlGaAs,
+        PerssonModelForMetallicClustersInAlGaAs(d, k, x, latticeFactor, epsType) {
+
+    init {
+        println("Constructing with d = $d, k = $k, x = $x, wPlasma = $wPlasma, gammaPlasma = $gammaPlasma, epsInf = $epsInf")
+    }
+
+    override val epsMetal: Complex_
+        get() {
+            println("***********")
+            println(wPlasma)
+            println(gammaPlasma)
+            println(epsInf)
+
+            val w = Complex_(toEnergy(wavelengthCurrent)) // eV
+            val numerator = Complex_(wPlasma * wPlasma)
+            val denominator = w * (w + Complex_(0.0, gammaPlasma))
+            return Complex_(epsInf) - (numerator / denominator)
+        }
+}
+
+
+class PerssonModelForSbClustersInAlGaAs(d: Double, k: Double, x: Double,
+                                        latticeFactor: Double,
+                                        epsType: EpsType) :
+        SbClustersInAlGaAs,
+        PerssonModelForMetallicClustersInAlGaAs(d, k, x, latticeFactor, epsType) {
+}
+
+
+/**
+ * https://en.wikipedia.oxrg/wiki/Effective_medium_approximations
+ * @param f  volume fraction of metallic clusters in AlGaAs matrix
+ * @return Maxwell-Garnett epsEff
+ */
+class EffectiveMediumForDrudeMetalClustersInAlGaAs(d: Double, k: Double, x: Double,
+                                                   override val wPlasma: Double,
+                                                   override val gammaPlasma: Double,
+                                                   val f: Double,
+                                                   override val epsInf: Double,
+                                                   epsType: EpsType) :
+        DrudeMetalClustersInAlGaAs, AlGaAs(d, k, x, epsType) {
+    private val epsEff: Complex_
+        get() {
+            val numerator = (epsMetal - epsMatrix) * f * 2.0 + epsMetal + (epsMatrix * 2.0)
+            val denominator = (epsMatrix * 2.0) + epsMetal - (epsMetal - epsMatrix) * f
+            return epsMatrix * (numerator / denominator)
+        }
+
+    override val n = eps_to_n(epsEff)
+
+    override fun parameters() = listOf(d, k, x, wPlasma, gammaPlasma, f, epsInf)
+}

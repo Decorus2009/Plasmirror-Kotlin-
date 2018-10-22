@@ -41,6 +41,9 @@ class GaAsLayerFitterController : LayerFitterController() {
     }
 
     override fun fit() {
+        // fitting procedure is slow and ineffective
+        TODO()
+/*
         println("Fitting GaAs layer")
 
         val from = d_fromTextField.text.toDouble()
@@ -60,6 +63,7 @@ class GaAsLayerFitterController : LayerFitterController() {
         }
 
         println("Fitter values: ${FitterState.listOfParameters}")
+*/
     }
 
     override fun enable() {

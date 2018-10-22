@@ -1,7 +1,7 @@
 package ui.controllers.fitter
 
 import core.layers.Layer
-import core.layers.MetallicNanoparticlesLayerPerssonModel
+import core.layers.PerssonModelForDrudeMetalClustersInAlGaAs
 import javafx.application.Platform
 import javafx.fxml.FXML
 import javafx.scene.control.CheckBox
@@ -55,7 +55,7 @@ class NanoparticlesLayerFitterController : LayerFitterController() {
             }
         }
         Platform.runLater {
-            with(layer as MetallicNanoparticlesLayerPerssonModel) {
+            with(layer as PerssonModelForDrudeMetalClustersInAlGaAs) {
                 d.let {
                     d_valueTextField.text = String.format(Locale.US, "%.2f", it)
                     d_fromTextField.text = String.format(Locale.US, "%.2f", it * 0.5)
@@ -80,19 +80,19 @@ class NanoparticlesLayerFitterController : LayerFitterController() {
                     latticeFactor_toTextField.text = String.format(Locale.US, "%.2f", it * 1.5)
                     latticeFactor_stepTextField.text = String.format(Locale.US, "%.2f", it / 100.0)
                 }
-                w_plasma.let {
+                wPlasma.let {
                     w_plasma_valueTextField.text = String.format(Locale.US, "%.2f", it)
                     w_plasma_fromTextField.text = String.format(Locale.US, "%.2f", it * 0.5)
                     w_plasma_toTextField.text = String.format(Locale.US, "%.2f", it * 1.5)
                     w_plasma_stepTextField.text = String.format(Locale.US, "%.2f", it / 100.0)
                 }
-                gamma_plasma.let {
+                gammaPlasma.let {
                     gamma_plasma_valueTextField.text = String.format(Locale.US, "%.2f", it)
                     gamma_plasma_fromTextField.text = String.format(Locale.US, "%.2f", it * 0.5)
                     gamma_plasma_toTextField.text = String.format(Locale.US, "%.2f", it * 1.5)
                     gamma_plasma_stepTextField.text = String.format(Locale.US, "%.2f", it / 100.0)
                 }
-                eps_inf.let {
+                epsInf.let {
                     eps_inf_valueTextField.text = String.format(Locale.US, "%.2f", it)
                     eps_inf_fromTextField.text = String.format(Locale.US, "%.2f", it * 0.5)
                     eps_inf_toTextField.text = String.format(Locale.US, "%.2f", it * 1.5)
@@ -104,6 +104,9 @@ class NanoparticlesLayerFitterController : LayerFitterController() {
     }
 
     override fun fit() {
+        // fitting procedure is slow and ineffective
+        TODO()
+/*
         println("Fitting Nanoparticles layer")
 
         val d_from = d_fromTextField.text.toDouble()
@@ -134,7 +137,7 @@ class NanoparticlesLayerFitterController : LayerFitterController() {
         val eps_inf_to = eps_inf_toTextField.text.toDouble()
         val eps_inf_step = eps_inf_stepTextField.text.toDouble()
 
-        with(layer as MetallicNanoparticlesLayerPerssonModel) {
+        with(layer as PerssonModelForDrudeMetalClustersInAlGaAs) {
             var d = d_from
             while (d <= d_to) {
                 this.d = d
@@ -163,7 +166,7 @@ class NanoparticlesLayerFitterController : LayerFitterController() {
                                     while (eps_inf <= eps_inf_to) {
                                         this.eps_inf = eps_inf
 
-//                                        println("d = $d k = $k x = $x latticeFactor = $latticeFactor w_plasma = $w_plasma gamma_plasma = $gamma_plasma eps_inf = $eps_inf")
+//                                        println("d = $d k = $k x = $x latticeFactor = $latticeFactor wPlasma = $wPlasma gammaPlasma = $gammaPlasma epsInf = $epsInf")
                                         with(FitterState) {
                                             clearPrevious()
                                             compute()
@@ -186,6 +189,7 @@ class NanoparticlesLayerFitterController : LayerFitterController() {
             }
         }
         println("Fitter values: ${FitterState.listOfParameters}")
+*/
     }
 
     override fun enable() {

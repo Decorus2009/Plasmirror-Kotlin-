@@ -92,15 +92,15 @@ class MainFitterController {
                 is AlGaAs -> load<AlGaAsLayerFitterController>(it, "fxml/fitter/AlGaAsLayerFitter.fxml")
                 is ConstRefractiveIndexLayer -> {
                 }
-                is GaAsExciton -> {
+                is GaAsExcitonic -> {
                 }
-                is AlGaAsExciton -> {
+                is AlGaAsExcitonic -> {
                 }
-                is ConstRefractiveIndexLayerExciton -> {
+                is ConstRefractiveIndexLayerExcitonic -> {
                 }
-                is EffectiveMedium -> {
+                is EffectiveMediumForDrudeMetalClustersInAlGaAs -> {
                 }
-                is MetallicNanoparticlesLayerPerssonModel -> load<NanoparticlesLayerFitterController>(it, "fxml/fitter/NanoparticlesLayerFitter.fxml")
+                is PerssonModelForDrudeMetalClustersInAlGaAs -> load<NanoparticlesLayerFitterController>(it, "fxml/fitter/NanoparticlesLayerFitter.fxml")
             }
         }
 

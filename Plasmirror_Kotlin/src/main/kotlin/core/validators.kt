@@ -1,12 +1,18 @@
 package core
 
+import core.Complex_.Companion.ONE
+import core.Medium.*
 import core.OpticalParametersValidator.validateAndSetOpticalParametersUsing
 import core.Regime.EPS
 import core.Regime.N
 import core.State.angle
+import core.State.leftMedium
+import core.State.leftMediumLayer
 import core.State.n_left
 import core.State.n_right
 import core.State.regime
+import core.State.rightMedium
+import core.State.rightMediumLayer
 import core.State.structure
 import core.State.wavelengthFrom
 import core.State.wavelengthStep
@@ -14,8 +20,11 @@ import core.State.wavelengthTo
 import core.StructureValidator.validateAndBuildStructure
 import core.ValidateResult.FAILURE
 import core.ValidateResult.SUCCESS
+import core.layers.ConstRefractiveIndexLayer
+import core.layers.GaAs
 import javafx.scene.control.Alert
 import ui.controllers.*
+import kotlin.Double.Companion.POSITIVE_INFINITY
 
 
 enum class ValidateResult { SUCCESS, FAILURE }
@@ -69,6 +78,24 @@ private object OpticalParametersValidator {
                 return FAILURE
             }
         }
+
+        /*
+        !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+        duplicated from MirrorBuilder.build() so that left medium layer be initialized before the structure building
+         */
+
+        leftMediumLayer = when (leftMedium) {
+            AIR -> ConstRefractiveIndexLayer(d = POSITIVE_INFINITY, n = ONE)
+            GAAS -> GaAs(d = POSITIVE_INFINITY, epsType = EpsType.GAUSS)
+            OTHER -> ConstRefractiveIndexLayer(d = POSITIVE_INFINITY, n = n_left)
+        }
+        rightMediumLayer = when (rightMedium) {
+            AIR -> ConstRefractiveIndexLayer(d = POSITIVE_INFINITY, n = ONE)
+            GAAS -> GaAs(d = POSITIVE_INFINITY, epsType = EpsType.GAUSS)
+            OTHER -> ConstRefractiveIndexLayer(d = POSITIVE_INFINITY, n = n_right)
+        }
+
+
         return SUCCESS
     }
 
@@ -119,14 +146,15 @@ private object StructureValidator {
             "5-1" to 7, "5-2" to 7, "5-3" to 7,
             "6" to 6,
             "7-1" to 8, "7-2" to 8, "7-3" to 8,
-            "8-1" to 8, "8-2" to 8, "8-3" to 8
+            "8-1" to 8, "8-2" to 8, "8-3" to 8,
+            "9-1" to 5, "9-2" to 5, "9-3" to 5
     )
 
     /**
-     * Validates and builds structure description representation in the text field of structureDescriptionController
+     * Validates and builds structure description representation from the text field of structureDescriptionController
      *
      * @param structureDescriptionController controller to get its text field
-     * containing structure description text representation
+     * containing the structure description text representation
      */
     fun validateAndBuildStructure(structureDescriptionController: StructureDescriptionController): ValidateResult {
         try {
@@ -149,7 +177,7 @@ private object StructureValidator {
      * Expand each layer description named tokens to single line:
      *
      *    type = 7-2, d = 10, x = 0.31,
-     *    w_plasma = 7.38, gamma_plasma = 0.18,  ---->  type = 7-2, d = 10, x = 0.31, w_plasma = 7.38, gamma_plasma = 0.18, f = 0.0017
+     *    wPlasma = 7.38, gammaPlasma = 0.18,  ---->  type = 7-2, d = 10, x = 0.31, wPlasma = 7.38, gammaPlasma = 0.18, f = 0.0017
      *    f = 0.0017
      *
      * Remove empty lines

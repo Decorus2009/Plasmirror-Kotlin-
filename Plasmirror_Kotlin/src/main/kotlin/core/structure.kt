@@ -45,34 +45,39 @@ object StructureBuilder {
                 val type = layerDescription.type
 
                 with(layerDescription.description) {
-                    val layer = when (type) {
-                        "1-1" -> GaAs(d = parseAt(i = 0), eps_Type = ADACHI)
-                        "1-2" -> GaAs(d = parseAt(i = 0), eps_Type = GAUSS)
-                        "1-3" -> GaAs(d = parseAt(i = 0), eps_Type = GAUSS_ADACHI)
+                    val layer: Layer = when (type) {
+                        "1-1" -> GaAs(d = parseAt(i = 0), epsType = ADACHI)
+                        "1-2" -> GaAs(d = parseAt(i = 0), epsType = GAUSS)
+                        "1-3" -> GaAs(d = parseAt(i = 0), epsType = GAUSS_ADACHI)
 
-                        "2-1" -> AlGaAs(d = parseAt(i = 0), k = parseAt(i = 1), x = parseAt(i = 2), eps_type = ADACHI)
-                        "2-2" -> AlGaAs(d = parseAt(i = 0), k = parseAt(i = 1), x = parseAt(i = 2), eps_type = GAUSS)
-                        "2-3" -> AlGaAs(d = parseAt(i = 0), k = parseAt(i = 1), x = parseAt(i = 2), eps_type = GAUSS_ADACHI)
+                        "2-1" -> AlGaAs(d = parseAt(i = 0), k = parseAt(i = 1), x = parseAt(i = 2), epsType = ADACHI)
+                        "2-2" -> AlGaAs(d = parseAt(i = 0), k = parseAt(i = 1), x = parseAt(i = 2), epsType = GAUSS)
+                        "2-3" -> AlGaAs(d = parseAt(i = 0), k = parseAt(i = 1), x = parseAt(i = 2), epsType = GAUSS_ADACHI)
 
-                        "3" -> ConstRefractiveIndexLayer(d = parseAt(i = 0), const_n = parseComplexAt(i = 1))
+                        "3" -> ConstRefractiveIndexLayer(d = parseAt(i = 0), n = parseComplexAt(i = 1))
 
-                        "4-1" -> GaAsExciton(d = parseAt(i = 0), w0 = parseAt(i = 1), gamma0 = parseAt(i = 2), gamma = parseAt(i = 3), eps_type = ADACHI)
-                        "4-2" -> GaAsExciton(d = parseAt(i = 0), w0 = parseAt(i = 1), gamma0 = parseAt(i = 2), gamma = parseAt(i = 3), eps_type = GAUSS)
-                        "4-3" -> GaAsExciton(d = parseAt(i = 0), w0 = parseAt(i = 1), gamma0 = parseAt(i = 2), gamma = parseAt(i = 3), eps_type = GAUSS_ADACHI)
+                        "4-1" -> GaAsExcitonic(d = parseAt(i = 0), w0 = parseAt(i = 1), gamma0 = parseAt(i = 2), gamma = parseAt(i = 3), epsType = ADACHI)
+                        "4-2" -> GaAsExcitonic(d = parseAt(i = 0), w0 = parseAt(i = 1), gamma0 = parseAt(i = 2), gamma = parseAt(i = 3), epsType = GAUSS)
+                        "4-3" -> GaAsExcitonic(d = parseAt(i = 0), w0 = parseAt(i = 1), gamma0 = parseAt(i = 2), gamma = parseAt(i = 3), epsType = GAUSS_ADACHI)
 
-                        "5-1" -> AlGaAsExciton(d = parseAt(i = 0), k = parseAt(i = 1), x = parseAt(i = 2), w0 = parseAt(i = 3), gamma0 = parseAt(i = 4), gamma = parseAt(i = 5), eps_type = ADACHI)
-                        "5-2" -> AlGaAsExciton(d = parseAt(i = 0), k = parseAt(i = 1), x = parseAt(i = 2), w0 = parseAt(i = 3), gamma0 = parseAt(i = 4), gamma = parseAt(i = 5), eps_type = GAUSS)
-                        "5-3" -> AlGaAsExciton(d = parseAt(i = 0), k = parseAt(i = 1), x = parseAt(i = 2), w0 = parseAt(i = 3), gamma0 = parseAt(i = 4), gamma = parseAt(i = 5), eps_type = GAUSS_ADACHI)
+                        "5-1" -> AlGaAsExcitonic(d = parseAt(i = 0), k = parseAt(i = 1), x = parseAt(i = 2), w0 = parseAt(i = 3), gamma0 = parseAt(i = 4), gamma = parseAt(i = 5), epsType = ADACHI)
+                        "5-2" -> AlGaAsExcitonic(d = parseAt(i = 0), k = parseAt(i = 1), x = parseAt(i = 2), w0 = parseAt(i = 3), gamma0 = parseAt(i = 4), gamma = parseAt(i = 5), epsType = GAUSS)
+                        "5-3" -> AlGaAsExcitonic(d = parseAt(i = 0), k = parseAt(i = 1), x = parseAt(i = 2), w0 = parseAt(i = 3), gamma0 = parseAt(i = 4), gamma = parseAt(i = 5), epsType = GAUSS_ADACHI)
 
-                        "6" -> ConstRefractiveIndexLayerExciton(d = parseAt(i = 0), const_n = parseComplexAt(i = 1), w0 = parseAt(i = 2), gamma0 = parseAt(i = 3), gamma = parseAt(i = 4))
+                        "6" -> ConstRefractiveIndexLayerExcitonic(d = parseAt(i = 0), n = parseComplexAt(i = 1), w0 = parseAt(i = 2), gamma0 = parseAt(i = 3), gamma = parseAt(i = 4))
 
-                        "7-1" -> EffectiveMedium(d = parseAt(i = 0), k = parseAt(i = 1), x = parseAt(i = 2), w_plasma = parseAt(i = 3), gamma_plasma = parseAt(i = 4), f = parseAt(i = 5), eps_inf = parseAt(i = 6), eps_type = ADACHI)
-                        "7-2" -> EffectiveMedium(d = parseAt(i = 0), k = parseAt(i = 1), x = parseAt(i = 2), w_plasma = parseAt(i = 3), gamma_plasma = parseAt(i = 4), f = parseAt(i = 5), eps_inf = parseAt(i = 6), eps_type = GAUSS)
-                        "7-3" -> EffectiveMedium(d = parseAt(i = 0), k = parseAt(i = 1), x = parseAt(i = 2), w_plasma = parseAt(i = 3), gamma_plasma = parseAt(i = 4), f = parseAt(i = 5), eps_inf = parseAt(i = 6), eps_type = GAUSS_ADACHI)
+                        "7-1" -> EffectiveMediumForDrudeMetalClustersInAlGaAs(d = parseAt(i = 0), k = parseAt(i = 1), x = parseAt(i = 2), wPlasma = parseAt(i = 3), gammaPlasma = parseAt(i = 4), f = parseAt(i = 5), epsInf = parseAt(i = 6), epsType = ADACHI)
+                        "7-2" -> EffectiveMediumForDrudeMetalClustersInAlGaAs(d = parseAt(i = 0), k = parseAt(i = 1), x = parseAt(i = 2), wPlasma = parseAt(i = 3), gammaPlasma = parseAt(i = 4), f = parseAt(i = 5), epsInf = parseAt(i = 6), epsType = GAUSS)
+                        "7-3" -> EffectiveMediumForDrudeMetalClustersInAlGaAs(d = parseAt(i = 0), k = parseAt(i = 1), x = parseAt(i = 2), wPlasma = parseAt(i = 3), gammaPlasma = parseAt(i = 4), f = parseAt(i = 5), epsInf = parseAt(i = 6), epsType = GAUSS_ADACHI)
 
-                        "8-1" -> MetallicNanoparticlesLayerPerssonModel(d = parseAt(i = 0), k = parseAt(i = 1), x = parseAt(i = 2), latticeFactor = parseAt(i = 3), w_plasma = parseAt(i = 4), gamma_plasma = parseAt(i = 5), eps_inf = parseAt(i = 6), eps_type = ADACHI)
-                        "8-2" -> MetallicNanoparticlesLayerPerssonModel(d = parseAt(i = 0), k = parseAt(i = 1), x = parseAt(i = 2), latticeFactor = parseAt(i = 3), w_plasma = parseAt(i = 4), gamma_plasma = parseAt(i = 5), eps_inf = parseAt(i = 6), eps_type = GAUSS)
-                        "8-3" -> MetallicNanoparticlesLayerPerssonModel(d = parseAt(i = 0), k = parseAt(i = 1), x = parseAt(i = 2), latticeFactor = parseAt(i = 3), w_plasma = parseAt(i = 4), gamma_plasma = parseAt(i = 5), eps_inf = parseAt(i = 6), eps_type = GAUSS_ADACHI)
+                        "8-1" -> PerssonModelForDrudeMetalClustersInAlGaAs(d = parseAt(i = 0), k = parseAt(i = 1), x = parseAt(i = 2), latticeFactor = parseAt(i = 3), wPlasma = parseAt(i = 4), gammaPlasma = parseAt(i = 5), epsInf = parseAt(i = 6), epsType = ADACHI)
+                        "8-2" -> PerssonModelForDrudeMetalClustersInAlGaAs(d = parseAt(i = 0), k = parseAt(i = 1), x = parseAt(i = 2), latticeFactor = parseAt(i = 3), wPlasma = parseAt(i = 4), gammaPlasma = parseAt(i = 5), epsInf = parseAt(i = 6), epsType = GAUSS)
+                        "8-3" -> PerssonModelForDrudeMetalClustersInAlGaAs(d = parseAt(i = 0), k = parseAt(i = 1), x = parseAt(i = 2), latticeFactor = parseAt(i = 3), wPlasma = parseAt(i = 4), gammaPlasma = parseAt(i = 5), epsInf = parseAt(i = 6), epsType = GAUSS_ADACHI)
+
+                        "9-1" -> PerssonModelForSbClustersInAlGaAs(d = parseAt(i = 0), k = parseAt(i = 1), x = parseAt(i = 2), latticeFactor = parseAt(i = 3), epsType = ADACHI)
+                        "9-2" -> PerssonModelForSbClustersInAlGaAs(d = parseAt(i = 0), k = parseAt(i = 1), x = parseAt(i = 2), latticeFactor = parseAt(i = 3), epsType = GAUSS)
+                        "9-3" -> PerssonModelForSbClustersInAlGaAs(d = parseAt(i = 0), k = parseAt(i = 1), x = parseAt(i = 2), latticeFactor = parseAt(i = 3), epsType = GAUSS_ADACHI)
+
                     /* must never be reached because of validating procedure */
                         else -> return@with
                     }
@@ -99,17 +104,16 @@ object StructureBuilder {
  * Builds mirror basing on left, right media and structure
  */
 object MirrorBuilder {
-    fun build(structure: Structure,
-              leftMedium: Medium, rightMedium: Medium): Mirror {
+    fun build(structure: Structure, leftMedium: Medium, rightMedium: Medium): Mirror {
         val leftMediumLayer = when (leftMedium) {
-            AIR -> ConstRefractiveIndexLayer(d = POSITIVE_INFINITY, const_n = ONE)
-            GAAS -> GaAs(d = POSITIVE_INFINITY, eps_Type = GAUSS)
-            OTHER -> ConstRefractiveIndexLayer(d = POSITIVE_INFINITY, const_n = n_left)
+            AIR -> ConstRefractiveIndexLayer(d = POSITIVE_INFINITY, n = ONE)
+            GAAS -> GaAs(d = POSITIVE_INFINITY, epsType = GAUSS)
+            OTHER -> ConstRefractiveIndexLayer(d = POSITIVE_INFINITY, n = n_left)
         }
         val rightMediumLayer = when (rightMedium) {
-            AIR -> ConstRefractiveIndexLayer(d = POSITIVE_INFINITY, const_n = ONE)
-            GAAS -> GaAs(d = POSITIVE_INFINITY, eps_Type = GAUSS)
-            OTHER -> ConstRefractiveIndexLayer(d = POSITIVE_INFINITY, const_n = n_right)
+            AIR -> ConstRefractiveIndexLayer(d = POSITIVE_INFINITY, n = ONE)
+            GAAS -> GaAs(d = POSITIVE_INFINITY, epsType = GAUSS)
+            OTHER -> ConstRefractiveIndexLayer(d = POSITIVE_INFINITY, n = n_right)
         }
         return Mirror(structure, leftMediumLayer, rightMediumLayer)
     }

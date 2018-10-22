@@ -26,6 +26,8 @@ object State {
 
     lateinit var leftMedium: Medium
     lateinit var rightMedium: Medium
+    lateinit var leftMediumLayer: Layer
+    lateinit var rightMediumLayer: Layer
     lateinit var n_left: Complex_
     lateinit var n_right: Complex_
 
@@ -39,6 +41,10 @@ object State {
     val permittivity = mutableListOf<Complex_>()
     val refractiveIndex = mutableListOf<Complex_>()
 
+    /**
+     * Here mirror is built after the validation procedure 'validateAndSetStateUsing'
+     * BUT! In that procedure during the layers' constructing some parameters such as n of the left medium are accessed via mirror
+     */
     fun set(): ValidateResult {
         if (validateAndSetStateUsing(mainController) == SUCCESS) {
             clearPreviousComputation()
@@ -67,8 +73,6 @@ object State {
                 }
             }
         }
-//        println("${wavelength[0]} ${reflection[0]}")
-//        for (i in 0..wavelength.size - 1) println("${wavelength[i]} ${reflection[i]}")
 
         fun set_fit() = reflection.clear()
 
@@ -85,7 +89,7 @@ object State {
 
 
 
-        }
+    }
     }
 
     private fun clearPreviousComputation() {
@@ -181,9 +185,9 @@ class Mirror(val structure: Structure, val leftMediumLayer: Layer, val rightMedi
         get() {
             var prev = leftMediumLayer
             /* blank layer (for formal initialization) */
-            var first: Layer = ConstRefractiveIndexLayer(d = Double.POSITIVE_INFINITY, const_n = Complex_(Complex.NaN))
+            var first: Layer = ConstRefractiveIndexLayer(d = Double.POSITIVE_INFINITY, n = Complex_(Complex.NaN))
             /* blank layer (for formal initialization) */
-            var beforeFirst: Layer = ConstRefractiveIndexLayer(d = Double.POSITIVE_INFINITY, const_n = Complex_(Complex.NaN))
+            var beforeFirst: Layer = ConstRefractiveIndexLayer(d = Double.POSITIVE_INFINITY, n = Complex_(Complex.NaN))
 
             var periodMatrix: Matrix_
             var tempMatrix: Matrix_
@@ -196,7 +200,7 @@ class Mirror(val structure: Structure, val leftMediumLayer: Layer, val rightMedi
                     periodMatrix = Matrix_.unaryMatrix()
 
                     isFirst = true
-                    var cur: Layer = ConstRefractiveIndexLayer(d = Double.POSITIVE_INFINITY, const_n = Complex_(Complex.NaN))  // blank layer (for formal initialization)
+                    var cur: Layer = ConstRefractiveIndexLayer(d = Double.POSITIVE_INFINITY, n = Complex_(Complex.NaN))  // blank layer (for formal initialization)
                     for (j in 0..layers.size - 1) {
 
                         cur = layers[j]

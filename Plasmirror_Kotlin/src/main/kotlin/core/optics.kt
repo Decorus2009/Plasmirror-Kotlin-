@@ -4,7 +4,11 @@ import core.Complex_.Companion.ONE
 import core.Complex_.Companion.ZERO
 import core.EpsType.*
 import core.State.angle
+import org.apache.commons.math3.analysis.polynomials.PolynomialSplineFunction
 import java.lang.Math.*
+import java.nio.file.Files
+import java.nio.file.Paths
+import java.util.*
 
 
 enum class Medium { AIR, GAAS, OTHER }
@@ -16,9 +20,6 @@ enum class Regime { R, T, A, EPS, N }
 enum class EpsType { ADACHI, GAUSS, GAUSS_ADACHI }
 
 
-/**
- * @param wavelength wavelength
- */
 fun toEnergy(wavelength: Double) = 1239.8 / wavelength
 
 fun cosThetaIncident() = Complex_(cos(angle * PI / 180.0))
@@ -28,7 +29,13 @@ fun cosThetaIncident() = Complex_(cos(angle * PI / 180.0))
  */
 fun cosThetaInLayer(n2: Complex_): Complex_ {
 
-    val n1 = State.mirror.leftMediumLayer.n
+    val n1 = State.leftMediumLayer.n
+
+    /**
+     * !!!!!!!!!!!!!!!!!!!!!!!!!!
+     * State.mirror is not initialized yet
+     */
+    //    val n1 = State.mirror.leftMediumLayer.n
 
     val cos1 = cosThetaIncident()
     val sin1_sq = ONE - (cos1 * cos1)
@@ -43,6 +50,43 @@ fun Double.round(): Double {
     return Math.floor((this + 1E-8) * power) / power
 }
 
+object SbTabulatedPermittivity {
+
+    private val functions: Pair<PolynomialSplineFunction, PolynomialSplineFunction>
+    private val path = Paths.get("data/inner/state_parameters/eps_Sb_Cardona_Adachi.txt")
+    private val wavelengths = mutableListOf<Double>()
+    private val epsSb = mutableListOf<Complex_>()
+
+    init {
+        println("Init in SbTabulatedPermittivity")
+        read()
+        functions = interpolate()
+    }
+
+    fun get(wavelength: Double) = with(functions) {
+        if (wavelengths.isEmpty() or epsSb.isEmpty()) {
+            throw IllegalStateException("Empty array of Sb permittivity")
+        }
+
+        val minWavelength = wavelengths[0]
+        val maxWavelength = wavelengths[wavelengths.size - 1]
+        val actualWavelength =
+                if (wavelength < minWavelength) minWavelength
+                else if (wavelength > maxWavelength) maxWavelength
+                else wavelength
+
+        Complex_(first.value(actualWavelength), second.value(actualWavelength))
+    }
+
+    private fun read() = Files.lines(path).forEach {
+        with(Scanner(it)) {
+            wavelengths += nextDouble()
+            epsSb += Complex_(nextDouble(), nextDouble())
+        }
+    }
+
+    private fun interpolate() = Interpolator.interpolateComplex(wavelengths, epsSb)
+}
 
 /**
  * Computation of the AlGaAs permittivity using full Gaussian approach from paper
@@ -53,26 +97,41 @@ object AlGaAsPermittivity {
 
     val GaussAdachiIntersections = mutableMapOf<Double, Double>()
 
+    fun epsAlGaAs(wavelength: Double, k: Double, x: Double, epsType: EpsType) =
+            eps_and_n_AlGaAs(wavelength, k, x, epsType).first
+
+    fun nAlGaAs(wavelength: Double, k: Double, x: Double, epsType: EpsType) =
+            eps_and_n_AlGaAs(wavelength, k, x, epsType).second
+
     /**
-     * If w < intersection energy, returns permittivity computed by the Adachi'85 approximation
+     * If w < intersection energy, returns eps and n computed by the Adachi'85 approximation
      * (with imaginary part computed by the Gauss approximation)
      * Else returns permittivity computed using the Gauss approximation
      */
-    fun eps_AlGaAs(wavelength: Double, x: Double, eps_type: EpsType) = when (eps_type) {
-        ADACHI -> epsAdachi(toEnergy(wavelength), x)
-        GAUSS -> epsGauss(toEnergy(wavelength), x)
-        GAUSS_ADACHI -> epsGaussAdachi(toEnergy(wavelength), x)
-    }
+    private fun eps_and_n_AlGaAs(wavelength: Double, k: Double, x: Double, epsType: EpsType): Pair<Complex_, Complex_> {
+        val eps = when (epsType) {
+            ADACHI -> epsAdachi(toEnergy(wavelength), x)
+            GAUSS -> epsGauss(toEnergy(wavelength), x)
+            GAUSS_ADACHI -> epsGaussAdachi(toEnergy(wavelength), x)
+        }
 
-    fun n_AlGaAs(wavelength: Double, x: Double, eps_type: EpsType) = eps_to_n(eps_AlGaAs(wavelength, x, eps_type))
+        val n = when (epsType) {
+            ADACHI -> {
+                with(eps_to_n(eps)) {
+                    Complex_(real, real * k)
+                }
+            }
+            else -> eps_to_n(eps)
+        }
+
+        return eps to n
+    }
 
     /**
      * Permittivity (Adachi)
      * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
      */
-    private fun epsAdachi(w: Double, x: Double) = n_to_eps(nAdachi(w, x))
-
-    private fun nAdachi(w: Double, x: Double): Complex_ {
+    private fun epsAdachi(w: Double, x: Double): Complex_ {
         var w_ = w
         val Eg = 1.425 + 1.155 * x + 0.37 * x * x
         /* nonrecursive */
@@ -85,7 +144,7 @@ object AlGaAsPermittivity {
         val hi = w_ / Eg
         val hi_so = w_ / (Eg + delta)
         val f: (Double) -> Double = { (2.0 - sqrt(1 + it) - sqrt(1 - it)) / (it * it) }
-        return Complex_(sqrt(A * (f.invoke(hi) + 0.5 * pow(Eg / (Eg + delta), 1.5) * f.invoke(hi_so)) + B))
+        return Complex_(A * (f.invoke(hi) + 0.5 * pow(Eg / (Eg + delta), 1.5) * f.invoke(hi_so)) + B)
     }
     /** * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
@@ -148,7 +207,7 @@ object AlGaAsPermittivity {
             epsGauss.add(epsGauss(w_, x))
             nGauss.add(nGauss(w_, x))
             epsAdachi.add(epsAdachi(w_, x))
-            nAdachi.add(nAdachi(w_, x))
+            nAdachi.add(eps_to_n(epsAdachi(w_, x)))
             w_ += step
         }
         /**
@@ -167,7 +226,7 @@ object AlGaAsPermittivity {
                 .filter { it.w > 1.4 && it.w < upperBound }.minBy { it.diff }!!.w)
     }
 
-    private fun eps_to_n(eps: Complex_): Complex_ {
+    fun eps_to_n(eps: Complex_): Complex_ {
         val n = sqrt((eps.abs() + eps.real) / 2.0)
         val k = sqrt((eps.abs() - eps.real) / 2.0)
         return Complex_(n, k)
@@ -279,8 +338,7 @@ object AlGaAsPermittivity {
 
     private fun E1_plus_delta1(x: Double) = Ei(x, Ei0 = 3.170, Ei1_minus_Ei0 = 0.917, c0 = -0.0734, c1 = -0.9393)
 
-    private fun Ei(x: Double, Ei0: Double, Ei1_minus_Ei0: Double, c0: Double, c1: Double)
-            = Ei0 + Ei1_minus_Ei0 * x + (c0 + c1 * x) * x * (1 - x)
+    private fun Ei(x: Double, Ei0: Double, Ei1_minus_Ei0: Double, c0: Double, c1: Double) = Ei0 + Ei1_minus_Ei0 * x + (c0 + c1 * x) * x * (1 - x)
 
     /**
      * Table II

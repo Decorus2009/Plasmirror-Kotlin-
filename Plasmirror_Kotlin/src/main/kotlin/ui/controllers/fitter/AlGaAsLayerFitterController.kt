@@ -67,6 +67,9 @@ class AlGaAsLayerFitterController : LayerFitterController() {
     }
 
     override fun fit() {
+        // fitting procedure is slow and ineffective
+        TODO()
+/*
         println("Fitting AlGaAs layer")
 
         val d_from = d_fromTextField.text.toDouble()
@@ -110,6 +113,7 @@ class AlGaAsLayerFitterController : LayerFitterController() {
             }
         }
         println("Fitter values: ${FitterState.listOfParameters}")
+*/
     }
 
     override fun enable() {
@@ -124,4 +128,5 @@ class AlGaAsLayerFitterController : LayerFitterController() {
 
     override val selected: Boolean
         get() = enableCheckBox.isSelected
+
 }
