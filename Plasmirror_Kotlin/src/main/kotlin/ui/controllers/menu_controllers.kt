@@ -20,8 +20,6 @@ import javafx.scene.input.KeyCombination.SHIFT_DOWN
 import javafx.scene.input.KeyCombination.SHORTCUT_DOWN
 import javafx.scene.input.KeyEvent
 import javafx.scene.layout.AnchorPane
-import javafx.scene.layout.GridPane
-import javafx.scene.layout.VBox
 import javafx.stage.DirectoryChooser
 import javafx.stage.FileChooser
 import javafx.stage.Stage
@@ -229,7 +227,7 @@ class MultipleExportDialogController {
                             After that the validation takes place parsing these GUI fields and setting actual inner
                             parameters in program (State.angle, State.polarization, etc.).
                             To be able to compute and export data at multiple angles,
-                            the corresponding GUI text field is set each time and validated and the computation process is performed.
+                            the corresponding GUI text field is init each time and validated and the computation process is performed.
                             In the end each field must get its initial value.
                             */
                             val initialAngle: String = State.mainController.globalParametersController
@@ -243,7 +241,7 @@ class MultipleExportDialogController {
                                     /* angleTextField.text will be validated before computation */
                                     mainController.globalParametersController.lightParametersController
                                             .angleTextField.text = currentAngle.toString()
-                                    set()
+                                    init()
                                     compute()
                                 }
                                 writeComputedDataTo(File("${chosenDirectory!!.canonicalPath}$separator${buildExportFileName()}.txt"))

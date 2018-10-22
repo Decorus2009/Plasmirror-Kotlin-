@@ -2,9 +2,9 @@ package core
 
 import core.Complex_.Companion.ONE
 import core.Medium.*
-import core.OpticalParametersValidator.validateAndSetOpticalParametersUsing
-import core.Regime.EPS
-import core.Regime.N
+import core.OpticalParametersValidator.initOpticalParametersUsing
+import core.Regime.PERMITTIVITY
+import core.Regime.REFRACTIVE_INDEX
 import core.State.angle
 import core.State.leftMedium
 import core.State.leftMediumLayer
@@ -17,7 +17,7 @@ import core.State.structure
 import core.State.wavelengthFrom
 import core.State.wavelengthStep
 import core.State.wavelengthTo
-import core.StructureValidator.validateAndBuildStructure
+import core.StructureValidator.initStructureUsing
 import core.ValidateResult.FAILURE
 import core.ValidateResult.SUCCESS
 import core.layers.ConstRefractiveIndexLayer
@@ -31,10 +31,9 @@ enum class ValidateResult { SUCCESS, FAILURE }
 
 
 object StateValidator {
-    fun validateAndSetStateUsing(mainController: MainController): ValidateResult {
+    fun initStateUsing(mainController: MainController): ValidateResult {
         with(mainController) {
-            if (validateAndSetOpticalParametersUsing(globalParametersController) == SUCCESS
-                    && validateAndBuildStructure(structureDescriptionController) == SUCCESS) {
+            if (initOpticalParametersUsing(globalParametersController) == SUCCESS && initStructureUsing(structureDescriptionController) == SUCCESS) {
                 return SUCCESS
             }
         }
@@ -44,11 +43,12 @@ object StateValidator {
 
 
 private object OpticalParametersValidator {
-    fun validateAndSetOpticalParametersUsing(globalParametersController: GlobalParametersController): ValidateResult {
+    fun initOpticalParametersUsing(globalParametersController: GlobalParametersController): ValidateResult {
+
         with(globalParametersController) {
-            if (validateRefractiveIndicesUsing(mediumParametersController) == SUCCESS
-                    && validateAngleUsing(lightParametersController) == SUCCESS
-                    && validateCalculationRangeUsing(computationRangeController) == SUCCESS) {
+            if (initRefractiveIndicesUsing(mediumParametersController) == SUCCESS
+                    && initAngleUsing(lightParametersController) == SUCCESS
+                    && initCalculationRangeUsing(computationRangeController) == SUCCESS) {
                 return SUCCESS
             }
         }
@@ -58,19 +58,19 @@ private object OpticalParametersValidator {
     /**
      * Negative refractive index values are allowed
      */
-    private fun validateRefractiveIndicesUsing(mediumParametersController: MediumParametersController): ValidateResult {
+    private fun initRefractiveIndicesUsing(mediumParametersController: MediumParametersController): ValidateResult {
         with(mediumParametersController) {
             try {
                 with(leftMediumChoiceBox) {
                     /* left medium == OTHER */
                     if (value == items[2]) {
-                        n_left = Complex_(n_leftRealTextField.text.toDouble(), n_leftImaginaryTextField.text.toDouble())
+                        n_left = Complex_(nLeftRealTextField.text.toDouble(), nLeftImagTextField.text.toDouble())
                     }
                 }
                 with(rightMediumChoiceBox) {
                     /* right medium == OTHER */
                     if (value == items[2]) {
-                        n_right = Complex_(n_rightRealTextField.text.toDouble(), n_rightImaginaryTextField.text.toDouble())
+                        n_right = Complex_(nRightRealTextField.text.toDouble(), nRightImagTextField.text.toDouble())
                     }
                 }
             } catch (e: NumberFormatException) {
@@ -99,7 +99,7 @@ private object OpticalParametersValidator {
         return SUCCESS
     }
 
-    private fun validateAngleUsing(lightParametersController: LightParametersController): ValidateResult {
+    private fun initAngleUsing(lightParametersController: LightParametersController): ValidateResult {
         try {
             angle = lightParametersController.angleTextField.text.toDouble()
             if (angle.isNotAllowed()) {
@@ -113,7 +113,7 @@ private object OpticalParametersValidator {
         return SUCCESS
     }
 
-    private fun validateCalculationRangeUsing(computationRangeController: ComputationRangeController): ValidateResult {
+    private fun initCalculationRangeUsing(computationRangeController: ComputationRangeController): ValidateResult {
         try {
             with(computationRangeController) {
                 wavelengthFrom = fromTextField.text.toDouble()
@@ -156,7 +156,7 @@ private object StructureValidator {
      * @param structureDescriptionController controller to get its text field
      * containing the structure description text representation
      */
-    fun validateAndBuildStructure(structureDescriptionController: StructureDescriptionController): ValidateResult {
+    fun initStructureUsing(structureDescriptionController: StructureDescriptionController): ValidateResult {
         try {
             val lines = toLines(structureDescriptionController.structureDescriptionCodeArea.text)
             val tokenizedLines = linesToTokenizedLines(lines)
@@ -276,10 +276,10 @@ private object StructureValidator {
             }
         }
         /**
-        Check that structure contains only one layer for EPS and N regimes
+        Check that structure contains only one layer for PERMITTIVITY and REFRACTIVE_INDEX regimes
         (check that tokenizedLines contains only one List<String> with layer parameters)
          */
-        if ((regime == EPS || regime == N) && filterNot { it.all { it.contains("x") } }.size != 1) {
+        if ((regime == PERMITTIVITY || regime == REFRACTIVE_INDEX) && filterNot { it.all { it.contains("x") } }.size != 1) {
             throw StructureDescriptionException("Structure must contain only one layer for this regime")
         }
         /**
@@ -382,7 +382,7 @@ private object StructureValidator {
 
 object MultipleExportDialogParametersValidator {
     fun validateRegime(): ValidateResult {
-        if ((regime == EPS || regime == N) && State.mainController.multipleExportDialogController.anglesSelected()) {
+        if ((regime == PERMITTIVITY || regime == REFRACTIVE_INDEX) && State.mainController.multipleExportDialogController.anglesSelected()) {
             alert(headerText = "Computation regime for multiple export error",
                     contentText = "For permittivity or refractive index computation temperature range must be selected")
             return FAILURE

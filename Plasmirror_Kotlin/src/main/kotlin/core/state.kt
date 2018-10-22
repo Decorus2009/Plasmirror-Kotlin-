@@ -1,7 +1,7 @@
 package core
 
 import core.Regime.*
-import core.StateValidator.validateAndSetStateUsing
+import core.StateValidator.initStateUsing
 import core.ValidateResult.FAILURE
 import core.ValidateResult.SUCCESS
 import core.layers.ConstRefractiveIndexLayer
@@ -42,11 +42,11 @@ object State {
     val refractiveIndex = mutableListOf<Complex_>()
 
     /**
-     * Here mirror is built after the validation procedure 'validateAndSetStateUsing'
+     * Here mirror is built after the validation procedure 'initStateUsing'
      * BUT! In that procedure during the layers' constructing some parameters such as n of the left medium are accessed via mirror
      */
-    fun set(): ValidateResult {
-        if (validateAndSetStateUsing(mainController) == SUCCESS) {
+    fun init(): ValidateResult {
+        if (initStateUsing(mainController) == SUCCESS) {
             clearPreviousComputation()
             buildMirror()
             return SUCCESS
@@ -68,8 +68,8 @@ object State {
                     R -> reflection += computeReflection()
                     T -> transmission += computeTransmission()
                     A -> absorption += computeAbsorption()
-                    EPS -> permittivity += computePermittivity()
-                    N -> refractiveIndex += computeRefractiveIndex()
+                    PERMITTIVITY -> permittivity += computePermittivity()
+                    REFRACTIVE_INDEX -> refractiveIndex += computeRefractiveIndex()
                 }
             }
         }

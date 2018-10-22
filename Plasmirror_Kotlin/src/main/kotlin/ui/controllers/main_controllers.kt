@@ -21,7 +21,7 @@ class RootController {
 
     @FXML
     fun initialize() {
-        println("Root controller set")
+        println("Root controller init")
         /**
         mainController is "lateinit" due to it's initialized through the reflection (@FXML)
         BEFORE the root controller initialization.
@@ -46,7 +46,7 @@ class MainController {
 
     @FXML
     fun initialize() {
-        println("Main controller set")
+        println("Main controller init")
         globalParametersController.mainController = this
         controlsController.mainController = this
         lineChartController.mainController = this
@@ -56,7 +56,7 @@ class MainController {
 
         with(State) {
             mainController = this@MainController
-            set()
+            init()
             compute()
         }
         lineChartController.updateLineChart()
@@ -84,7 +84,7 @@ class ControlsController {
             }
             setOnAction {
                 with(State) {
-                    if (set() == ValidateResult.SUCCESS) {
+                    if (init() == ValidateResult.SUCCESS) {
                         val startTime = System.nanoTime()
                         compute()
                         val stopTime = System.nanoTime()

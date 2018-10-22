@@ -11,11 +11,11 @@ import java.nio.file.Paths
 import java.util.*
 
 
-enum class Medium { AIR, GAAS, OTHER }
+enum class Medium { AIR, GAAS_ADACHI, GAAS_GAUSS, GAAS_GAUSS_ADACHI, OTHER }
 
 enum class Polarization { S, P }
 
-enum class Regime { R, T, A, EPS, N }
+enum class Regime { R, T, A, PERMITTIVITY, REFRACTIVE_INDEX }
 
 enum class EpsType { ADACHI, GAUSS, GAUSS_ADACHI }
 

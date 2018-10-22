@@ -59,7 +59,7 @@ class LineChartController {
 
     @FXML
     fun initialize() {
-        println("Line chart controller set")
+        println("Line chart controller init")
         /**
          * http://stackoverflow.com/questions/16473078/javafx-2-x-translate-mouse-click-coordinate-into-xychart-axis-value
          */
@@ -159,7 +159,7 @@ class LineChartController {
             }
         }
 
-        /* set number formatters for axises' values */
+        /* init number formatters for axises' values */
         xAxis.tickLabelFormatter = object : StringConverter<Number>() {
             override fun toString(`object`: Number): String {
                 return String.format(Locale.ROOT, "%.1f", `object`.toDouble())
@@ -223,8 +223,8 @@ class LineChartController {
                 R -> "Reflection"
                 T -> "Transmission"
                 A -> "Absorption"
-                EPS -> "Permittivity"
-                N -> "Refractive index"
+                PERMITTIVITY -> "Permittivity"
+                REFRACTIVE_INDEX -> "Refractive index"
             }
         }
 
@@ -241,13 +241,20 @@ class LineChartController {
 
         updateComputedSeries()
         updateYAxisLabel()
-        updateRegimeAndRescale()
+/*
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!1
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!1
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!1
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!1
+commented updateRegimeAndRescale
+ */
+//        updateRegimeAndRescale()
         updateLegendListener()
         updateStyleOfAll()
     }
 
     fun updateStyleOf(extendedSeries: ExtendedSeries) = with(extendedSeries) {
-        /* if series.data.isEmpty(), series.node == null. No need to set styles (NPE) */
+        /* if series.data.isEmpty(), series.node == null. No need to init styles (NPE) */
         if (series.data.isEmpty()) {
             return@with
         }
@@ -270,7 +277,7 @@ class LineChartController {
         /**
          * http://news.kynosarges.org/2017/05/14/javafx-chart-coloring/
          *
-         * sometimes when pressing compute button a few times in sequence, 'chart-legend-item-symbol' color is set to default.
+         * sometimes when pressing compute button a few times in sequence, 'chart-legend-item-symbol' color is init to default.
          * a bug?
          */
         Platform.runLater({
@@ -373,12 +380,12 @@ class LineChartController {
                 lowerBound = 0.0
                 upperBound = 1.0
                 tickUnit = 0.1
-            } else if (regime == EPS) {
+            } else if (regime == PERMITTIVITY) {
                 lowerBound = -5.0
                 upperBound = 20.0
                 tickUnit = 5.0
                 isAutoRanging = false
-            } else if (regime == N) {
+            } else if (regime == REFRACTIVE_INDEX) {
                 lowerBound = -1.0
                 upperBound = 4.5
                 tickUnit = 0.5
@@ -444,12 +451,12 @@ object LineChartState {
                     R -> addAll(wavelength.indices.map { Data<Number, Number>(wavelength[it], reflection[it]) })
                     T -> addAll(wavelength.indices.map { Data<Number, Number>(wavelength[it], transmission[it]) })
                     A -> addAll(wavelength.indices.map { Data<Number, Number>(wavelength[it], absorption[it]) })
-                    EPS -> {
+                    PERMITTIVITY -> {
                         addAll(wavelength.indices.map { Data<Number, Number>(wavelength[it], permittivity[it].real) })
                         extendedSeriesImaginary.series.data
                                 .addAll(wavelength.indices.map { Data<Number, Number>(wavelength[it], permittivity[it].imaginary) })
                     }
-                    N -> {
+                    REFRACTIVE_INDEX -> {
                         addAll(wavelength.indices.map { Data<Number, Number>(wavelength[it], refractiveIndex[it].real) })
                         extendedSeriesImaginary.series.data
                                 .addAll(wavelength.indices.map { Data<Number, Number>(wavelength[it], refractiveIndex[it].imaginary) })
@@ -458,17 +465,17 @@ object LineChartState {
             }
         }
 
-        /* set default names */
+        /* init default names */
         extendedSeriesReal.series.name = "Computed Real"
         extendedSeriesImaginary.series.name = "Computed Imaginary"
 
         /* if another regime */
         with(mainController.globalParametersController.regimeController) {
             if (regimeBefore == null || regime != regimeBefore) {
-                /* set default colors */
+                /* init default colors */
                 extendedSeriesReal.color = colors[0]!!
                 extendedSeriesImaginary.color = colors[1]!!
-                /* set default widths */
+                /* init default widths */
                 extendedSeriesReal.width = "2px"
                 extendedSeriesImaginary.width = "2px"
             }
@@ -506,7 +513,7 @@ object LineChartState {
         if (im_y.isNotEmpty()) {
             seriesImaginary.data.addAll(x.indices.map { Data<Number, Number>(x[it], im_y[it]) })
         }
-        /* set names */
+        /* init names */
         with(file.name) {
             seriesReal.name = this + " Real"
             seriesImaginary.name = this + " Imaginary"

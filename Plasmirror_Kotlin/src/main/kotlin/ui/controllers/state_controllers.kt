@@ -1,19 +1,15 @@
 package ui.controllers
 
-import core.Medium
+import core.*
 import core.Medium.*
-import core.Polarization
 import core.Polarization.P
 import core.Polarization.S
-import core.Regime
 import core.Regime.*
-import core.State
-import core.State.leftMedium
 import core.State.n_left
 import core.State.n_right
 import core.State.polarization
-import core.State.regime
-import core.State.rightMedium
+
+
 import javafx.fxml.FXML
 import javafx.scene.control.ChoiceBox
 import javafx.scene.control.Label
@@ -33,15 +29,20 @@ class GlobalParametersController {
 
     lateinit var mainController: MainController
 
-    @FXML lateinit var regimeController: RegimeController
-    @FXML lateinit var temperatureController: TemperatureController
-    @FXML lateinit var mediumParametersController: MediumParametersController
-    @FXML lateinit var lightParametersController: LightParametersController
-    @FXML lateinit var computationRangeController: ComputationRangeController
+    @FXML
+    lateinit var regimeController: RegimeController
+    @FXML
+    lateinit var temperatureController: TemperatureController
+    @FXML
+    lateinit var mediumParametersController: MediumParametersController
+    @FXML
+    lateinit var lightParametersController: LightParametersController
+    @FXML
+    lateinit var computationRangeController: ComputationRangeController
 
     @FXML
     fun initialize() {
-        println("Global parameters controller set")
+        println("Global parameters controller init")
         regimeController.globalParametersController = this
         temperatureController.globalParametersController = this
         computationRangeController.globalParametersController = this
@@ -60,59 +61,57 @@ class RegimeController {
 
     lateinit var globalParametersController: GlobalParametersController
 
-    @FXML private lateinit var regimeChoiceBox: ChoiceBox<String>
+    @FXML
+    private lateinit var regimeChoiceBox: ChoiceBox<String>
 
     var regimeBefore: Regime? = null
-    private val path = Paths.get(".${separator}data${separator}inner${separator}state_parameters${separator}regime.txt")
 
     @FXML
     fun initialize() {
-        println("Regime controller set")
-        /* set initial value */
-        /* lines.size should be == 1 */
-        val lines = Files.lines(path).toList().filter { it.isNotBlank() }
-        regime = Regime.valueOf(lines[0])
+        println("Regime controller init")
+
+        val regimes = mapOf(
+                R to 0, T to 1, A to 2, PERMITTIVITY to 3, REFRACTIVE_INDEX to 4
+        )
+        val inversed = regimes.map { it.value to it.key }
+
         with(regimeChoiceBox) {
-            value = when (regime) {
-                R -> items[0]
-                T -> items[1]
-                A -> items[2]
-                EPS -> items[3]
-                N -> items[4]
-            }
-            selectionModel.selectedItemProperty().addListener { _, oldValue, newValue ->
-                val newRegime = Regime.valueOf(newValue.toUpperCase())
-                regime = newRegime
-                regimeBefore = Regime.valueOf(oldValue.toUpperCase())
+            value = items[regimes[ComputationParameters.regime]!!]
+
+            selectionModel.selectedIndexProperty().addListener { _, _, newValue ->
+                val regime = inversed[newValue as Int].second
+                ComputationParameters.regime = regime
 
                 with(globalParametersController) {
-                    if (newRegime == R || newRegime == T || newRegime == A) {
-                        mediumParametersController.enableAll()
-                        lightParametersController.enableAll()
-                    } else if (newRegime == EPS || newRegime == N) {
-                        mediumParametersController.disableAll()
-                        lightParametersController.disableAll()
+                    when (regime) {
+                        R, T, A -> {
+                            mediumParametersController.enableAll()
+                            lightParametersController.enableAll()
+                        }
+                        PERMITTIVITY, REFRACTIVE_INDEX -> {
+                            mediumParametersController.disableAll()
+                            lightParametersController.disableAll()
+                        }
                     }
                 }
             }
         }
     }
-
-    fun writeRegime() = "${State.regime}".writeTo(path.toFile())
 }
 
 class TemperatureController {
 
     lateinit var globalParametersController: GlobalParametersController
 
-    @FXML private lateinit var T_TextField: TextField
+    @FXML
+    private lateinit var T_TextField: TextField
 
 //    private val path = Paths.get(".${File.separator}data${File.separator}inner${File.separator}state_parameters${File.separator}temperature.txt")
 
     @FXML
     fun initialize() {
-        println("Temperature controller set")
-        /* set initial values */
+        println("Temperature controller init")
+        /* init initial values */
         T_TextField.isDisable = true
 
         /* TODO read from file */
@@ -121,94 +120,114 @@ class TemperatureController {
 
 class MediumParametersController {
 
-    @FXML private lateinit var leftMediumLabel: Label
-    @FXML private lateinit var rightMediumLabel: Label
-    @FXML private lateinit var n_leftMediumLabel: Label
-    @FXML private lateinit var n_rightMediumLabel: Label
-    @FXML lateinit var n_leftRealTextField: TextField
-    @FXML lateinit var n_leftImaginaryTextField: TextField
-    @FXML lateinit var n_rightRealTextField: TextField
-    @FXML lateinit var n_rightImaginaryTextField: TextField
-    @FXML lateinit var leftMediumChoiceBox: ChoiceBox<String>
-    @FXML lateinit var rightMediumChoiceBox: ChoiceBox<String>
-
-    private val path = Paths.get(".${separator}data${separator}inner${separator}state_parameters${separator}medium_parameters.txt")
+    @FXML
+    private lateinit var leftMediumLabel: Label
+    @FXML
+    private lateinit var rightMediumLabel: Label
+    @FXML
+    private lateinit var nLeftMediumLabel: Label
+    @FXML
+    private lateinit var nRightMediumLabel: Label
+    @FXML
+    lateinit var nLeftRealTextField: TextField
+    @FXML
+    lateinit var nLeftImagTextField: TextField
+    @FXML
+    lateinit var nRightRealTextField: TextField
+    @FXML
+    lateinit var nRightImagTextField: TextField
+    @FXML
+    lateinit var leftMediumChoiceBox: ChoiceBox<String>
+    @FXML
+    lateinit var rightMediumChoiceBox: ChoiceBox<String>
 
     @FXML
     fun initialize() {
-        println("Medium parameters controller set")
-        /* set initial values */
-        /* lines.size should be == 6 */
-        val lines = Files.lines(path).toList().filter { it.isNotBlank() }
+        println("Medium parameters controller init")
 
-        leftMedium = Medium.valueOf(lines[0])
+        initMediumFields(
+                ComputationParameters.leftMedium,
+                ComputationParameters.leftMediumRefractiveIndex,
+                leftMediumChoiceBox,
+                nLeftRealTextField, nLeftImagTextField
+        )
         with(leftMediumChoiceBox) {
-            value = when (leftMedium) {
-                AIR -> items[0]
-                GAAS -> items[1]
-                OTHER -> {
-                    n_leftRealTextField.run {
-                        enable(this)
-                        text = lines[1]
-                    }
-                    n_leftImaginaryTextField.run {
-                        enable(this)
-                        text = lines[2]
-                    }
-                    items[2]
-                }
-            }
-            selectionModel.selectedItemProperty().addListener { _, _, _ ->
-                leftMedium = Medium.valueOf(value.toUpperCase())
-                if (leftMedium == OTHER) {
-                    enable(n_leftRealTextField, n_leftImaginaryTextField)
-                } else {
-                    disable(n_leftRealTextField, n_leftImaginaryTextField)
+
+            selectionModel.selectedIndexProperty().addListener { _, _, newValue ->
+                val leftMedium = inversed[newValue as Int].second
+                ComputationParameters.leftMedium = leftMedium
+
+                when (leftMedium) {
+                    OTHER -> enable(nLeftRealTextField, nLeftImagTextField)
+                    else -> disable(nLeftRealTextField, nLeftImagTextField)
                 }
             }
         }
-        rightMedium = Medium.valueOf(lines[3])
-        with(rightMediumChoiceBox) {
-            value = when (rightMedium) {
-                AIR -> items[0]
-                GAAS -> items[1]
-                OTHER -> {
-                    n_rightRealTextField.run {
-                        enable(this)
-                        text = lines[4]
-                    }
-                    n_rightImaginaryTextField.run {
-                        enable(this)
-                        text = lines[5]
-                    }
-                    items[2]
+
+        initMediumFields(
+                ComputationParameters.rightMedium,
+                ComputationParameters.rightMediumRefractiveIndex,
+                rightMediumChoiceBox,
+                nRightRealTextField, nRightImagTextField
+        )
+    }
+
+    private fun initMediumFields(medium: Medium,
+                                 mediumRefractiveIndex: Complex_,
+                                 mediumChoiceBox: ChoiceBox<String>,
+                                 nRealTextField: TextField, nImagTextField: TextField) {
+
+        val media = mapOf(
+                AIR to 0, GAAS_ADACHI to 1, GAAS_GAUSS to 2, GAAS_GAUSS_ADACHI to 3, OTHER to 4
+        )
+        val inversed = media.map { it.value to it.key }
+
+        with(mediumChoiceBox) {
+            value = items[media[medium]!!]
+
+            if (medium == OTHER) {
+                val n = mediumRefractiveIndex
+                nRealTextField.run {
+                    enable(this)
+                    text = n.real.toString()
+                }
+                nImagTextField.run {
+                    enable(this)
+                    text = n.imaginary.toString()
                 }
             }
-            selectionModel.selectedItemProperty().addListener { _, _, _ ->
-                rightMedium = Medium.valueOf(value.toUpperCase())
-                if (rightMedium == OTHER) {
-                    enable(n_rightRealTextField, n_rightImaginaryTextField)
-                } else {
-                    disable(n_rightRealTextField, n_rightImaginaryTextField)
+
+            selectionModel.selectedIndexProperty().addListener { _, _, newValue ->
+                medium = inversed[newValue as Int].second
+
+                when (medium) {
+                    OTHER -> enable(nRealTextField, nImagTextField)
+                    else -> disable(nRealTextField, nImagTextField)
                 }
             }
         }
     }
 
     fun disableAll() {
-        disable(leftMediumLabel, rightMediumLabel, n_leftMediumLabel, n_rightMediumLabel)
+        disable(leftMediumLabel, rightMediumLabel, nLeftMediumLabel, nRightMediumLabel)
         disable(leftMediumChoiceBox, rightMediumChoiceBox)
-        disable(n_leftRealTextField, n_leftImaginaryTextField, n_rightRealTextField, n_rightImaginaryTextField)
+        disable(nLeftRealTextField, nLeftImagTextField, nRightRealTextField, nRightImagTextField)
     }
 
     fun enableAll() {
-        enable(leftMediumLabel, rightMediumLabel, n_leftMediumLabel, n_rightMediumLabel)
+        enable(leftMediumLabel, rightMediumLabel, nLeftMediumLabel, nRightMediumLabel)
         enable(leftMediumChoiceBox, rightMediumChoiceBox)
-        if (leftMedium == OTHER) {
-            enable(n_leftRealTextField, n_leftImaginaryTextField)
+
+        with(leftMediumChoiceBox) {
+
         }
+        if (inversed[newValue as Int].second)
+
+            if (leftMedium == OTHER) {
+                enable(nLeftRealTextField, nLeftImagTextField)
+            }
         if (rightMedium == OTHER) {
-            enable(n_rightRealTextField, n_rightImaginaryTextField)
+            enable(nRightRealTextField, nRightImagTextField)
         }
     }
 
@@ -229,17 +248,21 @@ class MediumParametersController {
 
 class LightParametersController {
 
-    @FXML private lateinit var angleLabel: Label
-    @FXML private lateinit var polarizationLabel: Label
-    @FXML lateinit var polarizationChoiceBox: ChoiceBox<String>
-    @FXML lateinit var angleTextField: TextField
+    @FXML
+    private lateinit var angleLabel: Label
+    @FXML
+    private lateinit var polarizationLabel: Label
+    @FXML
+    lateinit var polarizationChoiceBox: ChoiceBox<String>
+    @FXML
+    lateinit var angleTextField: TextField
 
     private val path = Paths.get(".${separator}data${separator}inner${separator}state_parameters${separator}light_parameters.txt")
 
     @FXML
     fun initialize() {
-        println("Light parameters controller set")
-        /* set initial values */
+        println("Light parameters controller init")
+        /* init initial values */
         /* lines.size should be == 2 */
         val lines = Files.lines(path).toList().filter { it.isNotBlank() }
         polarization = Polarization.valueOf(lines[0])
@@ -273,16 +296,19 @@ class ComputationRangeController {
 
     lateinit var globalParametersController: GlobalParametersController
 
-    @FXML lateinit var fromTextField: TextField
-    @FXML lateinit var toTextField: TextField
-    @FXML lateinit var stepTextField: TextField
+    @FXML
+    lateinit var fromTextField: TextField
+    @FXML
+    lateinit var toTextField: TextField
+    @FXML
+    lateinit var stepTextField: TextField
 
     private val path = Paths.get(".${separator}data${separator}inner${separator}state_parameters${separator}computation_range.txt")
 
     @FXML
     fun initialize() {
-        println("Computation range controller set")
-        /* set initial values */
+        println("Computation range controller init")
+        /* init initial values */
         /* lines.size should be == 3 */
         val lines = Files.lines(path).toList().filter { it.isNotBlank() }
 
