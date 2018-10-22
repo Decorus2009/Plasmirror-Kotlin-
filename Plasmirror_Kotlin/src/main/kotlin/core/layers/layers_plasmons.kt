@@ -27,10 +27,11 @@ interface DrudeMetalClustersInAlGaAs : MetallicClustersInAlGaAs {
 
     override val epsMetal: Complex_
         get() {
-            println("***********")
-            println(wPlasma)
-            println(gammaPlasma)
-            println(epsInf)
+//            println("calling epsMetal property in interface DrudeMetalClustersInAlGaAs")
+//            println("***********")
+//            println(wPlasma)
+//            println(gammaPlasma)
+//            println(epsInf)
 
             val w = Complex_(toEnergy(wavelengthCurrent)) // eV
             val numerator = Complex_(wPlasma * wPlasma)
@@ -51,9 +52,18 @@ abstract class PerssonModelForMetallicClustersInAlGaAs(d: Double, k: Double, x: 
                                                        val latticeFactor: Double,
                                                        epsType: EpsType) :
         MetallicClustersInAlGaAs, AlGaAs(d, k, x, epsType) {
+
+//    init {
+//        println("Constructing abstract class PerssonModelForMetallicClustersInAlGaAs \n" +
+//                "with d = $d, k = $k, x = $x, latticeFactor = $latticeFactor, epsType = $epsType")
+//    }
+
     override val matrix: Matrix_
         get() = Matrix_().apply {
-            with(r_and_t) {
+
+//            println("Matrix property in final class PerssonModelForMetallicClustersInAlGaAs")
+
+            with(rt()) {
                 val r = first
                 val t = second
                 this@apply[0, 0] = (t * t - r * r) / t
@@ -65,48 +75,52 @@ abstract class PerssonModelForMetallicClustersInAlGaAs(d: Double, k: Double, x: 
 
     private val R = d / 2.0
     private val a = latticeFactor * R
-    private val U_0 = 9.03 / (a * a * a)
+    private val U0 = 9.03 / (a * a * a)
+    // here cos and sin are used with getter due to 'n' is used exactly in getter. Otherwise it is not initialized yet
     private val cos
         get() = cosThetaInLayer(n)
     private val sin
         get() = Complex_((ONE - cos * cos).sqrt())
 
 
-    private val r_and_t: Pair<Complex_, Complex_>
-        get() {
-            val theta = Complex_(cos.acos())
+    private fun rt(): Pair<Complex_, Complex_> {
+        val theta = Complex_(cos.acos())
+        val (alphaParallel, alphaOrthogonal) = alphaParallelOrthogonal()
+        val (A, B) = AB()
 
-            val common1 = cos * cos * alphaParallel
-            val common2 = sin * sin * alphaOrthogonal
-            val common3 = ONE + B * (alphaOrthogonal - alphaParallel)
-            val common4 = A * B * alphaParallel * alphaOrthogonal * ((theta * I * 2.0).exp())
+        val common1 = cos * cos * alphaParallel
+        val common2 = sin * sin * alphaOrthogonal
+        val common3 = ONE + B * (alphaOrthogonal - alphaParallel)
+        val common4 = A * B * alphaParallel * alphaOrthogonal * ((theta * I * 2.0).exp())
 
-            val rNumerator = when (polarization) {
-                S -> -A * common1
-                P -> -A * (common1 - common2) - common4
-            }
-            val tNumerator = when (polarization) {
-                S -> ONE - B * alphaParallel
-                P -> common3
-            }
-            val commonDenominator = when (polarization) {
-                S -> ONE - B * alphaParallel - A * common1
-                P -> common3 - A * (common1 + common2) - common4
-            }
-
-            return rNumerator / commonDenominator to tNumerator / commonDenominator
+        val rNumerator = when (polarization) {
+            S -> -A * common1
+            P -> -A * (common1 - common2) - common4
+        }
+        val tNumerator = when (polarization) {
+            S -> ONE - B * alphaParallel
+            P -> common3
+        }
+        val commonDenominator = when (polarization) {
+            S -> ONE - B * alphaParallel - A * common1
+            P -> common3 - A * (common1 + common2) - common4
         }
 
-    private val alpha: Complex_
-        get() = (epsMetal - epsMatrix) / (epsMetal + epsMatrix * 2.0) * pow(R, 3.0)
+        return rNumerator / commonDenominator to tNumerator / commonDenominator
+    }
 
-    private val alphaParallel = with(alpha) { this / (ONE - this * 0.5 * U_0) }
+    private fun alphaParallelOrthogonal() = with(alpha()) {
+        this / (ONE - this * 0.5 * U0) to this / (ONE + this * U0)
+    }
 
-    private val alphaOrthogonal: Complex_ = with(alpha) { this / (ONE + this * U_0) }
+    private fun alpha(): Complex_ = (epsMetal - epsMatrix) / (epsMetal + epsMatrix * 2.0) * pow(R, 3.0)
+//            .also {
+//        println("Calling alpha property in abstract class PerssonModelForMetallicClustersInAlGaAs using epsMetal property")
+//    }
 
-    private val A = I / cos * pow(2 * PI / a, 2.0) / wavelengthCurrent
-
-    private val B = sin * pow(2 * PI / a, 2.0) / wavelengthCurrent
+    private fun AB() = with(pow(2 * PI / a, 2.0) / wavelengthCurrent) {
+        I / cos * this to sin * this
+    }
 }
 
 
@@ -119,22 +133,10 @@ class PerssonModelForDrudeMetalClustersInAlGaAs(d: Double, k: Double, x: Double,
         DrudeMetalClustersInAlGaAs,
         PerssonModelForMetallicClustersInAlGaAs(d, k, x, latticeFactor, epsType) {
 
-    init {
-        println("Constructing with d = $d, k = $k, x = $x, wPlasma = $wPlasma, gammaPlasma = $gammaPlasma, epsInf = $epsInf")
-    }
-
-    override val epsMetal: Complex_
-        get() {
-            println("***********")
-            println(wPlasma)
-            println(gammaPlasma)
-            println(epsInf)
-
-            val w = Complex_(toEnergy(wavelengthCurrent)) // eV
-            val numerator = Complex_(wPlasma * wPlasma)
-            val denominator = w * (w + Complex_(0.0, gammaPlasma))
-            return Complex_(epsInf) - (numerator / denominator)
-        }
+//    init {
+//        println("Constructing PerssonModelForDrudeMetalClustersInAlGaAs \n" +
+//                "with d = $d, k = $k, x = $x, wPlasma = $wPlasma, gammaPlasma = $gammaPlasma, epsInf = $epsInf")
+//    }
 }
 
 
@@ -142,8 +144,7 @@ class PerssonModelForSbClustersInAlGaAs(d: Double, k: Double, x: Double,
                                         latticeFactor: Double,
                                         epsType: EpsType) :
         SbClustersInAlGaAs,
-        PerssonModelForMetallicClustersInAlGaAs(d, k, x, latticeFactor, epsType) {
-}
+        PerssonModelForMetallicClustersInAlGaAs(d, k, x, latticeFactor, epsType)
 
 
 /**

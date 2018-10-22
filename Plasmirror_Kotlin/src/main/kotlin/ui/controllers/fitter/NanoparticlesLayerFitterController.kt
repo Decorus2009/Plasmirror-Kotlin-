@@ -154,9 +154,9 @@ class NanoparticlesLayerFitterController : LayerFitterController() {
                         while (latticeFactor <= latticeFactor_to) {
                             this.latticeFactor = latticeFactor
 
-                            var w_plasma = w_plasma_from
-                            while (w_plasma <= w_plasma_to) {
-                                this.w_plasma = w_plasma
+                            var wPlasma = w_plasma_from
+                            while (wPlasma <= w_plasma_to) {
+                                this.wPlasma = wPlasma
 
                                 var gamma_plasma = gamma_plasma_from
                                 while (gamma_plasma <= gamma_plasma_to) {
@@ -177,7 +177,7 @@ class NanoparticlesLayerFitterController : LayerFitterController() {
                                     }
                                     gamma_plasma += gamma_plasma_step
                                 }
-                                w_plasma += w_plasma_step
+                                wPlasma += w_plasma_step
                             }
                             latticeFactor += latticeFactor_step
                         }
