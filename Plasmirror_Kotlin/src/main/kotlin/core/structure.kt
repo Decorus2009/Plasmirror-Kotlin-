@@ -2,7 +2,8 @@ package core
 
 import core.Complex_.Companion.ONE
 import core.EpsType.*
-import core.Medium.*
+import core.Medium.AIR
+import core.Medium.OTHER
 import core.State.n_left
 import core.State.n_right
 import core.layers.*

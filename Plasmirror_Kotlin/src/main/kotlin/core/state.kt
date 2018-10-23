@@ -88,8 +88,7 @@ object State {
             val imported = LineChartState.imported[0].extendedSeriesReal.series.data
 
 
-
-    }
+        }
     }
 
     private fun clearPreviousComputation() {

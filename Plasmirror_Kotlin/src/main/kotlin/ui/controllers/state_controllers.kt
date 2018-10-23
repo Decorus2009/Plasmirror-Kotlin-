@@ -5,10 +5,6 @@ import core.Medium.*
 import core.Polarization.P
 import core.Polarization.S
 import core.Regime.*
-import core.State.n_left
-import core.State.n_right
-import core.State.polarization
-
 
 import javafx.fxml.FXML
 import javafx.scene.control.ChoiceBox
@@ -145,67 +141,60 @@ class MediumParametersController {
     fun initialize() {
         println("Medium parameters controller init")
 
+        val mediaMap = mapOf(
+                AIR to 0, GAAS_ADACHI to 1, GAAS_GAUSS to 2, GAAS_GAUSS_ADACHI to 3, OTHER to 4
+        )
+        val invMap = mediaMap.map { it.value to it.key }
+
+        fun initMediumFields(medium: Medium,
+                             mediumRefractiveIndex: Complex_,
+                             mediumChoiceBox: ChoiceBox<String>,
+                             nRealTextField: TextField, nImagTextField: TextField) {
+
+            with(mediumChoiceBox) {
+                value = items[mediaMap[medium]!!]
+
+                if (medium == OTHER) {
+                    val n = mediumRefractiveIndex
+                    nRealTextField.run {
+                        enable(this)
+                        text = n.real.toString()
+                    }
+                    nImagTextField.run {
+                        enable(this)
+                        text = n.imaginary.toString()
+                    }
+                }
+
+                selectionModel.selectedIndexProperty().addListener { _, _, newValue ->
+                    when (medium) {
+                        OTHER -> enable(nRealTextField, nImagTextField)
+                        else -> disable(nRealTextField, nImagTextField)
+                    }
+                }
+            }
+        }
+
+
         initMediumFields(
                 ComputationParameters.leftMedium,
                 ComputationParameters.leftMediumRefractiveIndex,
                 leftMediumChoiceBox,
                 nLeftRealTextField, nLeftImagTextField
         )
-        with(leftMediumChoiceBox) {
-
-            selectionModel.selectedIndexProperty().addListener { _, _, newValue ->
-                val leftMedium = inversed[newValue as Int].second
-                ComputationParameters.leftMedium = leftMedium
-
-                when (leftMedium) {
-                    OTHER -> enable(nLeftRealTextField, nLeftImagTextField)
-                    else -> disable(nLeftRealTextField, nLeftImagTextField)
-                }
-            }
-        }
-
         initMediumFields(
                 ComputationParameters.rightMedium,
                 ComputationParameters.rightMediumRefractiveIndex,
                 rightMediumChoiceBox,
                 nRightRealTextField, nRightImagTextField
         )
-    }
 
-    private fun initMediumFields(medium: Medium,
-                                 mediumRefractiveIndex: Complex_,
-                                 mediumChoiceBox: ChoiceBox<String>,
-                                 nRealTextField: TextField, nImagTextField: TextField) {
-
-        val media = mapOf(
-                AIR to 0, GAAS_ADACHI to 1, GAAS_GAUSS to 2, GAAS_GAUSS_ADACHI to 3, OTHER to 4
-        )
-        val inversed = media.map { it.value to it.key }
-
-        with(mediumChoiceBox) {
-            value = items[media[medium]!!]
-
-            if (medium == OTHER) {
-                val n = mediumRefractiveIndex
-                nRealTextField.run {
-                    enable(this)
-                    text = n.real.toString()
-                }
-                nImagTextField.run {
-                    enable(this)
-                    text = n.imaginary.toString()
-                }
-            }
-
-            selectionModel.selectedIndexProperty().addListener { _, _, newValue ->
-                medium = inversed[newValue as Int].second
-
-                when (medium) {
-                    OTHER -> enable(nRealTextField, nImagTextField)
-                    else -> disable(nRealTextField, nImagTextField)
-                }
-            }
-        }
+//        leftMediumChoiceBox.selectionModel.selectedIndexProperty().addListener { _, _, newValue ->
+//            ComputationParameters.leftMedium = invMap[newValue as Int].second
+//        }
+//        rightMediumChoiceBox.selectionModel.selectedIndexProperty().addListener { _, _, newValue ->
+//            ComputationParameters.rightMedium = invMap[newValue as Int].second
+//        }
     }
 
     fun disableAll() {
@@ -218,32 +207,13 @@ class MediumParametersController {
         enable(leftMediumLabel, rightMediumLabel, nLeftMediumLabel, nRightMediumLabel)
         enable(leftMediumChoiceBox, rightMediumChoiceBox)
 
-        with(leftMediumChoiceBox) {
-
+        if (ComputationParameters.leftMedium == OTHER) {
+            enable(nLeftRealTextField, nLeftImagTextField)
         }
-        if (inversed[newValue as Int].second)
-
-            if (leftMedium == OTHER) {
-                enable(nLeftRealTextField, nLeftImagTextField)
-            }
-        if (rightMedium == OTHER) {
+        if (ComputationParameters.rightMedium == OTHER) {
             enable(nRightRealTextField, nRightImagTextField)
         }
     }
-
-    fun writeMediumParametersToFile() = StringBuilder().apply {
-        append(leftMedium.toString()).append("\n")
-        when (leftMedium) {
-            OTHER -> with(n_left) { append(real).append("\n").append(imaginary).append("\n") }
-            else -> append("-\n-\n")
-        }
-
-        append(rightMedium.toString()).append("\n")
-        when (rightMedium) {
-            OTHER -> with(n_right) { append(real).append("\n").append(imaginary).append("\n") }
-            else -> append("-\n-\n")
-        }
-    }.toString().writeTo(path.toFile())
 }
 
 class LightParametersController {
@@ -257,23 +227,32 @@ class LightParametersController {
     @FXML
     lateinit var angleTextField: TextField
 
-    private val path = Paths.get(".${separator}data${separator}inner${separator}state_parameters${separator}light_parameters.txt")
-
     @FXML
     fun initialize() {
         println("Light parameters controller init")
-        /* init initial values */
-        /* lines.size should be == 2 */
-        val lines = Files.lines(path).toList().filter { it.isNotBlank() }
-        polarization = Polarization.valueOf(lines[0])
-        angleTextField.text = lines[1]
+
+        val polarizationMap = mapOf(P to 0, S to 1)
+        val invMap = polarizationMap.map { it.value to it.key }
 
         with(polarizationChoiceBox) {
-            value = when (polarization) {
-                P -> items[0]
-                S -> items[1]
+            value = items[polarizationMap[ComputationParameters.polarization]!!]
+
+            selectionModel.selectedIndexProperty().addListener { _, _, newValue ->
+                ComputationParameters.polarization = invMap[newValue as Int].second
             }
-            selectionModel.selectedItemProperty().addListener { _, _, _ -> polarization = Polarization.valueOf(value) }
+        }
+
+        with(angleTextField) {
+            val previousValue = ComputationParameters.angle
+            text = previousValue.toString()
+
+            textProperty().addListener { _, _, newValue ->
+                try {
+                    ComputationParameters.angle = newValue.toDouble()
+                } catch (e: NumberFormatException) {
+                    ComputationParameters.angle = previousValue
+                }
+            }
         }
     }
 
@@ -288,8 +267,6 @@ class LightParametersController {
         enable(polarizationChoiceBox)
         enable(angleTextField)
     }
-
-    fun writeLightParameters() = "${State.polarization}\n${State.angle}".writeTo(path.toFile())
 }
 
 class ComputationRangeController {
@@ -303,21 +280,49 @@ class ComputationRangeController {
     @FXML
     lateinit var stepTextField: TextField
 
-    private val path = Paths.get(".${separator}data${separator}inner${separator}state_parameters${separator}computation_range.txt")
-
     @FXML
     fun initialize() {
         println("Computation range controller init")
-        /* init initial values */
-        /* lines.size should be == 3 */
-        val lines = Files.lines(path).toList().filter { it.isNotBlank() }
 
-        fromTextField.text = lines[0]
-        toTextField.text = lines[1]
-        stepTextField.text = lines[2]
+        with(fromTextField) {
+            val previousValue = ComputationParameters.computationRangeStart
+            text = previousValue.toString()
+
+            textProperty().addListener { _, _, newValue ->
+                try {
+                    ComputationParameters.computationRangeStart = newValue.toDouble()
+                } catch (e: NumberFormatException) {
+                    ComputationParameters.computationRangeStart = previousValue
+                }
+            }
+        }
+
+        with(toTextField) {
+            val previousValue = ComputationParameters.computationRangeEnd
+            text = previousValue.toString()
+
+            textProperty().addListener { _, _, newValue ->
+                try {
+                    ComputationParameters.computationRangeEnd = newValue.toDouble()
+                } catch (e: NumberFormatException) {
+                    ComputationParameters.computationRangeEnd = previousValue
+                }
+            }
+        }
+
+        with(toTextField) {
+            val previousValue = ComputationParameters.computationRangeStep
+            text = previousValue.toString()
+
+            textProperty().addListener { _, _, newValue ->
+                try {
+                    ComputationParameters.computationRangeStep = newValue.toDouble()
+                } catch (e: NumberFormatException) {
+                    ComputationParameters.computationRangeStep = previousValue
+                }
+            }
+        }
     }
-
-    fun writeComputationRange() = "${State.wavelengthFrom}\n${State.wavelengthTo}\n${State.wavelengthStep}".writeTo(path.toFile())
 }
 
 class StructureDescriptionController {
@@ -325,8 +330,6 @@ class StructureDescriptionController {
     @FXML
     private var anchorPane = AnchorPane()
     val structureDescriptionCodeArea = CodeArea()
-
-    private val path = Paths.get(".${separator}data${separator}inner${separator}state_parameters${separator}structure.txt")
 
     @FXML
     fun initialize() = with(structureDescriptionCodeArea) {
@@ -343,10 +346,12 @@ class StructureDescriptionController {
                 -fx-highlight-fill: #dbdddd;
                 -fx-highlight-text-fill: #dbdddd;
         """
-        replaceText(0, 0, Files.lines(path).toList().reduce { text, line -> text + "\n" + line })
+        replaceText(0, 0, StructureDescriptionStorage.description)
     }
 
-    fun writeStructureDescription() = structureDescriptionCodeArea.text.writeTo(path.toFile())
+    fun save() {
+        StructureDescriptionStorage.description = structureDescriptionCodeArea.text
+    }
 
     /**
      * Code in this method is used using Java style as in the example (to be able to understand what's going on here)
