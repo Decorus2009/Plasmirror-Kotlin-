@@ -1,11 +1,11 @@
 {
-    "right_medium": "GaAs: Gauss",
+    "right_medium": "Air",
     "computation_range": {
-        "start": "200",
+        "start": "400",
         "end": "1000",
         "step": "1.0"
     },
-    "regime": "Permittivity",
+    "regime": "Reflectance",
     "angle": "30",
     "polarization": "P",
     "left_medium": "Air",

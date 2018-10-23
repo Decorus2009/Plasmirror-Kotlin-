@@ -7,8 +7,8 @@ import core.validators.ValidationResult.*
 import ui.controllers.MainController
 import java.util.*
 
-object State {
 
+object State {
     lateinit var mainController: MainController
 
     var wavelengthStart: Double = 600.0
@@ -16,12 +16,13 @@ object State {
     var wavelengthStep: Double = 1.0
     var wavelengthCurrent = wavelengthStart
 
-    var angle: Double = 0.0
-    lateinit var polarization: Polarization
     lateinit var regime: Regime
 
     lateinit var leftMediumLayer: Layer
     lateinit var rightMediumLayer: Layer
+
+    lateinit var polarization: Polarization
+    var angle: Double = 0.0
 
     lateinit var structure: Structure
     lateinit var mirror: Mirror
@@ -37,7 +38,7 @@ object State {
      * Here mirror is built after the validation procedure 'initState'
      * BUT! In that procedure during the layers' constructing some parameters such as n of the left medium are accessed via mirror
      */
-//    fun init() {
+    //    fun init() {
 //        if (StateValidator.initState() == SUCCESS) {
 //            clearPreviousComputation()
 //            buildMirror()
@@ -104,5 +105,3 @@ object State {
         mirror = Mirror(structure, leftMediumLayer, rightMediumLayer)
     }
 }
-
-

@@ -16,7 +16,7 @@ import javafx.scene.control.Button
 import javafx.scene.control.Separator
 import javafx.scene.layout.VBox
 import org.apache.commons.math3.analysis.interpolation.SplineInterpolator
-import ui.controllers.LineChartState
+import ui.controllers.chart.LineChartState
 import java.lang.Math.abs
 import kotlin.Double.Companion.MAX_VALUE
 

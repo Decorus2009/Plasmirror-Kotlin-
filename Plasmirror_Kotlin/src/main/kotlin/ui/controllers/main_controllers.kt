@@ -12,6 +12,10 @@ import javafx.scene.input.KeyCombination
 import core.State
 import core.StructureDescriptionStorage
 import core.validators.ValidationResult.*
+import ui.controllers.chart.LineChartController
+import ui.controllers.chart.SeriesManagerController
+import ui.controllers.chart.XAxisRangeController
+import ui.controllers.chart.YAxisRangeController
 import java.util.*
 
 class RootController {
