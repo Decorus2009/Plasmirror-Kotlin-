@@ -72,6 +72,11 @@ class MainController {
 
         State.mainController = this
 
+        Platform.runLater {
+            // a bit dirty but by the time of this call mainController should be already initialized
+            multipleExportDialogController.mainController = this
+        }
+
 // TODO commented
 /*        with(State) {
             mainController = this@MainController

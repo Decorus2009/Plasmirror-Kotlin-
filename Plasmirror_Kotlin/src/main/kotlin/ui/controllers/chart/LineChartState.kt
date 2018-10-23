@@ -52,10 +52,20 @@ object LineChartState {
     fun allExtendedSeries() = (imported + computed).flatMap { listOf(it.extendedSeriesReal, it.extendedSeriesImaginary) }
 
     fun updateComputed() = with(computed) {
-        extendedSeriesReal.series.data.run { if (isNotEmpty()) clear() }
-        extendedSeriesImaginary.series.data.run { if (isNotEmpty()) clear() }
 
+        extendedSeriesReal.clear()
+        extendedSeriesImaginary.clear()
+//        extendedSeriesReal.series.data.run { if (isNotEmpty()) clear() }
+//        extendedSeriesImaginary.series.data.run { if (isNotEmpty()) clear() }
 
+//        when (State.regime) {
+//            REFLECTANCE -> {
+//                extendedSeriesReal.series.data.addAll()
+//            }
+//
+//            TRANSMITTANCE -> TODO()
+//            ABSORBANCE -> TODO()
+//        }
 
         extendedSeriesReal.series.data.run {
             with(State) {
@@ -166,7 +176,7 @@ object LineChartState {
             width = "2px"
         }
 
-//        fun clear() = series.data.clear()
+        fun clear() = series.data.clear()
     }
 
     enum class SERIES_TYPE { COMPUTED, IMPORTED }

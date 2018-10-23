@@ -2,19 +2,17 @@ package ui.controllers
 
 
 import MainApp
-import core.State
-import core.State.polarization
-import core.validators.MultipleExportDialogParametersValidator
+import core.ComputationParametersStorage
 import core.Polarization
+import core.State
+import core.validators.MultipleExportDialogParametersValidator
 import core.validators.ValidationResult.SUCCESS
 import javafx.fxml.FXML
 import javafx.fxml.FXMLLoader
 import javafx.scene.Scene
 import javafx.scene.control.*
 import javafx.scene.input.KeyCode
-import javafx.scene.input.KeyCode.E
-import javafx.scene.input.KeyCode.F
-import javafx.scene.input.KeyCode.I
+import javafx.scene.input.KeyCode.*
 import javafx.scene.input.KeyCodeCombination
 import javafx.scene.input.KeyCombination.SHIFT_DOWN
 import javafx.scene.input.KeyCombination.SHORTCUT_DOWN
@@ -26,9 +24,7 @@ import javafx.stage.Stage
 import org.apache.commons.io.FileUtils
 import java.io.File
 import java.io.File.separator
-import java.nio.file.Files
 import java.nio.file.Paths
-import kotlin.streams.toList
 
 
 class MenuController {
@@ -57,16 +53,14 @@ class MenuController {
         fitterMenuItem.accelerator = KeyCodeCombination(F, SHORTCUT_DOWN)
 
         importMenuItem.setOnAction {
-            val file = initFileChooser(".")
-                    .showOpenDialog(rootController.mainApp.primaryStage)
+            val file = initFileChooser(".").showOpenDialog(rootController.mainApp.primaryStage)
             if (file != null) {
                 rootController.mainController.lineChartController.importFrom(file)
             }
         }
 
         importMultipleMenuItem.setOnAction {
-            val files = initFileChooser(".")
-                    .showOpenMultipleDialog(rootController.mainApp.primaryStage)
+            val files = initFileChooser(".").showOpenMultipleDialog(rootController.mainApp.primaryStage)
             if (files != null) {
                 rootController.mainController.lineChartController.importMultiple(files)
             }
@@ -101,24 +95,6 @@ class MenuController {
             }
         }
 
-        fitterMenuItem.setOnAction {
-            val page = with(FXMLLoader()) {
-                location = MainApp::class.java.getResource("fxml/fitter/Fitter.fxml")
-                load<ScrollPane>()
-            }
-            with(Stage()) {
-                title = "MainFitterController"
-//                isAlwaysOnTop = true
-                scene = Scene(page)
-                addEventHandler(KeyEvent.KEY_RELEASED) { event: KeyEvent ->
-                    if (KeyCode.ESCAPE == event.code) {
-                        close()
-                    }
-                }
-                showAndWait()
-            }
-        }
-
         helpMenuItem.setOnAction {
             val page = with(FXMLLoader()) {
                 location = MainApp::class.java.getResource("fxml/HelpInfo.fxml")
@@ -146,45 +122,17 @@ class MenuController {
 
 class MultipleExportDialogController {
 
+    lateinit var mainController: MainController
+
     @FXML
     private lateinit var polarizationChoiceBox: ChoiceBox<String>
-    @FXML
-    private lateinit var anglesLabel: Label
-    @FXML
-    private lateinit var temperaturesLabel: Label
 
-    @FXML
-    private lateinit var toggleGroup: ToggleGroup
-
-    @FXML
-    private lateinit var angleRadioButton: RadioButton
-    @FXML
-    private lateinit var angleFromLabel: Label
-    @FXML
-    private lateinit var angleToLabel: Label
-    @FXML
-    private lateinit var angleStepLabel: Label
     @FXML
     lateinit var angleFromTextField: TextField
     @FXML
     lateinit var angleToTextField: TextField
     @FXML
     lateinit var angleStepTextField: TextField
-
-    @FXML
-    private lateinit var temperatureRadioButton: RadioButton
-    @FXML
-    private lateinit var temperatureFromLabel: Label
-    @FXML
-    private lateinit var temperatureToLabel: Label
-    @FXML
-    private lateinit var temperatureStepLabel: Label
-    @FXML
-    lateinit var temperatureFromTextField: TextField
-    @FXML
-    lateinit var temperatureToTextField: TextField
-    @FXML
-    lateinit var temperatureStepTextField: TextField
 
     @FXML
     private lateinit var directoryButton: Button
@@ -198,40 +146,36 @@ class MultipleExportDialogController {
     var angleFrom: Double = 0.0
     var angleTo: Double = 0.0
     var angleStep: Double = 0.0
-    var temperatureFrom: Double = 0.0
-    var temperatureTo: Double = 0.0
-    var temperatureStep: Double = 0.0
 
     var chosenDirectory: File? = null
 
-    fun anglesSelected(): Boolean = toggleGroup.selectedToggle as? RadioButton === angleRadioButton
-
     @FXML
     fun initialize() {
-        /* the only way to call another controllers of GUI is using already initialized State.mainController */
-        State.mainController.multipleExportDialogController = this
+        println("multiple export dialog controller init")
+
+//        /* the only way to call another controllers of GUI is using already initialized State.mainController */
+//        State.mainController.multipleExportDialogController = this
+        mainController.multipleExportDialogController = this
 
         with(polarizationChoiceBox) {
-            /* initial value */
-            value = polarization.toString()
-            selectionModel.selectedItemProperty().addListener { _, _, _ ->
-                polarization = Polarization.valueOf(value)
-                State.mainController.globalParametersController
-                        .lightParametersController.polarizationChoiceBox.value = value
-            }
-        }
+            value = mainController.globalParametersController.lightParametersController.polarizationChoiceBox.value
+            selectionModel.selectedItemProperty().addListener { _, _, newValue ->
+                ComputationParametersStorage.polarization = newValue
+                State.polarization = Polarization.valueOf(ComputationParametersStorage.polarization)
 
-        toggleGroup.selectedToggleProperty().addListener { _, _, _ ->
-            if (anglesSelected()) {
-                enableAngles()
-            } else {
-                enableTemperatures()
+                mainController.globalParametersController.lightParametersController.polarizationChoiceBox.value = value
             }
+
+
+//            value = State.polarization.toString()
+//            selectionModel.selectedItemProperty().addListener { _, _, _ ->
+//                State.polarization = Polarization.valueOf(value)
+//                State.mainController.globalParametersController.lightParametersController.polarizationChoiceBox.value = value
+//            }
         }
 
         directoryButton.setOnMouseClicked {
             with(DirectoryChooser()) {
-                //                initialDirectory = File(".${separator}data${separator}computed_multiple")
                 initialDirectory = File(".")
                 /**
                 Need to pass Window or Stage. There's no access to any Stage object from this controller
@@ -243,64 +187,56 @@ class MultipleExportDialogController {
             chosenDirectory?.let { chosenDirectoryLabel.text = it.canonicalPath }
         }
 
+
+        /**
+         * TODO !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+         * Установить соответствующие поля для поляризации и угла в главном окне в поле light parameters из MultipleExportDialog
+         * и вызывать State.init(), который будет запускать валидацию. Тут ничего не надо проверять
+         */
+
+
+
+
+
+
         exportButton.setOnMouseClicked {
             with(MultipleExportDialogParametersValidator) {
-                if (validateRegime() == SUCCESS && validateChosenDirectory() == SUCCESS) {
-                    if (anglesSelected()) {
-                        if (validateAngles() == SUCCESS) {
-                            /**
-                            Computation process runs through the setting fields in GUI (angle, polarization, etc.).
-                            After that the validation takes place parsing these GUI fields and setting actual inner
-                            parameters in program (State.angle, State.polarization, etc.).
-                            To be able to compute and export data at multiple angles,
-                            the corresponding GUI text field is init each time and validated and the computation process is performed.
-                            In the end each field must get its initial value.
-                             */
-                            val initialAngle: String = State.mainController.globalParametersController
-                                    .lightParametersController.angleTextField.text
-                            val initialPolarization = State.mainController.globalParametersController
-                                    .lightParametersController.polarizationChoiceBox.value
+                if (validateChosenDirectory() == SUCCESS) {
+                    if (validateAngles() == SUCCESS) {
+                        /**
+                        Computation process runs through the setting fields in GUI (angle, polarization, etc.).
+                        After that the validation takes place parsing these GUI fields and setting actual inner
+                        parameters in program (State.angle, State.polarization, etc.).
+                        To be able to compute and export data at multiple angles,
+                        the corresponding GUI text field is init each time and validated and the computation process is performed.
+                        In the end each field must get its initial value.
+                         */
+                        val initialAngle: String = State.mainController.globalParametersController
+                                .lightParametersController.angleTextField.text
+                        val initialPolarization = State.mainController.globalParametersController
+                                .lightParametersController.polarizationChoiceBox.value
 
-                            var currentAngle = angleFrom
-                            while (currentAngle < 90.0 && currentAngle <= angleTo) {
-                                with(State) {
-                                    /* angleTextField.text will be validated before computation */
-                                    mainController.globalParametersController.lightParametersController
-                                            .angleTextField.text = currentAngle.toString()
-                                    init()
-                                    compute()
-                                }
-                                writeComputedDataTo(File("${chosenDirectory!!.canonicalPath}$separator${buildExportFileName()}.txt"))
-                                currentAngle += angleStep
+                        var currentAngle = angleFrom
+                        while (currentAngle < 90.0 && currentAngle <= angleTo) {
+                            with(State) {
+                                /* angleTextField.text will be validated before computation */
+                                mainController.globalParametersController.lightParametersController
+                                        .angleTextField.text = currentAngle.toString()
+                                init()
+                                compute()
                             }
-                            with(State.mainController.globalParametersController.lightParametersController) {
-                                angleTextField.text = initialAngle
-                                polarizationChoiceBox.value = initialPolarization
-                            }
+                            writeComputedDataTo(File("${chosenDirectory!!.canonicalPath}$separator${buildExportFileName()}.txt"))
+                            currentAngle += angleStep
                         }
-                    } else {
-                        if (validateTemperatures() == SUCCESS) {
-                            /* TODO multiple export for temperature range */
+                        with(State.mainController.globalParametersController.lightParametersController) {
+                            angleTextField.text = initialAngle
+                            polarizationChoiceBox.value = initialPolarization
                         }
                     }
                     statusLabel.text = "Exported"
                 }
             }
         }
-    }
-
-    private fun enableAngles() {
-        enable(anglesLabel, angleFromLabel, angleToLabel, angleStepLabel)
-        enable(angleFromTextField, angleToTextField, angleStepTextField)
-        disable(temperaturesLabel, temperatureFromLabel, temperatureToLabel, temperatureStepLabel)
-        disable(temperatureFromTextField, temperatureToTextField, temperatureStepTextField)
-    }
-
-    private fun enableTemperatures() {
-        enable(temperaturesLabel, temperatureFromLabel, temperatureToLabel, temperatureStepLabel)
-        enable(temperatureFromTextField, temperatureToTextField, temperatureStepTextField)
-        disable(anglesLabel, angleFromLabel, angleToLabel, angleStepLabel)
-        disable(angleFromTextField, angleToTextField, angleStepTextField)
     }
 }
 

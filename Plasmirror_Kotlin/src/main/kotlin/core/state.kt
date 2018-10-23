@@ -3,9 +3,9 @@ package core
 import core.Regime.*
 import core.layers.Layer
 import core.validators.StateValidator
-import core.validators.ValidationResult.*
+import core.validators.ValidationResult.FAILURE
+import core.validators.ValidationResult.SUCCESS
 import ui.controllers.MainController
-import java.util.*
 
 
 object State {
@@ -34,45 +34,29 @@ object State {
     val permittivity = mutableListOf<Complex_>()
     val refractiveIndex = mutableListOf<Complex_>()
 
-    /**
-     * Here mirror is built after the validation procedure 'initState'
-     * BUT! In that procedure during the layers' constructing some parameters such as n of the left medium are accessed via mirror
-     */
-    //    fun init() {
-//        if (StateValidator.initState() == SUCCESS) {
-//            clearPreviousComputation()
-//            buildMirror()
-//        }
-//    }
 
     fun init() = when (StateValidator.initState()) {
         SUCCESS -> {
-            clearPreviousComputation()
+            clear()
             buildMirror()
             SUCCESS
         }
         FAILURE -> FAILURE
     }
 
-    fun compute() {
-        val size = ((wavelengthEnd - wavelengthStart) / wavelengthStep).toInt() + 1
-        wavelength = ArrayList(size)
-        /* TODO MERGE TWO LOOPS, CHECK PERFORMANCE */
-        (0 until size).forEach { wavelength.add(wavelengthStart + it * wavelengthStep) }
+    fun compute() = (0 until wavelength.size).forEach {
+        wavelengthCurrent = wavelength[it]
 
-        /* TODO PARALLEL */
-        (0 until wavelength.size).forEach {
-            wavelengthCurrent = wavelength[it]
-            with(mirror) {
-                when (regime) {
-                    REFLECTANCE -> reflectance += computeReflectance()
-                    TRANSMITTANCE -> transmittance += computeTransmittance()
-                    ABSORBANCE -> absorbance += computeAbsorbance()
-                    PERMITTIVITY -> permittivity += computePermittivity()
-                    REFRACTIVE_INDEX -> refractiveIndex += computeRefractiveIndex()
-                }
+        with(mirror) {
+            when (regime) {
+                REFLECTANCE -> reflectance += computeReflectance()
+                TRANSMITTANCE -> transmittance += computeTransmittance()
+                ABSORBANCE -> absorbance += computeAbsorbance()
+                PERMITTIVITY -> permittivity += computePermittivity()
+                REFRACTIVE_INDEX -> refractiveIndex += computeRefractiveIndex()
             }
         }
+    }
 
 //        fun set_fit() = reflectance.clear()
 //
@@ -87,13 +71,15 @@ object State {
 //        fun computeDifference() {
 //            val imported = LineChartState.imported[0].extendedSeriesReal.series.data
 //        }
-    }
 
-    private fun clearPreviousComputation() {
-        fun <T> clearIfNotEmpty(vararg lists: MutableList<out T>) = lists.forEach { it.run { if (isNotEmpty()) clear() } }
+    private fun clear() {
+//        fun <T> clearIfNotEmpty(vararg lists: MutableList<out T>) = lists.forEach { it.run { if (isNotEmpty()) clear() } }
 
-        clearIfNotEmpty(reflectance, transmittance, absorbance)
-        clearIfNotEmpty(permittivity, refractiveIndex)
+        fun <T> clear(vararg lists: MutableList<out T>) = lists.forEach { it.clear() }
+
+
+        clear(reflectance, transmittance, absorbance)
+        clear(permittivity, refractiveIndex)
         /*
         TODO Doesn't clear when using this form of extension function (without "run")
         fun <T> MutableList<out T>.clearIfNotEmpty() = run { if (isNotEmpty()) clear() } // works

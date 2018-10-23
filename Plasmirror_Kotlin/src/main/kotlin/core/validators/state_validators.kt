@@ -1,10 +1,13 @@
 package core.validators
 
-import core.*
+import core.Complex_
 import core.Complex_.Companion.ONE
+import core.ComputationParametersStorage
 import core.EpsType.*
 import core.Medium.*
+import core.Polarization
 import core.Regime.*
+import core.State
 import core.layers.ConstRefractiveIndexLayer
 import core.layers.GaAs
 import core.validators.ValidationResult.FAILURE
@@ -24,8 +27,10 @@ object StateValidator {
 private object OpticalParametersValidator {
 
     fun initOpticalParametersUsing() = when {
-        initRegime() == SUCCESS && initExternalMediaLayers() == SUCCESS &&
-                initPolarizationAndAngle() == SUCCESS && initCalculationRange() == SUCCESS -> SUCCESS
+        initRegime() == SUCCESS &&
+                initExternalMediaLayers() == SUCCESS &&
+                initPolarizationAndAngle() == SUCCESS &&
+                initComputationRange() == SUCCESS -> SUCCESS
         else -> FAILURE
     }
 
@@ -161,7 +166,7 @@ private object OpticalParametersValidator {
         return SUCCESS
     }
 
-    private fun initCalculationRange(): ValidationResult {
+    private fun initComputationRange(): ValidationResult {
         /*
         Setting values in ComputationParametersStorage and State to defaults
          */
@@ -191,6 +196,13 @@ private object OpticalParametersValidator {
             toDefaults()
             return FAILURE
         }
+
+        initComputationWavelengths()
         return SUCCESS
+    }
+
+    private fun initComputationWavelengths() = with(State) {
+        val size = ((wavelengthEnd - wavelengthStart) / wavelengthStep).toInt() + 1
+        wavelength = (0 until size).map { wavelengthStart + it * wavelengthStep }.toMutableList()
     }
 }
