@@ -5,8 +5,13 @@ import org.json.JSONObject
 import ui.controllers.writeTo
 import java.nio.file.Paths
 
+
+/*
+TODO Must be initialized before GUI elements
+ */
+
 object StructureDescriptionStorage {
-    private val file = Paths.get("D:\\Clouds\\YandexDisk\\RESEARCH [FTI]\\Util\\Plasmirror_Kotlin\\Plasmirror_Kotlin\\data\\inner\\state_parameters\\structure.txt").toFile()
+    private val file = Paths.get("./data/inner/state_parameters/structure.txt").toFile()
     var description = FileUtils.readFileToString(file, "utf-8")
 
     fun save() = FileUtils.writeStringToFile(file, description)
@@ -14,79 +19,93 @@ object StructureDescriptionStorage {
 
 object ComputationParameters {
 
-    private val file = Paths.get("C:\\Users\\Vitalii\\YandexDisk\\RESEARCH [FTI]\\Util\\Plasmirror_Kotlin\\Plasmirror_Kotlin\\data\\inner\\state_parameters\\computation_range.txt").toFile()
+    private val file = Paths.get("./data/inner/state_parameters/parameters.json").toFile()
     private val content = FileUtils.readFileToString(file, "utf-8")
     private var parameters: JSONObject = JSONObject(content)
 
     fun save() = parameters.toString(4).writeTo(file)
 
-    var regime: Regime
-        get() = Regime.valueOf(parameters.getString("regime"))
+    var regime: String
+        get() = parameters.getString("regime")
         set(value) {
-            parameters.put("regime", value.toString())
+            parameters.put("regime", value)
         }
 
-    var leftMedium: Medium
-        get() = Medium.valueOf(parameters.getString("left_medium"))
+    var leftMedium: String
+        get() = parameters.getString("left_medium")
         set(value) {
-            parameters.put("left_medium", value.toString())
+            parameters.put("left_medium", value)
         }
 
-    var rightMedium: Medium
-        get() = Medium.valueOf(parameters.getString("right_medium"))
+    var rightMedium: String
+        get() = parameters.getString("right_medium")
         set(value) {
-            parameters.put("right_medium", value.toString())
+            parameters.put("right_medium", value)
         }
 
-    var leftMediumRefractiveIndex: Complex_
+    var leftMediumRefractiveIndexReal: String
         get() = with(parameters.getJSONObject("left_medium_n")) {
-            Complex_(getDouble("real"), getDouble("imag"))
+            getString("real")
         }
         set(value) = with(parameters.getJSONObject("left_medium_n")) {
-            put("real", value.real)
-            put("imag", value.imaginary)
+            put("real", value)
         }
 
-    var rightMediumRefractiveIndex: Complex_
+    var leftMediumRefractiveIndexImaginary: String
+        get() = with(parameters.getJSONObject("left_medium_n")) {
+            getString("imaginary")
+        }
+        set(value) = with(parameters.getJSONObject("left_medium_n")) {
+            put("imaginary", value)
+        }
+
+    var rightMediumRefractiveIndexReal: String
+        get() = with(parameters.getJSONObject("left_medium_n")) {
+            getString("real")
+        }
+        set(value) = with(parameters.getJSONObject("left_medium_n")) {
+            put("real", value)
+        }
+
+    var rightMediumRefractiveIndexImaginary: String
         get() = with(parameters.getJSONObject("right_medium_n")) {
-            Complex_(getDouble("real"), getDouble("imag"))
+            getString("imaginary")
         }
         set(value) = with(parameters.getJSONObject("right_medium_n")) {
-            put("real", value.real)
-            put("imag", value.imaginary)
+            put("imaginary", value)
         }
 
-    var polarization: Polarization
-        get() = Polarization.valueOf(parameters.getString("polarization"))
+    var polarization: String
+        get() = parameters.getString("polarization")
         set(value) {
-            parameters.put("polarization", value.toString())
+            parameters.put("polarization", value)
         }
 
-    var angle: Double
-        get() = parameters.getDouble("angle")
+    var angle: String
+        get() = parameters.getString("angle")
         set(value) {
             parameters.put("angle", value)
         }
 
-    var computationRangeStart: Double
+    var computationRangeStart: String
         get() = with(parameters.getJSONObject("computation_range")) {
-            getDouble("start")
+            getString("start")
         }
         set(value) = with(parameters.getJSONObject("computation_range")) {
             put("start", value)
         }
 
-    var computationRangeEnd: Double
+    var computationRangeEnd: String
         get() = with(parameters.getJSONObject("computation_range")) {
-            getDouble("end")
+            getString("end")
         }
         set(value) = with(parameters.getJSONObject("computation_range")) {
             put("end", value)
         }
 
-    var computationRangeStep: Double
+    var computationRangeStep: String
         get() = with(parameters.getJSONObject("computation_range")) {
-            getDouble("step")
+            getString("step")
         }
         set(value) = with(parameters.getJSONObject("computation_range")) {
             put("step", value)

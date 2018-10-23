@@ -30,14 +30,15 @@ class MainApp : Application() {
             rootController.mainApp = this@MainApp
         }
         /**
-        Let state initialization be here, before the opening of the app window,
+        TODO Let state initialization be here, before the opening of the app window,
         but after the loading of all the controllers.
         During the controllers loading some state parameters (such as polarization) are init.
         At the first call of a state parameter the "init" method from State is called (if present).
         In this method the main controller was init (for validation of state parameters)
         whereas it was not fully initialized while the child controllers are loading. This is incorrect
          */
-        State.init()
+        // TODO commented
+//        State.init()
         with(Scene(rootLayout)) {
             stylesheets.add("css/chart.css")
             primaryStage.scene = this

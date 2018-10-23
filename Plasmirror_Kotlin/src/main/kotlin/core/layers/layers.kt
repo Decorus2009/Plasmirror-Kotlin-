@@ -1,14 +1,13 @@
 package core.layers
 
-import core.State.wavelengthCurrent
 import core.AlGaAsPermittivity.nAlGaAs
 import core.Complex_
 import core.EpsType
-import core.EpsType.ADACHI
 import core.Matrix_
 import core.cosThetaInLayer
 import org.apache.commons.math3.complex.Complex
 import java.lang.Math.PI
+import core.State
 
 /**
  * Abstract layer without excitons
@@ -27,7 +26,7 @@ interface Layer {
     val matrix: Matrix_
         get() = Matrix_().apply {
             val cos = cosThetaInLayer(n)
-            var phi = Complex_(2.0 * PI * d / wavelengthCurrent) * n * cos
+            var phi = Complex_(2.0 * PI * d / State.wavelengthCurrent) * n * cos
             if (phi.imaginary < 0) {
                 phi *= -1.0
             }
@@ -44,7 +43,7 @@ interface GaAsLayer : Layer {
     val epsType: EpsType
 
     override val n: Complex_
-        get() = nAlGaAs(wavelengthCurrent, 0.0, 0.0, epsType)
+        get() = nAlGaAs(State.wavelengthCurrent, 0.0, 0.0, epsType)
 
     override fun parameters() = listOf(d)
 }
@@ -55,7 +54,7 @@ interface AlGaAsLayer : GaAsLayer {
     val x: Double
 
     override val n: Complex_
-        get() = nAlGaAs(wavelengthCurrent, k, x, epsType)
+        get() = nAlGaAs(State.wavelengthCurrent, k, x, epsType)
 
     override fun parameters() = listOf(d, k, x)
 }

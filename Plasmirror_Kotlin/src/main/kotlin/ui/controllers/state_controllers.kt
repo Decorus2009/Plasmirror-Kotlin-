@@ -1,11 +1,8 @@
 package ui.controllers
 
-import core.*
-import core.Medium.*
-import core.Polarization.P
-import core.Polarization.S
-import core.Regime.*
-
+import core.ComputationParameters
+import core.Regime
+import core.StructureDescriptionStorage
 import javafx.fxml.FXML
 import javafx.scene.control.ChoiceBox
 import javafx.scene.control.Label
@@ -14,11 +11,7 @@ import javafx.scene.layout.AnchorPane
 import org.fxmisc.richtext.CodeArea
 import org.fxmisc.richtext.model.StyleSpans
 import org.fxmisc.richtext.model.StyleSpansBuilder
-import java.io.File.separator
-import java.nio.file.Files
-import java.nio.file.Paths
 import java.util.regex.Pattern
-import kotlin.streams.toList
 
 
 class GlobalParametersController {
@@ -39,17 +32,18 @@ class GlobalParametersController {
     @FXML
     fun initialize() {
         println("Global parameters controller init")
+
         regimeController.globalParametersController = this
         temperatureController.globalParametersController = this
         computationRangeController.globalParametersController = this
     }
 
-    fun writeGlobalParameters() {
-        regimeController.writeRegime()
+    fun save() {
+        regimeController.save()
 //        temperatureController.writeTemperature()
-        mediumParametersController.writeMediumParametersToFile()
-        lightParametersController.writeLightParameters()
-        computationRangeController.writeComputationRange()
+        mediumParametersController.save()
+        lightParametersController.save()
+        computationRangeController.save()
     }
 }
 
@@ -62,29 +56,28 @@ class RegimeController {
 
     var regimeBefore: Regime? = null
 
+//    private val regimes = mapOf(
+//            REFLECTANCE to 0, TRANSMITTANCE to 1, ABSORBANCE to 2, PERMITTIVITY to 3, REFRACTIVE_INDEX to 4
+//    )
+//    private val regimesMap = mapOf(
+//            "Reflectance" to 0, "Transmittance" to 1, "Absorbance" to 2, "Permittivity" to 3, "Refractive Index" to 4
+//    )
+
     @FXML
     fun initialize() {
         println("Regime controller init")
 
-        val regimes = mapOf(
-                R to 0, T to 1, A to 2, PERMITTIVITY to 3, REFRACTIVE_INDEX to 4
-        )
-        val inversed = regimes.map { it.value to it.key }
-
         with(regimeChoiceBox) {
-            value = items[regimes[ComputationParameters.regime]!!]
+            value = ComputationParameters.regime
 
-            selectionModel.selectedIndexProperty().addListener { _, _, newValue ->
-                val regime = inversed[newValue as Int].second
-                ComputationParameters.regime = regime
-
+            selectionModel.selectedItemProperty().addListener { _, _, newValue ->
                 with(globalParametersController) {
-                    when (regime) {
-                        R, T, A -> {
+                    when (newValue) {
+                        "Reflectance", "Transmittance", "Absorbance" -> {
                             mediumParametersController.enableAll()
                             lightParametersController.enableAll()
                         }
-                        PERMITTIVITY, REFRACTIVE_INDEX -> {
+                        "Permittivity", "Refractive Index" -> {
                             mediumParametersController.disableAll()
                             lightParametersController.disableAll()
                         }
@@ -92,6 +85,10 @@ class RegimeController {
                 }
             }
         }
+    }
+
+    fun save() {
+        ComputationParameters.regime = regimeChoiceBox.value
     }
 }
 
@@ -121,72 +118,78 @@ class MediumParametersController {
     @FXML
     private lateinit var rightMediumLabel: Label
     @FXML
-    private lateinit var nLeftMediumLabel: Label
+    private lateinit var leftMediumRefractiveIndexLabel: Label
     @FXML
-    private lateinit var nRightMediumLabel: Label
+    private lateinit var rightMediumRefractiveIndexLabel: Label
     @FXML
-    lateinit var nLeftRealTextField: TextField
+    lateinit var leftMediumRefractiveIndexRealTextField: TextField
     @FXML
-    lateinit var nLeftImagTextField: TextField
+    lateinit var leftMediumRefractiveIndexImaginaryTextField: TextField
     @FXML
-    lateinit var nRightRealTextField: TextField
+    lateinit var rightMediumRefractiveIndexRealTextField: TextField
     @FXML
-    lateinit var nRightImagTextField: TextField
+    lateinit var rightMediumRefractiveIndexImaginaryTextField: TextField
     @FXML
     lateinit var leftMediumChoiceBox: ChoiceBox<String>
     @FXML
     lateinit var rightMediumChoiceBox: ChoiceBox<String>
 
+
+//    private val media = mapOf(
+//            AIR to 0, GAAS_ADACHI to 1, GAAS_GAUSS to 2, GAAS_GAUSS_ADACHI to 3, CUSTOM to 4
+//    )
+
+//    private val media = mapOf(
+//            "Air" to 0, "GaAs: Adachi" to 1, "GaAs: Gauss" to 2, "GaAs: Gauss-Adachi" to 3, "Custom" to 4
+//    )
+//    private val invMedia = media.map { it.value to it.key }
+
     @FXML
     fun initialize() {
         println("Medium parameters controller init")
 
-        val mediaMap = mapOf(
-                AIR to 0, GAAS_ADACHI to 1, GAAS_GAUSS to 2, GAAS_GAUSS_ADACHI to 3, OTHER to 4
-        )
-        val invMap = mediaMap.map { it.value to it.key }
-
-        fun initMediumFields(medium: Medium,
-                             mediumRefractiveIndex: Complex_,
-                             mediumChoiceBox: ChoiceBox<String>,
-                             nRealTextField: TextField, nImagTextField: TextField) {
+        fun initFields(medium: String,
+                       mediumRefractiveIndexReal: String,
+                       mediumRefractiveIndexImaginary: String,
+                       mediumChoiceBox: ChoiceBox<String>,
+                       nRealTextField: TextField, nImagTextField: TextField) {
 
             with(mediumChoiceBox) {
-                value = items[mediaMap[medium]!!]
+                value = medium
 
-                if (medium == OTHER) {
-                    val n = mediumRefractiveIndex
+                if (medium == "Custom") {
                     nRealTextField.run {
                         enable(this)
-                        text = n.real.toString()
+                        text = mediumRefractiveIndexReal
                     }
                     nImagTextField.run {
                         enable(this)
-                        text = n.imaginary.toString()
+                        text = mediumRefractiveIndexImaginary
                     }
                 }
 
-                selectionModel.selectedIndexProperty().addListener { _, _, newValue ->
-                    when (medium) {
-                        OTHER -> enable(nRealTextField, nImagTextField)
+                selectionModel.selectedItemProperty().addListener { _, _, newValue ->
+                    when (newValue) {
+                        "Custom" -> enable(nRealTextField, nImagTextField)
                         else -> disable(nRealTextField, nImagTextField)
                     }
                 }
             }
         }
 
-
-        initMediumFields(
+        initFields(
                 ComputationParameters.leftMedium,
-                ComputationParameters.leftMediumRefractiveIndex,
+                ComputationParameters.leftMediumRefractiveIndexReal,
+                ComputationParameters.leftMediumRefractiveIndexImaginary,
                 leftMediumChoiceBox,
-                nLeftRealTextField, nLeftImagTextField
+                leftMediumRefractiveIndexRealTextField, leftMediumRefractiveIndexImaginaryTextField
         )
-        initMediumFields(
+        initFields(
                 ComputationParameters.rightMedium,
-                ComputationParameters.rightMediumRefractiveIndex,
+                ComputationParameters.rightMediumRefractiveIndexReal,
+                ComputationParameters.rightMediumRefractiveIndexImaginary,
                 rightMediumChoiceBox,
-                nRightRealTextField, nRightImagTextField
+                rightMediumRefractiveIndexRealTextField, rightMediumRefractiveIndexImaginaryTextField
         )
 
 //        leftMediumChoiceBox.selectionModel.selectedIndexProperty().addListener { _, _, newValue ->
@@ -198,20 +201,42 @@ class MediumParametersController {
     }
 
     fun disableAll() {
-        disable(leftMediumLabel, rightMediumLabel, nLeftMediumLabel, nRightMediumLabel)
+        disable(leftMediumLabel, rightMediumLabel, leftMediumRefractiveIndexLabel, rightMediumRefractiveIndexLabel)
         disable(leftMediumChoiceBox, rightMediumChoiceBox)
-        disable(nLeftRealTextField, nLeftImagTextField, nRightRealTextField, nRightImagTextField)
+        disable(leftMediumRefractiveIndexRealTextField, leftMediumRefractiveIndexImaginaryTextField,
+                rightMediumRefractiveIndexRealTextField, rightMediumRefractiveIndexImaginaryTextField)
     }
 
     fun enableAll() {
-        enable(leftMediumLabel, rightMediumLabel, nLeftMediumLabel, nRightMediumLabel)
+        enable(leftMediumLabel, rightMediumLabel, leftMediumRefractiveIndexLabel, rightMediumRefractiveIndexLabel)
         enable(leftMediumChoiceBox, rightMediumChoiceBox)
 
-        if (ComputationParameters.leftMedium == OTHER) {
-            enable(nLeftRealTextField, nLeftImagTextField)
+        if (leftMediumChoiceBox.value == "Custom") {
+            enable(leftMediumRefractiveIndexRealTextField, leftMediumRefractiveIndexImaginaryTextField)
         }
-        if (ComputationParameters.rightMedium == OTHER) {
-            enable(nRightRealTextField, nRightImagTextField)
+        if (rightMediumChoiceBox.value == "Custom") {
+            enable(rightMediumRefractiveIndexRealTextField, rightMediumRefractiveIndexImaginaryTextField)
+        }
+    }
+
+    fun save() = with(ComputationParameters) {
+
+        leftMedium = leftMediumChoiceBox.value
+        if (leftMedium == "Custom") {
+            leftMediumRefractiveIndexReal = leftMediumRefractiveIndexRealTextField.text
+            leftMediumRefractiveIndexImaginary = leftMediumRefractiveIndexImaginaryTextField.text
+        } else {
+            leftMediumRefractiveIndexReal = "1.0"
+            leftMediumRefractiveIndexImaginary = "0.0"
+        }
+
+        rightMedium = rightMediumChoiceBox.value
+        if (rightMedium == "Custom") {
+            rightMediumRefractiveIndexReal = rightMediumRefractiveIndexRealTextField.text
+            rightMediumRefractiveIndexImaginary = rightMediumRefractiveIndexImaginaryTextField.text
+        } else {
+            rightMediumRefractiveIndexReal = "1.0"
+            rightMediumRefractiveIndexImaginary = "0.0"
         }
     }
 }
@@ -231,29 +256,8 @@ class LightParametersController {
     fun initialize() {
         println("Light parameters controller init")
 
-        val polarizationMap = mapOf(P to 0, S to 1)
-        val invMap = polarizationMap.map { it.value to it.key }
-
-        with(polarizationChoiceBox) {
-            value = items[polarizationMap[ComputationParameters.polarization]!!]
-
-            selectionModel.selectedIndexProperty().addListener { _, _, newValue ->
-                ComputationParameters.polarization = invMap[newValue as Int].second
-            }
-        }
-
-        with(angleTextField) {
-            val previousValue = ComputationParameters.angle
-            text = previousValue.toString()
-
-            textProperty().addListener { _, _, newValue ->
-                try {
-                    ComputationParameters.angle = newValue.toDouble()
-                } catch (e: NumberFormatException) {
-                    ComputationParameters.angle = previousValue
-                }
-            }
-        }
+//        val polarizationMap = mapOf("P" to 0, "S" to 1)
+        polarizationChoiceBox.value = ComputationParameters.polarization
     }
 
     fun disableAll() {
@@ -266,6 +270,11 @@ class LightParametersController {
         enable(polarizationLabel, angleLabel)
         enable(polarizationChoiceBox)
         enable(angleTextField)
+    }
+
+    fun save() = with(ComputationParameters) {
+        polarization = polarizationChoiceBox.value
+        angle = angleTextField.text
     }
 }
 
@@ -284,44 +293,56 @@ class ComputationRangeController {
     fun initialize() {
         println("Computation range controller init")
 
-        with(fromTextField) {
-            val previousValue = ComputationParameters.computationRangeStart
-            text = previousValue.toString()
-
-            textProperty().addListener { _, _, newValue ->
-                try {
-                    ComputationParameters.computationRangeStart = newValue.toDouble()
-                } catch (e: NumberFormatException) {
-                    ComputationParameters.computationRangeStart = previousValue
-                }
-            }
+        with(ComputationParameters) {
+            fromTextField.text = computationRangeStart
+            toTextField.text = computationRangeEnd
+            stepTextField.text = computationRangeStep
         }
 
-        with(toTextField) {
-            val previousValue = ComputationParameters.computationRangeEnd
-            text = previousValue.toString()
+//        with(fromTextField) {
+//            val previousValue = ComputationParameters.computationRangeStart
+//            text = previousValue.toString()
+//
+//            textProperty().addListener { _, _, newValue ->
+//                try {
+//                    ComputationParameters.computationRangeStart = newValue.toDouble()
+//                } catch (e: NumberFormatException) {
+//                    ComputationParameters.computationRangeStart = previousValue
+//                }
+//            }
+//        }
+//
+//        with(toTextField) {
+//            val previousValue = ComputationParameters.computationRangeEnd
+//            text = previousValue.toString()
+//
+//            textProperty().addListener { _, _, newValue ->
+//                try {
+//                    ComputationParameters.computationRangeEnd = newValue.toDouble()
+//                } catch (e: NumberFormatException) {
+//                    ComputationParameters.computationRangeEnd = previousValue
+//                }
+//            }
+//        }
+//
+//        with(toTextField) {
+//            val previousValue = ComputationParameters.computationRangeStep
+//            text = previousValue.toString()
+//
+//            textProperty().addListener { _, _, newValue ->
+//                try {
+//                    ComputationParameters.computationRangeStep = newValue.toDouble()
+//                } catch (e: NumberFormatException) {
+//                    ComputationParameters.computationRangeStep = previousValue
+//                }
+//            }
+//        }
+    }
 
-            textProperty().addListener { _, _, newValue ->
-                try {
-                    ComputationParameters.computationRangeEnd = newValue.toDouble()
-                } catch (e: NumberFormatException) {
-                    ComputationParameters.computationRangeEnd = previousValue
-                }
-            }
-        }
-
-        with(toTextField) {
-            val previousValue = ComputationParameters.computationRangeStep
-            text = previousValue.toString()
-
-            textProperty().addListener { _, _, newValue ->
-                try {
-                    ComputationParameters.computationRangeStep = newValue.toDouble()
-                } catch (e: NumberFormatException) {
-                    ComputationParameters.computationRangeStep = previousValue
-                }
-            }
-        }
+    fun save() = with(ComputationParameters) {
+        computationRangeStart = fromTextField.text
+        computationRangeEnd = toTextField.text
+        computationRangeStep = stepTextField.text
     }
 }
 
@@ -357,7 +378,7 @@ class StructureDescriptionController {
      * Code in this method is used using Java style as in the example (to be able to understand what's going on here)
      */
     private fun computeHighlighting(text: String): StyleSpans<Collection<String>> {
-        val COMMENT_PATTERN = "//[^\n]*" + "|" + "/\\*(.|\\R)*?\\*/"
+        val COMMENT_PATTERN = "//[^\n]*" + "|" + "/\\*(.|\\REFLECTANCE)*?\\*/"
         val NAME_PATTERN = "\\w+\\s*=\\s*+"
         val REPEAT_PATTERN = "\\s*[xX]\\s*[0-9]+\\s*"
         val PATTERN = Pattern.compile("(?<COMMENT>$COMMENT_PATTERN)|(?<NAME>$NAME_PATTERN)|(?<REPEAT>$REPEAT_PATTERN)")

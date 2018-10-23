@@ -2,10 +2,6 @@ package ui.controllers
 
 import com.sun.javafx.charts.Legend
 import core.State
-import core.State.mainController
-import core.State.regime
-import core.State.wavelengthTo
-import core.State.wavelengthFrom
 import core.Regime.*
 import javafx.application.Platform
 import javafx.event.EventHandler
@@ -219,10 +215,10 @@ class LineChartController {
         }
 
         fun updateYAxisLabel() {
-            yAxis.label = when (regime) {
-                R -> "Reflection"
-                T -> "Transmission"
-                A -> "Absorption"
+            yAxis.label = when (State.regime) {
+                REFLECTANCE -> "Reflection"
+                TRANSMITTANCE -> "Transmission"
+                ABSORBANCE -> "Absorption"
                 PERMITTIVITY -> "Permittivity"
                 REFRACTIVE_INDEX -> "Refractive index"
             }
@@ -231,8 +227,8 @@ class LineChartController {
         /* regime == null is used during the first automatic call of rescale() method after initialization */
         fun updateRegimeAndRescale() = with(mainController.globalParametersController.regimeController) {
             /* if another regime */
-            if (regimeBefore == null || regimeBefore != regime) {
-                regimeBefore = regime
+            if (regimeBefore == null || regimeBefore != State.regime) {
+                regimeBefore = State.regime
                 /* deselect all series, labels and disable activated series manager */
                 allExtendedSeries().forEach { deselect() }
                 rescale()
@@ -360,8 +356,8 @@ commented updateRegimeAndRescale
     /* TODO fix this */
     private fun rescale() = with(mainController.globalParametersController.regimeController) {
         with(xAxis) {
-            lowerBound = wavelengthFrom
-            upperBound = wavelengthTo
+            lowerBound = State.wavelengthFrom
+            upperBound = State.wavelengthTo
             tickUnit = 50.0
             tickUnit = when {
                 upperBound - lowerBound >= 4000.0 -> 500.0
@@ -376,16 +372,16 @@ commented updateRegimeAndRescale
             }
         }
         with(yAxis) {
-            if (regime == R || regime == A || regime == T) {
+            if (State.regime == REFLECTANCE || State.regime == ABSORBANCE || State.regime == TRANSMITTANCE) {
                 lowerBound = 0.0
                 upperBound = 1.0
                 tickUnit = 0.1
-            } else if (regime == PERMITTIVITY) {
+            } else if (State.regime == PERMITTIVITY) {
                 lowerBound = -5.0
                 upperBound = 20.0
                 tickUnit = 5.0
                 isAutoRanging = false
-            } else if (regime == REFRACTIVE_INDEX) {
+            } else if (State.regime == REFRACTIVE_INDEX) {
                 lowerBound = -1.0
                 upperBound = 4.5
                 tickUnit = 0.5
@@ -448,9 +444,9 @@ object LineChartState {
         extendedSeriesReal.series.data.run {
             with(State) {
                 when (regime) {
-                    R -> addAll(wavelength.indices.map { Data<Number, Number>(wavelength[it], reflection[it]) })
-                    T -> addAll(wavelength.indices.map { Data<Number, Number>(wavelength[it], transmission[it]) })
-                    A -> addAll(wavelength.indices.map { Data<Number, Number>(wavelength[it], absorption[it]) })
+                    REFLECTANCE -> addAll(wavelength.indices.map { Data<Number, Number>(wavelength[it], reflection[it]) })
+                    TRANSMITTANCE -> addAll(wavelength.indices.map { Data<Number, Number>(wavelength[it], transmission[it]) })
+                    ABSORBANCE -> addAll(wavelength.indices.map { Data<Number, Number>(wavelength[it], absorption[it]) })
                     PERMITTIVITY -> {
                         addAll(wavelength.indices.map { Data<Number, Number>(wavelength[it], permittivity[it].real) })
                         extendedSeriesImaginary.series.data
@@ -470,8 +466,8 @@ object LineChartState {
         extendedSeriesImaginary.series.name = "Computed Imaginary"
 
         /* if another regime */
-        with(mainController.globalParametersController.regimeController) {
-            if (regimeBefore == null || regime != regimeBefore) {
+        with(State.mainController.globalParametersController.regimeController) {
+            if (regimeBefore == null || State.regime != regimeBefore) {
                 /* init default colors */
                 extendedSeriesReal.color = colors[0]!!
                 extendedSeriesImaginary.color = colors[1]!!

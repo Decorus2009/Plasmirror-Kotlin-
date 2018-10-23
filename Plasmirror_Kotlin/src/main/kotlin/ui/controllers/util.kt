@@ -13,15 +13,12 @@ import core.State.wavelengthTo
 import core.Regime.*
 import core.State.wavelength
 import javafx.scene.control.*
-import org.apache.commons.io.FileUtils
-import org.json.JSONObject
 import java.io.File
-import java.nio.file.Paths
 import java.util.*
 
 fun buildExportFileName() = StringBuilder().apply {
     append("computation_${regime}_${wavelengthFrom}_$wavelengthTo")
-    if (regime == R || regime == T || regime == A) {
+    if (regime == REFLECTANCE || regime == TRANSMITTANCE || regime == ABSORBANCE) {
         append("_$polarization-POL_^${String.format(Locale.US, "%04.1f", State.angle)}_deg")
     }
 }.toString()
@@ -31,9 +28,9 @@ fun writeComputedDataTo(file: File) = StringBuilder().apply {
     var computedImaginary: List<Double> = emptyList()
 
     computedReal = when (regime) {
-        R -> reflection
-        T -> transmission
-        A -> absorption
+        REFLECTANCE -> reflection
+        TRANSMITTANCE -> transmission
+        ABSORBANCE -> absorption
         PERMITTIVITY -> {
             computedImaginary = permittivity.map { it.imaginary }.toList()
             permittivity.map { it.real }.toList()

@@ -1,8 +1,6 @@
 package ui.controllers
 
 import MainApp
-import core.State
-import core.ValidateResult
 import javafx.application.Platform
 import javafx.fxml.FXML
 import javafx.scene.control.Button
@@ -10,12 +8,17 @@ import javafx.scene.control.Label
 import javafx.scene.input.KeyCode
 import javafx.scene.input.KeyCodeCombination
 import javafx.scene.input.KeyCombination
+import core.State
+import core.validators.ValidationResult
+import core.validators.ValidationResult.*
 import java.util.*
 
 class RootController {
 
-    @FXML lateinit var menuController: MenuController
-    @FXML lateinit var mainController: MainController
+    @FXML
+    lateinit var menuController: MenuController
+    @FXML
+    lateinit var mainController: MainController
 
     lateinit var mainApp: MainApp
 
@@ -35,14 +38,22 @@ class RootController {
 class MainController {
 
     lateinit var rootController: RootController
-    @FXML lateinit var structureDescriptionController: StructureDescriptionController
-    @FXML lateinit var globalParametersController: GlobalParametersController
-    @FXML lateinit var lineChartController: LineChartController
-    @FXML lateinit var controlsController: ControlsController
-    @FXML private lateinit var xAxisRangeController: XAxisRangeController
-    @FXML private lateinit var yAxisRangeController: YAxisRangeController
-    @FXML lateinit var seriesManagerController: SeriesManagerController
-    @FXML lateinit var multipleExportDialogController: MultipleExportDialogController
+    @FXML
+    lateinit var structureDescriptionController: StructureDescriptionController
+    @FXML
+    lateinit var globalParametersController: GlobalParametersController
+    @FXML
+    lateinit var lineChartController: LineChartController
+    @FXML
+    lateinit var controlsController: ControlsController
+    @FXML
+    private lateinit var xAxisRangeController: XAxisRangeController
+    @FXML
+    private lateinit var yAxisRangeController: YAxisRangeController
+    @FXML
+    lateinit var seriesManagerController: SeriesManagerController
+    @FXML
+    lateinit var multipleExportDialogController: MultipleExportDialogController
 
     @FXML
     fun initialize() {
@@ -54,17 +65,20 @@ class MainController {
         yAxisRangeController.mainController = this
         seriesManagerController.mainController = this
 
-        with(State) {
+// TODO commented
+/*        with(State) {
             mainController = this@MainController
+            // TODO Should be here?
             init()
+            // TODO Should be here?
             compute()
         }
-        lineChartController.updateLineChart()
+        lineChartController.updateLineChart()*/
     }
 
-    fun writeParametersChangingsToFiles() {
-        globalParametersController.writeGlobalParameters()
-        structureDescriptionController.writeStructureDescription()
+    fun save() {
+        globalParametersController.save()
+        structureDescriptionController.save()
     }
 }
 
@@ -72,8 +86,10 @@ class MainController {
 class ControlsController {
 
     lateinit var mainController: MainController
-    @FXML private lateinit var computationTimeLabel: Label
-    @FXML private lateinit var computeButton: Button
+    @FXML
+    private lateinit var computationTimeLabel: Label
+    @FXML
+    private lateinit var computeButton: Button
 
     @FXML
     fun initialize() {
@@ -83,8 +99,9 @@ class ControlsController {
                         .put(KeyCodeCombination(KeyCode.SPACE, KeyCombination.SHORTCUT_DOWN), Runnable(this::fire))
             }
             setOnAction {
+                // TODO commented
                 with(State) {
-                    if (init() == ValidateResult.SUCCESS) {
+                    if (init() == SUCCESS) {
                         val startTime = System.nanoTime()
                         compute()
                         val stopTime = System.nanoTime()
@@ -93,7 +110,7 @@ class ControlsController {
                         /**
                         Write to file last successful computation parameters
                          */
-                        mainController.writeParametersChangingsToFiles()
+                        mainController.save()
                         mainController.lineChartController.updateLineChart()
                     }
                 }

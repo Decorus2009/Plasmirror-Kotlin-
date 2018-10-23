@@ -1,8 +1,6 @@
 package core.layers
 
 import core.*
-import core.State.polarization
-import core.State.wavelengthCurrent
 import core.Polarization.P
 import org.apache.commons.math3.complex.Complex.I
 import java.lang.Math.PI
@@ -23,12 +21,12 @@ interface LayerExcitonic : Layer {
         get() = Matrix_().apply {
             val cos = cosThetaInLayer(n)
             /* TODO проверить поляризацию (в VisMirror (GaAs) было S) */
-            val gamma0e = when (polarization) {
+            val gamma0e = when (State.polarization) {
                 P -> gamma0 * cos.real
                 else -> gamma0 * (cos.pow(-1.0)).real
             }
-            val phi = Complex_(2.0 * PI * d / wavelengthCurrent) * n * cos
-            val S = Complex_(gamma0e) / Complex_(toEnergy(wavelengthCurrent) - w0, gamma)
+            val phi = Complex_(2.0 * PI * d / State.wavelengthCurrent) * n * cos
+            val S = Complex_(gamma0e) / Complex_(toEnergy(State.wavelengthCurrent) - w0, gamma)
 
             this[0, 0] = Complex_((phi * I).exp()) * Complex_(1.0 + S.imaginary, -S.real)
             this[0, 1] = Complex_(S.imaginary, -S.real)

@@ -7,15 +7,13 @@ import core.Complex_.Companion.I
 import core.Complex_.Companion.ONE
 import core.Polarization.P
 import core.Polarization.S
-import core.State.polarization
-import core.State.wavelengthCurrent
 import java.lang.Math.PI
 import java.lang.Math.pow
 
 
 interface MetallicClustersInAlGaAs : AlGaAsLayer {
     val epsMatrix
-        get() = epsAlGaAs(wavelengthCurrent, k, x, epsType)
+        get() = epsAlGaAs(State.wavelengthCurrent, k, x, epsType)
     val epsMetal: Complex_
 }
 
@@ -33,7 +31,7 @@ interface DrudeMetalClustersInAlGaAs : MetallicClustersInAlGaAs {
 //            println(gammaPlasma)
 //            println(epsInf)
 
-            val w = Complex_(toEnergy(wavelengthCurrent)) // eV
+            val w = Complex_(toEnergy(State.wavelengthCurrent)) // eV
             val numerator = Complex_(wPlasma * wPlasma)
             val denominator = w * (w + Complex_(0.0, gammaPlasma))
             return Complex_(epsInf) - (numerator / denominator)
@@ -44,7 +42,7 @@ interface DrudeMetalClustersInAlGaAs : MetallicClustersInAlGaAs {
 interface SbClustersInAlGaAs : MetallicClustersInAlGaAs {
 
     override val epsMetal: Complex_
-        get() = SbTabulatedPermittivity.get(wavelengthCurrent)
+        get() = SbTabulatedPermittivity.get(State.wavelengthCurrent)
 }
 
 
@@ -93,15 +91,15 @@ abstract class PerssonModelForMetallicClustersInAlGaAs(d: Double, k: Double, x: 
         val common3 = ONE + B * (alphaOrthogonal - alphaParallel)
         val common4 = A * B * alphaParallel * alphaOrthogonal * ((theta * I * 2.0).exp())
 
-        val rNumerator = when (polarization) {
+        val rNumerator = when (State.polarization) {
             S -> -A * common1
             P -> -A * (common1 - common2) - common4
         }
-        val tNumerator = when (polarization) {
+        val tNumerator = when (State.polarization) {
             S -> ONE - B * alphaParallel
             P -> common3
         }
-        val commonDenominator = when (polarization) {
+        val commonDenominator = when (State.polarization) {
             S -> ONE - B * alphaParallel - A * common1
             P -> common3 - A * (common1 + common2) - common4
         }
@@ -118,7 +116,7 @@ abstract class PerssonModelForMetallicClustersInAlGaAs(d: Double, k: Double, x: 
 //        println("Calling alpha property in abstract class PerssonModelForMetallicClustersInAlGaAs using epsMetal property")
 //    }
 
-    private fun AB() = with(pow(2 * PI / a, 2.0) / wavelengthCurrent) {
+    private fun AB() = with(pow(2 * PI / a, 2.0) / State.wavelengthCurrent) {
         I / cos * this to sin * this
     }
 }

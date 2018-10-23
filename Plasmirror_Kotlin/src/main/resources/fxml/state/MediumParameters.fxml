@@ -53,8 +53,8 @@
                                         <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
                                     </rowConstraints>
                                     <children>
-                                        <TextField fx:id="nLeftRealTextField" alignment="CENTER" disable="true" prefHeight="40.0" prefWidth="187.0" />
-                                        <TextField fx:id="nLeftImagTextField" alignment="CENTER" disable="true" GridPane.columnIndex="1" />
+                                        <TextField fx:id="leftMediumRefractiveIndexRealTextField" alignment="CENTER" disable="true" prefHeight="40.0" prefWidth="187.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0"/>
+                                        <TextField fx:id="leftMediumRefractiveIndexImaginaryTextField" alignment="CENTER" disable="true" GridPane.columnIndex="1" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0"/>
                                     </children>
                                 </GridPane>
                             </children>
@@ -84,8 +84,8 @@
                                         <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
                                     </rowConstraints>
                                     <children>
-                                        <TextField fx:id="nRightRealTextField" alignment="CENTER" disable="true" prefHeight="40.0" prefWidth="187.0" />
-                                        <TextField fx:id="nRightImagTextField" alignment="CENTER" disable="true" GridPane.columnIndex="1" />
+                                        <TextField fx:id="rightMediumRefractiveIndexRealTextField" alignment="CENTER" disable="true" prefHeight="40.0" prefWidth="187.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0"/>
+                                        <TextField fx:id="rightMediumRefractiveIndexImaginaryTextField" alignment="CENTER" disable="true" GridPane.columnIndex="1" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0"/>
                                     </children>
                                 </GridPane>
                             </children>
@@ -110,8 +110,10 @@
                                     <items>
                                         <FXCollections fx:factory="observableArrayList">
                                             <String fx:value="Air" />
-                                            <String fx:value="GaAs" />
-                                            <String fx:value="Other" />
+                                            <String fx:value="GaAs: Adachi" />
+                                            <String fx:value="GaAs: Gauss" />
+                                            <String fx:value="GaAs: Gauss-Adachi" />
+                                            <String fx:value="Custom" />
                                         </FXCollections>
                                     </items>
                                 </ChoiceBox>
@@ -137,8 +139,10 @@
                                     <items>
                                         <FXCollections fx:factory="observableArrayList">
                                             <String fx:value="Air" />
-                                            <String fx:value="GaAs" />
-                                            <String fx:value="Other" />
+                                            <String fx:value="GaAs: Adachi" />
+                                            <String fx:value="GaAs: Gauss" />
+                                            <String fx:value="GaAs: Gauss-Adachi" />
+                                            <String fx:value="Custom" />
                                         </FXCollections>
                                     </items>
                                 </ChoiceBox>
@@ -150,12 +154,12 @@
         </AnchorPane>
         <AnchorPane prefHeight="200.0" prefWidth="200.0" GridPane.rowIndex="2">
             <children>
-                <Label fx:id="nLeftMediumLabel" alignment="CENTER" contentDisplay="CENTER" layoutX="46.0" layoutY="10.0" prefHeight="36.0" prefWidth="125.0" text="n" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+                <Label fx:id="leftMediumRefractiveIndexLabel" alignment="CENTER" contentDisplay="CENTER" layoutX="46.0" layoutY="10.0" prefHeight="36.0" prefWidth="125.0" text="n" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
             </children>
         </AnchorPane>
         <AnchorPane prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="2">
             <children>
-                <Label fx:id="nRightMediumLabel" alignment="CENTER" contentDisplay="CENTER" layoutX="46.0" layoutY="10.0" prefHeight="36.0" prefWidth="125.0" text="n" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+                <Label fx:id="rightMediumRefractiveIndexLabel" alignment="CENTER" contentDisplay="CENTER" layoutX="46.0" layoutY="10.0" prefHeight="36.0" prefWidth="125.0" text="n" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
             </children>
         </AnchorPane>
     </children>

@@ -4,9 +4,9 @@ package ui.controllers
 import MainApp
 import core.State
 import core.State.polarization
-import core.MultipleExportDialogParametersValidator
+import core.validators.MultipleExportDialogParametersValidator
 import core.Polarization
-import core.ValidateResult.SUCCESS
+import core.validators.ValidationResult.SUCCESS
 import javafx.fxml.FXML
 import javafx.fxml.FXMLLoader
 import javafx.scene.Scene
@@ -23,6 +23,7 @@ import javafx.scene.layout.AnchorPane
 import javafx.stage.DirectoryChooser
 import javafx.stage.FileChooser
 import javafx.stage.Stage
+import org.apache.commons.io.FileUtils
 import java.io.File
 import java.io.File.separator
 import java.nio.file.Files
@@ -34,12 +35,18 @@ class MenuController {
 
     lateinit var rootController: RootController
 
-    @FXML private lateinit var importMenuItem: MenuItem
-    @FXML private lateinit var importMultipleMenuItem: MenuItem
-    @FXML private lateinit var exportMenuItem: MenuItem
-    @FXML private lateinit var exportMultipleMenuItem: MenuItem
-    @FXML private lateinit var helpMenuItem: MenuItem
-    @FXML private lateinit var fitterMenuItem: MenuItem
+    @FXML
+    private lateinit var importMenuItem: MenuItem
+    @FXML
+    private lateinit var importMultipleMenuItem: MenuItem
+    @FXML
+    private lateinit var exportMenuItem: MenuItem
+    @FXML
+    private lateinit var exportMultipleMenuItem: MenuItem
+    @FXML
+    private lateinit var helpMenuItem: MenuItem
+    @FXML
+    private lateinit var fitterMenuItem: MenuItem
 
     @FXML
     fun initialize() {
@@ -50,7 +57,7 @@ class MenuController {
         fitterMenuItem.accelerator = KeyCodeCombination(F, SHORTCUT_DOWN)
 
         importMenuItem.setOnAction {
-//            val file = initFileChooser(".${separator}data${separator}for_import")
+            //            val file = initFileChooser(".${separator}data${separator}for_import")
             val file = initFileChooser(".")
                     .showOpenDialog(rootController.mainApp.primaryStage)
             if (file != null) {
@@ -59,7 +66,7 @@ class MenuController {
         }
 
         importMultipleMenuItem.setOnAction {
-//            val files = initFileChooser(".${separator}data${separator}for_import")
+            //            val files = initFileChooser(".${separator}data${separator}for_import")
             val files = initFileChooser(".")
                     .showOpenMultipleDialog(rootController.mainApp.primaryStage)
             if (files != null) {
@@ -69,7 +76,7 @@ class MenuController {
 
         exportMenuItem.setOnAction {
             val file = initFileChooser(".").let {
-//            val file = initFileChooser(".${separator}data${separator}computed_single").let {
+                //            val file = initFileChooser(".${separator}data${separator}computed_single").let {
                 it.initialFileName = buildExportFileName()
                 it.showSaveDialog(rootController.mainApp.primaryStage)
             }
@@ -142,32 +149,54 @@ class MenuController {
 
 class MultipleExportDialogController {
 
-    @FXML private lateinit var polarizationChoiceBox: ChoiceBox<String>
-    @FXML private lateinit var anglesLabel: Label
-    @FXML private lateinit var temperaturesLabel: Label
+    @FXML
+    private lateinit var polarizationChoiceBox: ChoiceBox<String>
+    @FXML
+    private lateinit var anglesLabel: Label
+    @FXML
+    private lateinit var temperaturesLabel: Label
 
-    @FXML private lateinit var toggleGroup: ToggleGroup
+    @FXML
+    private lateinit var toggleGroup: ToggleGroup
 
-    @FXML private lateinit var angleRadioButton: RadioButton
-    @FXML private lateinit var angleFromLabel: Label
-    @FXML private lateinit var angleToLabel: Label
-    @FXML private lateinit var angleStepLabel: Label
-    @FXML lateinit var angleFromTextField: TextField
-    @FXML lateinit var angleToTextField: TextField
-    @FXML lateinit var angleStepTextField: TextField
+    @FXML
+    private lateinit var angleRadioButton: RadioButton
+    @FXML
+    private lateinit var angleFromLabel: Label
+    @FXML
+    private lateinit var angleToLabel: Label
+    @FXML
+    private lateinit var angleStepLabel: Label
+    @FXML
+    lateinit var angleFromTextField: TextField
+    @FXML
+    lateinit var angleToTextField: TextField
+    @FXML
+    lateinit var angleStepTextField: TextField
 
-    @FXML private lateinit var temperatureRadioButton: RadioButton
-    @FXML private lateinit var temperatureFromLabel: Label
-    @FXML private lateinit var temperatureToLabel: Label
-    @FXML private lateinit var temperatureStepLabel: Label
-    @FXML lateinit var temperatureFromTextField: TextField
-    @FXML lateinit var temperatureToTextField: TextField
-    @FXML lateinit var temperatureStepTextField: TextField
+    @FXML
+    private lateinit var temperatureRadioButton: RadioButton
+    @FXML
+    private lateinit var temperatureFromLabel: Label
+    @FXML
+    private lateinit var temperatureToLabel: Label
+    @FXML
+    private lateinit var temperatureStepLabel: Label
+    @FXML
+    lateinit var temperatureFromTextField: TextField
+    @FXML
+    lateinit var temperatureToTextField: TextField
+    @FXML
+    lateinit var temperatureStepTextField: TextField
 
-    @FXML private lateinit var directoryButton: Button
-    @FXML private lateinit var exportButton: Button
-    @FXML private lateinit var statusLabel: Label
-    @FXML private lateinit var chosenDirectoryLabel: Label
+    @FXML
+    private lateinit var directoryButton: Button
+    @FXML
+    private lateinit var exportButton: Button
+    @FXML
+    private lateinit var statusLabel: Label
+    @FXML
+    private lateinit var chosenDirectoryLabel: Label
 
     var angleFrom: Double = 0.0
     var angleTo: Double = 0.0
@@ -205,7 +234,7 @@ class MultipleExportDialogController {
 
         directoryButton.setOnMouseClicked {
             with(DirectoryChooser()) {
-//                initialDirectory = File(".${separator}data${separator}computed_multiple")
+                //                initialDirectory = File(".${separator}data${separator}computed_multiple")
                 initialDirectory = File(".")
                 /**
                 Need to pass Window or Stage. There's no access to any Stage object from this controller
@@ -229,7 +258,7 @@ class MultipleExportDialogController {
                             To be able to compute and export data at multiple angles,
                             the corresponding GUI text field is init each time and validated and the computation process is performed.
                             In the end each field must get its initial value.
-                            */
+                             */
                             val initialAngle: String = State.mainController.globalParametersController
                                     .lightParametersController.angleTextField.text
                             val initialPolarization = State.mainController.globalParametersController
@@ -280,13 +309,12 @@ class MultipleExportDialogController {
 
 class HelpInfoController {
 
-    @FXML private lateinit var helpTextArea: TextArea
-
-    private val path = Paths.get("./data/inner/help.txt")
+    @FXML
+    private lateinit var helpTextArea: TextArea
 
     @FXML
     fun initialize() {
-        helpTextArea.text = Files.lines(path).toList().reduce { text, line -> text + "\n" + line }
+        helpTextArea.text = FileUtils.readFileToString(Paths.get("./data/inner/help.txt").toFile())
     }
 }
 
