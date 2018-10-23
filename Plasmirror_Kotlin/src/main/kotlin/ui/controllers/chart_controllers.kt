@@ -44,10 +44,14 @@ class LineChartController {
 
     lateinit var mainController: MainController
 
-    @FXML lateinit var lineChart: LineChart<Number, Number>
-    @FXML lateinit var xAxis: NumberAxis
-    @FXML lateinit var yAxis: NumberAxis
-    @FXML private lateinit var XYPositionLabel: Label
+    @FXML
+    lateinit var lineChart: LineChart<Number, Number>
+    @FXML
+    lateinit var xAxis: NumberAxis
+    @FXML
+    lateinit var yAxis: NumberAxis
+    @FXML
+    private lateinit var XYPositionLabel: Label
 
     private enum class ComputationType { REAL, COMPLEX, NONE }
 
@@ -356,8 +360,8 @@ commented updateRegimeAndRescale
     /* TODO fix this */
     private fun rescale() = with(mainController.globalParametersController.regimeController) {
         with(xAxis) {
-            lowerBound = State.wavelengthFrom
-            upperBound = State.wavelengthTo
+            lowerBound = State.wavelengthStart
+            upperBound = State.wavelengthEnd
             tickUnit = 50.0
             tickUnit = when {
                 upperBound - lowerBound >= 4000.0 -> 500.0
@@ -444,9 +448,9 @@ object LineChartState {
         extendedSeriesReal.series.data.run {
             with(State) {
                 when (regime) {
-                    REFLECTANCE -> addAll(wavelength.indices.map { Data<Number, Number>(wavelength[it], reflection[it]) })
-                    TRANSMITTANCE -> addAll(wavelength.indices.map { Data<Number, Number>(wavelength[it], transmission[it]) })
-                    ABSORBANCE -> addAll(wavelength.indices.map { Data<Number, Number>(wavelength[it], absorption[it]) })
+                    REFLECTANCE -> addAll(wavelength.indices.map { Data<Number, Number>(wavelength[it], reflectance[it]) })
+                    TRANSMITTANCE -> addAll(wavelength.indices.map { Data<Number, Number>(wavelength[it], transmittance[it]) })
+                    ABSORBANCE -> addAll(wavelength.indices.map { Data<Number, Number>(wavelength[it], absorbance[it]) })
                     PERMITTIVITY -> {
                         addAll(wavelength.indices.map { Data<Number, Number>(wavelength[it], permittivity[it].real) })
                         extendedSeriesImaginary.series.data
@@ -466,6 +470,8 @@ object LineChartState {
         extendedSeriesImaginary.series.name = "Computed Imaginary"
 
         /* if another regime */
+//        with(State.mainController.globalParametersController.regimeController) {
+
         with(State.mainController.globalParametersController.regimeController) {
             if (regimeBefore == null || State.regime != regimeBefore) {
                 /* init default colors */
@@ -556,14 +562,22 @@ class SeriesManagerController {
 
     lateinit var mainController: MainController
 
-    @FXML private lateinit var colorLabel: Label
-    @FXML private lateinit var colorPicker: ColorPicker
-    @FXML private lateinit var xAxisFactorLabel: Label
-    @FXML private lateinit var xAxisFactorTextField: TextField
-    @FXML private lateinit var yAxisFactorLabel: Label
-    @FXML private lateinit var yAxisFactorTextField: TextField
-    @FXML private lateinit var visibleCheckBox: CheckBox
-    @FXML private lateinit var removeButton: Button
+    @FXML
+    private lateinit var colorLabel: Label
+    @FXML
+    private lateinit var colorPicker: ColorPicker
+    @FXML
+    private lateinit var xAxisFactorLabel: Label
+    @FXML
+    private lateinit var xAxisFactorTextField: TextField
+    @FXML
+    private lateinit var yAxisFactorLabel: Label
+    @FXML
+    private lateinit var yAxisFactorTextField: TextField
+    @FXML
+    private lateinit var visibleCheckBox: CheckBox
+    @FXML
+    private lateinit var removeButton: Button
 
     private lateinit var selectedSeries: ExtendedSeries
 
@@ -665,9 +679,12 @@ class XAxisRangeController {
 
     lateinit var mainController: MainController
 
-    @FXML private lateinit var fromTextField: TextField
-    @FXML private lateinit var toTextField: TextField
-    @FXML private lateinit var tickTextField: TextField
+    @FXML
+    private lateinit var fromTextField: TextField
+    @FXML
+    private lateinit var toTextField: TextField
+    @FXML
+    private lateinit var tickTextField: TextField
 
     /**
      * Platform.runLater due to the mainController is not initialized during this.initialize()
@@ -723,9 +740,12 @@ class YAxisRangeController {
 
     lateinit var mainController: MainController
 
-    @FXML private lateinit var fromTextField: TextField
-    @FXML private lateinit var toTextField: TextField
-    @FXML private lateinit var tickTextField: TextField
+    @FXML
+    private lateinit var fromTextField: TextField
+    @FXML
+    private lateinit var toTextField: TextField
+    @FXML
+    private lateinit var tickTextField: TextField
 
     /**
      * Platform.runLater due to the mainController is not initialized during this.initialize()

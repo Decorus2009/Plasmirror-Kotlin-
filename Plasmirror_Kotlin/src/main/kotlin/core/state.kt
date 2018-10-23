@@ -3,7 +3,6 @@ package core
 import core.Regime.*
 import core.layers.Layer
 import core.validators.StateValidator
-import core.validators.ValidationResult
 import core.validators.ValidationResult.*
 import ui.controllers.MainController
 import java.util.*
@@ -12,10 +11,10 @@ object State {
 
     lateinit var mainController: MainController
 
-    var wavelengthFrom: Double = 0.0
-    var wavelengthTo: Double = 1000.0
-    var wavelengthStep: Double = 0.0
-    var wavelengthCurrent: Double = 0.0
+    var wavelengthStart: Double = 600.0
+    var wavelengthEnd: Double = 1000.0
+    var wavelengthStep: Double = 1.0
+    var wavelengthCurrent = wavelengthStart
 
     var angle: Double = 0.0
     lateinit var polarization: Polarization
@@ -23,16 +22,14 @@ object State {
 
     lateinit var leftMediumLayer: Layer
     lateinit var rightMediumLayer: Layer
-    lateinit var n_left: Complex_
-    lateinit var n_right: Complex_
 
     lateinit var structure: Structure
     lateinit var mirror: Mirror
 
     var wavelength = mutableListOf<Double>()
-    val reflection = mutableListOf<Double>()
-    val transmission = mutableListOf<Double>()
-    val absorption = mutableListOf<Double>()
+    val reflectance = mutableListOf<Double>()
+    val transmittance = mutableListOf<Double>()
+    val absorbance = mutableListOf<Double>()
     val permittivity = mutableListOf<Complex_>()
     val refractiveIndex = mutableListOf<Complex_>()
 
@@ -57,33 +54,33 @@ object State {
     }
 
     fun compute() {
-        val size = ((wavelengthTo - wavelengthFrom) / wavelengthStep).toInt() + 1
-        wavelength = ArrayList<Double>(size)
+        val size = ((wavelengthEnd - wavelengthStart) / wavelengthStep).toInt() + 1
+        wavelength = ArrayList(size)
         /* TODO MERGE TWO LOOPS, CHECK PERFORMANCE */
-        (0 until size).forEach { wavelength.add(wavelengthFrom + it * wavelengthStep) }
+        (0 until size).forEach { wavelength.add(wavelengthStart + it * wavelengthStep) }
 
         /* TODO PARALLEL */
-        (0..wavelength.size - 1).forEach {
+        (0 until wavelength.size).forEach {
             wavelengthCurrent = wavelength[it]
             with(mirror) {
                 when (regime) {
-                    REFLECTANCE -> reflection += computeReflection()
-                    TRANSMITTANCE -> transmission += computeTransmission()
-                    ABSORBANCE -> absorption += computeAbsorption()
+                    REFLECTANCE -> reflectance += computeReflectance()
+                    TRANSMITTANCE -> transmittance += computeTransmittance()
+                    ABSORBANCE -> absorbance += computeAbsorbance()
                     PERMITTIVITY -> permittivity += computePermittivity()
                     REFRACTIVE_INDEX -> refractiveIndex += computeRefractiveIndex()
                 }
             }
         }
 
-//        fun set_fit() = reflection.clear()
+//        fun set_fit() = reflectance.clear()
 //
 //        /**
 //         * Wavelengths are already initialized.
 //         */
 //        fun compute_fit() = (0..wavelength.size - 1).forEach {
 //            wavelengthCurrent = wavelength[it]
-//            reflection += mirror.computeReflection()
+//            reflectance += mirror.computeReflectance()
 //        }
 //
 //        fun computeDifference() {
@@ -94,12 +91,12 @@ object State {
     private fun clearPreviousComputation() {
         fun <T> clearIfNotEmpty(vararg lists: MutableList<out T>) = lists.forEach { it.run { if (isNotEmpty()) clear() } }
 
-        clearIfNotEmpty(reflection, transmission, absorption)
+        clearIfNotEmpty(reflectance, transmittance, absorbance)
         clearIfNotEmpty(permittivity, refractiveIndex)
         /*
         TODO Doesn't clear when using this form of extension function (without "run")
-        fun <TRANSMITTANCE> MutableList<out TRANSMITTANCE>.clearIfNotEmpty() = run { if (isNotEmpty()) clear() } // works
-        fun <TRANSMITTANCE> MutableList<TRANSMITTANCE>.clearIfNotEmpty() = { if (isNotEmpty()) clear() } // doesn't work
+        fun <T> MutableList<out T>.clearIfNotEmpty() = run { if (isNotEmpty()) clear() } // works
+        fun <T> MutableList<T>.clearIfNotEmpty() = { if (isNotEmpty()) clear() } // doesn't work
          */
     }
 

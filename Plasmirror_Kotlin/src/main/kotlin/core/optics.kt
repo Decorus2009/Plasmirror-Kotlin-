@@ -29,13 +29,13 @@ fun cosThetaIncident() = Complex_(cos(angle * PI / 180.0))
  */
 fun cosThetaInLayer(n2: Complex_): Complex_ {
 
-    val n1 = State.leftMediumLayer.n
 
     /**
      * !!!!!!!!!!!!!!!!!!!!!!!!!!
      * State.mirror is not initialized yet
      */
     //    val n1 = State.mirror.leftMediumLayer.n
+    val n1 = State.leftMediumLayer.n
 
     val cos1 = cosThetaIncident()
     val sin1_sq = ONE - (cos1 * cos1)

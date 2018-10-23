@@ -1,15 +1,15 @@
 package ui.controllers
 
 import core.*
-import core.State.absorption
+import core.State.absorbance
 import core.State.permittivity
 import core.State.polarization
-import core.State.reflection
+import core.State.reflectance
 import core.State.refractiveIndex
 import core.State.regime
-import core.State.transmission
-import core.State.wavelengthFrom
-import core.State.wavelengthTo
+import core.State.transmittance
+import core.State.wavelengthStart
+import core.State.wavelengthEnd
 import core.Regime.*
 import core.State.wavelength
 import javafx.scene.control.*
@@ -17,7 +17,7 @@ import java.io.File
 import java.util.*
 
 fun buildExportFileName() = StringBuilder().apply {
-    append("computation_${regime}_${wavelengthFrom}_$wavelengthTo")
+    append("computation_${regime}_${wavelengthStart}_$wavelengthEnd")
     if (regime == REFLECTANCE || regime == TRANSMITTANCE || regime == ABSORBANCE) {
         append("_$polarization-POL_^${String.format(Locale.US, "%04.1f", State.angle)}_deg")
     }
@@ -28,9 +28,9 @@ fun writeComputedDataTo(file: File) = StringBuilder().apply {
     var computedImaginary: List<Double> = emptyList()
 
     computedReal = when (regime) {
-        REFLECTANCE -> reflection
-        TRANSMITTANCE -> transmission
-        ABSORBANCE -> absorption
+        REFLECTANCE -> reflectance
+        TRANSMITTANCE -> transmittance
+        ABSORBANCE -> absorbance
         PERMITTIVITY -> {
             computedImaginary = permittivity.map { it.imaginary }.toList()
             permittivity.map { it.real }.toList()

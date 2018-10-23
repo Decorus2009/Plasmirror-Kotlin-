@@ -2,12 +2,12 @@ package ui.controllers.fitter
 
 import MainApp
 import core.State.mirror
-import core.State.reflection
+import core.State.reflectance
 import core.State.wavelength
 import core.State.wavelengthCurrent
-import core.State.wavelengthFrom
+import core.State.wavelengthStart
 import core.State.wavelengthStep
-import core.State.wavelengthTo
+import core.State.wavelengthEnd
 import core.layers.*
 import javafx.fxml.FXML
 import javafx.fxml.FXMLLoader
@@ -38,8 +38,8 @@ object FitterState {
 
         val spline = SplineInterpolator().interpolate(xImported.toDoubleArray(), yImported.toDoubleArray())
         interpolated = listOf<Double>()
-        var wavelength = wavelengthFrom
-        while (wavelength <= wavelengthTo) {
+        var wavelength = wavelengthStart
+        while (wavelength <= wavelengthEnd) {
             interpolated += spline.value(wavelength)
             wavelength += wavelengthStep
         }
@@ -47,19 +47,19 @@ object FitterState {
         println("INterpolated size ${interpolated.size}")
     }
 
-    fun clearPrevious() = reflection.clear()
+    fun clearPrevious() = reflectance.clear()
 
     /**
      * Wavelengths are already initialized.
      */
     fun compute() = (0 until wavelength.size).forEach {
         wavelengthCurrent = wavelength[it]
-        reflection += mirror.computeReflection()
+        reflectance += mirror.computeReflectance()
     }
 
     /* TODO measure time */
     fun checkDifference() {
-        val currentDifference = reflection.zip(interpolated).sumByDouble { abs(it.first - it.second) }
+        val currentDifference = reflectance.zip(interpolated).sumByDouble { abs(it.first - it.second) }
         if (currentDifference < difference) {
             difference = currentDifference
             listOfParameters = mainFitterController.layerToFit.parameters()

@@ -1,6 +1,7 @@
 package ui.controllers
 
 import MainApp
+import core.ComputationParametersStorage
 import javafx.application.Platform
 import javafx.fxml.FXML
 import javafx.scene.control.Button
@@ -9,7 +10,7 @@ import javafx.scene.input.KeyCode
 import javafx.scene.input.KeyCodeCombination
 import javafx.scene.input.KeyCombination
 import core.State
-import core.validators.ValidationResult
+import core.StructureDescriptionStorage
 import core.validators.ValidationResult.*
 import java.util.*
 
@@ -26,7 +27,7 @@ class RootController {
     fun initialize() {
         println("Root controller init")
         /**
-        mainController is "lateinit" due to it's initialized through the reflection (@FXML)
+        mainController is "lateinit" due to it's initialized through the reflectance (@FXML)
         BEFORE the root controller initialization.
          */
         menuController.rootController = this
@@ -65,6 +66,8 @@ class MainController {
         yAxisRangeController.mainController = this
         seriesManagerController.mainController = this
 
+        State.mainController = this
+
 // TODO commented
 /*        with(State) {
             mainController = this@MainController
@@ -76,9 +79,14 @@ class MainController {
         lineChartController.updateLineChart()*/
     }
 
-    fun save() {
+    fun saveToStorages() {
         globalParametersController.save()
         structureDescriptionController.save()
+    }
+
+    fun saveToFiles() {
+        ComputationParametersStorage.saveToFile()
+        StructureDescriptionStorage.saveToFile()
     }
 }
 
@@ -99,20 +107,24 @@ class ControlsController {
                         .put(KeyCodeCombination(KeyCode.SPACE, KeyCombination.SHORTCUT_DOWN), Runnable(this::fire))
             }
             setOnAction {
-                // TODO commented
-                with(State) {
-                    if (init() == SUCCESS) {
-                        val startTime = System.nanoTime()
-                        compute()
-                        val stopTime = System.nanoTime()
-                        computationTimeLabel.text =
-                                "Computation time: ${kotlin.String.format(Locale.US, "%.2f", (stopTime - startTime).toDouble() / 1E6)} ms"
-                        /**
-                        Write to file last successful computation parameters
-                         */
-                        mainController.save()
-                        mainController.lineChartController.updateLineChart()
-                    }
+                mainController.saveToStorages()
+//                mainController.lineChartController.updateLineChart()
+
+                if (State.init() == SUCCESS) {
+                    println("Compute button clicked and State.init() == SUCCESS")
+                    // TODO commented
+
+                    val startTime = System.nanoTime()
+                    State.compute()
+                    val stopTime = System.nanoTime()
+                    computationTimeLabel.text =
+                            "Computation time: ${kotlin.String.format(Locale.US, "%.2f", (stopTime - startTime).toDouble() / 1E6)} ms"
+                    /**
+                    Save and write to file last successful computation parameters
+                     */
+                    mainController.lineChartController.updateLineChart()
+                    mainController.saveToFiles()
+
                 }
             }
         }

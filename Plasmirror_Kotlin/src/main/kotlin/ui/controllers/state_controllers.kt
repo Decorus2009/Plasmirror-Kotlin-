@@ -1,6 +1,6 @@
 package ui.controllers
 
-import core.ComputationParameters
+import core.ComputationParametersStorage
 import core.Regime
 import core.StructureDescriptionStorage
 import javafx.fxml.FXML
@@ -40,10 +40,11 @@ class GlobalParametersController {
 
     fun save() {
         regimeController.save()
-//        temperatureController.writeTemperature()
         mediumParametersController.save()
         lightParametersController.save()
         computationRangeController.save()
+
+//        temperatureController.writeTemperature()
     }
 }
 
@@ -68,7 +69,7 @@ class RegimeController {
         println("Regime controller init")
 
         with(regimeChoiceBox) {
-            value = ComputationParameters.regime
+            value = ComputationParametersStorage.regime
 
             selectionModel.selectedItemProperty().addListener { _, _, newValue ->
                 with(globalParametersController) {
@@ -88,7 +89,7 @@ class RegimeController {
     }
 
     fun save() {
-        ComputationParameters.regime = regimeChoiceBox.value
+        ComputationParametersStorage.regime = regimeChoiceBox.value
     }
 }
 
@@ -178,25 +179,25 @@ class MediumParametersController {
         }
 
         initFields(
-                ComputationParameters.leftMedium,
-                ComputationParameters.leftMediumRefractiveIndexReal,
-                ComputationParameters.leftMediumRefractiveIndexImaginary,
+                ComputationParametersStorage.leftMedium,
+                ComputationParametersStorage.leftMediumRefractiveIndexReal,
+                ComputationParametersStorage.leftMediumRefractiveIndexImaginary,
                 leftMediumChoiceBox,
                 leftMediumRefractiveIndexRealTextField, leftMediumRefractiveIndexImaginaryTextField
         )
         initFields(
-                ComputationParameters.rightMedium,
-                ComputationParameters.rightMediumRefractiveIndexReal,
-                ComputationParameters.rightMediumRefractiveIndexImaginary,
+                ComputationParametersStorage.rightMedium,
+                ComputationParametersStorage.rightMediumRefractiveIndexReal,
+                ComputationParametersStorage.rightMediumRefractiveIndexImaginary,
                 rightMediumChoiceBox,
                 rightMediumRefractiveIndexRealTextField, rightMediumRefractiveIndexImaginaryTextField
         )
 
 //        leftMediumChoiceBox.selectionModel.selectedIndexProperty().addListener { _, _, newValue ->
-//            ComputationParameters.leftMedium = invMap[newValue as Int].second
+//            ComputationParametersStorage.leftMedium = invMap[newValue as Int].second
 //        }
 //        rightMediumChoiceBox.selectionModel.selectedIndexProperty().addListener { _, _, newValue ->
-//            ComputationParameters.rightMedium = invMap[newValue as Int].second
+//            ComputationParametersStorage.rightMedium = invMap[newValue as Int].second
 //        }
     }
 
@@ -219,7 +220,7 @@ class MediumParametersController {
         }
     }
 
-    fun save() = with(ComputationParameters) {
+    fun save() = with(ComputationParametersStorage) {
 
         leftMedium = leftMediumChoiceBox.value
         if (leftMedium == "Custom") {
@@ -256,8 +257,8 @@ class LightParametersController {
     fun initialize() {
         println("Light parameters controller init")
 
-//        val polarizationMap = mapOf("P" to 0, "S" to 1)
-        polarizationChoiceBox.value = ComputationParameters.polarization
+        polarizationChoiceBox.value = ComputationParametersStorage.polarization
+        angleTextField.text = ComputationParametersStorage.angle
     }
 
     fun disableAll() {
@@ -272,7 +273,7 @@ class LightParametersController {
         enable(angleTextField)
     }
 
-    fun save() = with(ComputationParameters) {
+    fun save() = with(ComputationParametersStorage) {
         polarization = polarizationChoiceBox.value
         angle = angleTextField.text
     }
@@ -293,56 +294,56 @@ class ComputationRangeController {
     fun initialize() {
         println("Computation range controller init")
 
-        with(ComputationParameters) {
-            fromTextField.text = computationRangeStart
-            toTextField.text = computationRangeEnd
-            stepTextField.text = computationRangeStep
+        with(ComputationParametersStorage) {
+            fromTextField.text = wavelengthStart
+            toTextField.text = wavelengthEnd
+            stepTextField.text = wavelengthStep
         }
 
 //        with(fromTextField) {
-//            val previousValue = ComputationParameters.computationRangeStart
+//            val previousValue = ComputationParametersStorage.wavelengthStart
 //            text = previousValue.toString()
 //
 //            textProperty().addListener { _, _, newValue ->
 //                try {
-//                    ComputationParameters.computationRangeStart = newValue.toDouble()
+//                    ComputationParametersStorage.wavelengthStart = newValue.toDouble()
 //                } catch (e: NumberFormatException) {
-//                    ComputationParameters.computationRangeStart = previousValue
+//                    ComputationParametersStorage.wavelengthStart = previousValue
 //                }
 //            }
 //        }
 //
 //        with(toTextField) {
-//            val previousValue = ComputationParameters.computationRangeEnd
+//            val previousValue = ComputationParametersStorage.wavelengthEnd
 //            text = previousValue.toString()
 //
 //            textProperty().addListener { _, _, newValue ->
 //                try {
-//                    ComputationParameters.computationRangeEnd = newValue.toDouble()
+//                    ComputationParametersStorage.wavelengthEnd = newValue.toDouble()
 //                } catch (e: NumberFormatException) {
-//                    ComputationParameters.computationRangeEnd = previousValue
+//                    ComputationParametersStorage.wavelengthEnd = previousValue
 //                }
 //            }
 //        }
 //
 //        with(toTextField) {
-//            val previousValue = ComputationParameters.computationRangeStep
+//            val previousValue = ComputationParametersStorage.wavelengthStep
 //            text = previousValue.toString()
 //
 //            textProperty().addListener { _, _, newValue ->
 //                try {
-//                    ComputationParameters.computationRangeStep = newValue.toDouble()
+//                    ComputationParametersStorage.wavelengthStep = newValue.toDouble()
 //                } catch (e: NumberFormatException) {
-//                    ComputationParameters.computationRangeStep = previousValue
+//                    ComputationParametersStorage.wavelengthStep = previousValue
 //                }
 //            }
 //        }
     }
 
-    fun save() = with(ComputationParameters) {
-        computationRangeStart = fromTextField.text
-        computationRangeEnd = toTextField.text
-        computationRangeStep = stepTextField.text
+    fun save() = with(ComputationParametersStorage) {
+        wavelengthStart = fromTextField.text
+        wavelengthEnd = toTextField.text
+        wavelengthStep = stepTextField.text
     }
 }
 

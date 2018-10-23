@@ -3,21 +3,22 @@ package core
 import core.Polarization.*
 import core.layers.ConstRefractiveIndexLayer
 import core.layers.Layer
-import org.apache.commons.math3.complex.Complex
 import org.apache.commons.math3.complex.Complex.NaN
 import kotlin.Double.Companion.POSITIVE_INFINITY
 
 /**
  * Mirror: left medium layer + structure + right medium layer
  */
-class Mirror(val structure: Structure, val leftMediumLayer: Layer, val rightMediumLayer: Layer) {
+class Mirror(val structure: Structure, private val leftMediumLayer: Layer, private val rightMediumLayer: Layer) {
 
-    fun computeReflection(): Double {
-        val r = r().abs()
-        return r * r
-    }
+//    fun computeReflectance(): Double {
+//        val r = r().abs()
+//        return r * r
+//    }
+    fun computeReflectance() = with(r().abs()) { this * this }
 
-    fun computeTransmission(): Double {
+
+    fun computeTransmittance(): Double {
         val t = t().abs()
 
         // просто обращаться к State.n_left нельзя, NPE
@@ -34,29 +35,35 @@ class Mirror(val structure: Structure, val leftMediumLayer: Layer, val rightMedi
         }
     }
 
-    fun computeAbsorption(): Double = 1.0 - computeReflection() - computeTransmission()
+    fun computeAbsorbance() = 1.0 - computeReflectance() - computeTransmittance()
 
-    fun computePermittivity(): Complex_ {
-        val layer = structure.blocks[0].layers[0]
-        val n = layer.n
-        /**
-         * eps = n^2 = (n + ik)^2 = n^2 - k^2 + 2ink
-         * Re(eps) = n^2 - k^2, Im(eps) = 2nk
-         */
-        return n * n
-    }
+    fun computeRefractiveIndex() = structure.blocks[0].layers[0].n
 
-    fun computeRefractiveIndex(): Complex_ = structure.blocks[0].layers[0].n
+    fun computePermittivity() = with(computeRefractiveIndex()) { this * this }
 
-    private fun r(): Complex_ {
-        val mirrorMatrix = matrix
-        return mirrorMatrix[1, 0] / mirrorMatrix[1, 1] * (-1.0)
-    }
+//    fun computePermittivity(): Complex_ {
+//        val layer = structure.blocks[0].layers[0]
+//        val n = layer.n
+//        /**
+//         * eps = n^2 = (n + ik)^2 = n^2 - k^2 + 2ink
+//         * Re(eps) = n^2 - k^2, Im(eps) = 2nk
+//         */
+//        return n * n
+//    }
 
-    private fun t(): Complex_ {
-        val mirrorMatrix = matrix
-        return mirrorMatrix.det() / mirrorMatrix[1, 1]
-    }
+    private fun r() = with(matrix) { this[1, 0] / this[1, 1] * (-1.0) }
+
+//    private fun r(): Complex_ {
+//        val mirrorMatrix = matrix
+//        return mirrorMatrix[1, 0] / mirrorMatrix[1, 1] * (-1.0)
+//    }
+
+    private fun t() = with(matrix) { det() / this[1, 1] }
+
+//    private fun t(): Complex_ {
+//        val mirrorMatrix = matrix
+//        return mirrorMatrix.det() / mirrorMatrix[1, 1]
+//    }
 
     /**
      * Странный алгоритм перемножения матриц. Оно происходит не последовательно!
@@ -146,15 +153,14 @@ class Mirror(val structure: Structure, val leftMediumLayer: Layer, val rightMedi
          */
         val cos1 = cosThetaInLayer(leftLayer.n)
         val cos2 = cosThetaInLayer(rightLayer.n)
-        val n1e = if (State.polarization === S) {
-            n1 * cos1
-        } else {
-            n1 / cos1
+
+        val n1e = when {
+            State.polarization === S -> n1 * cos1
+            else -> n1 / cos1
         }
-        val n2e = if (State.polarization === S) {
-            n2 * cos2
-        } else {
-            n2 / cos2
+        val n2e = when {
+            State.polarization === S -> n2 * cos2
+            else -> n2 / cos2
         }
         setDiagonal((n2e + n1e) / (n2e * 2.0))
         setAntiDiagonal((n2e - n1e) / (n2e * 2.0))

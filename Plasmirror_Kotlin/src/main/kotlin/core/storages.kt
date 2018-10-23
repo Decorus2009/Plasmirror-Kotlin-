@@ -14,16 +14,16 @@ object StructureDescriptionStorage {
     private val file = Paths.get("./data/inner/state_parameters/structure.txt").toFile()
     var description = FileUtils.readFileToString(file, "utf-8")
 
-    fun save() = FileUtils.writeStringToFile(file, description)
+    fun saveToFile() = FileUtils.writeStringToFile(file, description)
 }
 
-object ComputationParameters {
+object ComputationParametersStorage {
 
     private val file = Paths.get("./data/inner/state_parameters/parameters.json").toFile()
     private val content = FileUtils.readFileToString(file, "utf-8")
     private var parameters: JSONObject = JSONObject(content)
 
-    fun save() = parameters.toString(4).writeTo(file)
+    fun saveToFile() = parameters.toString(4).writeTo(file)
 
     var regime: String
         get() = parameters.getString("regime")
@@ -60,10 +60,10 @@ object ComputationParameters {
         }
 
     var rightMediumRefractiveIndexReal: String
-        get() = with(parameters.getJSONObject("left_medium_n")) {
+        get() = with(parameters.getJSONObject("right_medium_n")) {
             getString("real")
         }
-        set(value) = with(parameters.getJSONObject("left_medium_n")) {
+        set(value) = with(parameters.getJSONObject("right_medium_n")) {
             put("real", value)
         }
 
@@ -87,7 +87,7 @@ object ComputationParameters {
             parameters.put("angle", value)
         }
 
-    var computationRangeStart: String
+    var wavelengthStart: String
         get() = with(parameters.getJSONObject("computation_range")) {
             getString("start")
         }
@@ -95,7 +95,7 @@ object ComputationParameters {
             put("start", value)
         }
 
-    var computationRangeEnd: String
+    var wavelengthEnd: String
         get() = with(parameters.getJSONObject("computation_range")) {
             getString("end")
         }
@@ -103,7 +103,7 @@ object ComputationParameters {
             put("end", value)
         }
 
-    var computationRangeStep: String
+    var wavelengthStep: String
         get() = with(parameters.getJSONObject("computation_range")) {
             getString("step")
         }
