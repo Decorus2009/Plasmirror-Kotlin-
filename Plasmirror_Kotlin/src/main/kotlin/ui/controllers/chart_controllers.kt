@@ -228,6 +228,7 @@ class LineChartController {
             }
         }
 
+        // TODO commented
         /* regime == null is used during the first automatic call of rescale() method after initialization */
         fun updateRegimeAndRescale() = with(mainController.globalParametersController.regimeController) {
             /* if another regime */
@@ -241,13 +242,8 @@ class LineChartController {
 
         updateComputedSeries()
         updateYAxisLabel()
-/*
-!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!1
-!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!1
-!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!1
-!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!1
-commented updateRegimeAndRescale
- */
+
+// TODO commented updateRegimeAndRescale !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!1
 //        updateRegimeAndRescale()
         updateLegendListener()
         updateStyleOfAll()
@@ -381,8 +377,8 @@ commented updateRegimeAndRescale
                 upperBound = 1.0
                 tickUnit = 0.1
             } else if (State.regime == PERMITTIVITY) {
-                lowerBound = -5.0
-                upperBound = 20.0
+                lowerBound = -10.0
+                upperBound = 30.0
                 tickUnit = 5.0
                 isAutoRanging = false
             } else if (State.regime == REFRACTIVE_INDEX) {

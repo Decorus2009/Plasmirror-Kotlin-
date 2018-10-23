@@ -1,12 +1,12 @@
 {
-    "right_medium": "GaAs: Gauss-Adachi",
+    "right_medium": "GaAs: Gauss",
     "computation_range": {
-        "start": "600.0",
+        "start": "200",
         "end": "1000",
         "step": "1.0"
     },
-    "regime": "Reflectance",
-    "angle": "0",
+    "regime": "Permittivity",
+    "angle": "30",
     "polarization": "P",
     "left_medium": "Air",
     "left_medium_n": {

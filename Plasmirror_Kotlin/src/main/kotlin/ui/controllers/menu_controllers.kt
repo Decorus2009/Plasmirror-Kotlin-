@@ -57,7 +57,6 @@ class MenuController {
         fitterMenuItem.accelerator = KeyCodeCombination(F, SHORTCUT_DOWN)
 
         importMenuItem.setOnAction {
-            //            val file = initFileChooser(".${separator}data${separator}for_import")
             val file = initFileChooser(".")
                     .showOpenDialog(rootController.mainApp.primaryStage)
             if (file != null) {
@@ -66,7 +65,6 @@ class MenuController {
         }
 
         importMultipleMenuItem.setOnAction {
-            //            val files = initFileChooser(".${separator}data${separator}for_import")
             val files = initFileChooser(".")
                     .showOpenMultipleDialog(rootController.mainApp.primaryStage)
             if (files != null) {
@@ -76,7 +74,6 @@ class MenuController {
 
         exportMenuItem.setOnAction {
             val file = initFileChooser(".").let {
-                //            val file = initFileChooser(".${separator}data${separator}computed_single").let {
                 it.initialFileName = buildExportFileName()
                 it.showSaveDialog(rootController.mainApp.primaryStage)
             }
