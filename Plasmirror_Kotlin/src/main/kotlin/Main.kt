@@ -7,15 +7,20 @@ import javafx.scene.layout.AnchorPane
 import javafx.stage.Stage
 import ui.controllers.RootController
 
+//lateinit var rootCntrllr: RootController
+
+@FXML
+lateinit var rootController: RootController
+
 class MainApp : Application() {
 
-    @FXML private lateinit var rootController: RootController
 
     lateinit var primaryStage: Stage
     private lateinit var rootLayout: AnchorPane
 
     companion object {
-        @JvmStatic fun main(args: Array<String>) {
+        @JvmStatic
+        fun main(args: Array<String>) {
             launch(MainApp::class.java)
         }
     }
@@ -28,6 +33,9 @@ class MainApp : Application() {
             rootLayout = load<AnchorPane>()
             rootController = getController()
             rootController.mainApp = this@MainApp
+
+//            rootCntrllr = rootController
+            println("Roots")
         }
         /**
         TODO Let state initialization be here, before the opening of the app window,

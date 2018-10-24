@@ -1,25 +1,17 @@
 package ui.controllers
 
 import core.*
-import core.State.absorbance
-import core.State.permittivity
-import core.State.polarization
-import core.State.reflectance
-import core.State.refractiveIndex
-import core.State.regime
-import core.State.transmittance
-import core.State.wavelengthStart
-import core.State.wavelengthEnd
+
 import core.Regime.*
-import core.State.wavelength
+
 import javafx.scene.control.*
 import java.io.File
 import java.util.*
 
 fun buildExportFileName() = StringBuilder().apply {
-    append("computation_${regime}_${wavelengthStart}_$wavelengthEnd")
-    if (regime == REFLECTANCE || regime == TRANSMITTANCE || regime == ABSORBANCE) {
-        append("_$polarization-POL_^${String.format(Locale.US, "%04.1f", State.angle)}_deg")
+    append("computation_${State.regime}_${State.wavelengthStart}_${State.wavelengthEnd}")
+    if (State.regime == REFLECTANCE || State.regime == TRANSMITTANCE || State.regime == ABSORBANCE) {
+        append("_${State.polarization}-POL_^${String.format(Locale.US, "%04.1f", State.angle)}_deg")
     }
 }.toString()
 
@@ -27,24 +19,24 @@ fun writeComputedDataTo(file: File) = StringBuilder().apply {
     val computedReal: List<Double>
     var computedImaginary: List<Double> = emptyList()
 
-    computedReal = when (regime) {
-        REFLECTANCE -> reflectance
-        TRANSMITTANCE -> transmittance
-        ABSORBANCE -> absorbance
+    computedReal = when (State.regime) {
+        REFLECTANCE -> State.reflectance
+        TRANSMITTANCE -> State.transmittance
+        ABSORBANCE -> State.absorbance
         PERMITTIVITY -> {
-            computedImaginary = permittivity.map { it.imaginary }.toList()
-            permittivity.map { it.real }.toList()
+            computedImaginary = State.permittivity.map { it.imaginary }.toList()
+            State.permittivity.map { it.real }.toList()
         }
         REFRACTIVE_INDEX -> {
-            computedImaginary = refractiveIndex.map { it.imaginary }.toList()
-            refractiveIndex.map { it.real }.toList()
+            computedImaginary = State.refractiveIndex.map { it.imaginary }.toList()
+            State.refractiveIndex.map { it.real }.toList()
         }
     }
 
     val columnSeparator = "    "
     with(computedReal) {
         indices.forEach { i ->
-            append(String.format(Locale.US, "%.8f", wavelength[i]))
+            append(String.format(Locale.US, "%.8f", State.wavelength[i]))
             append(columnSeparator)
             append(String.format(Locale.US, "%.8f", this[i]))
 

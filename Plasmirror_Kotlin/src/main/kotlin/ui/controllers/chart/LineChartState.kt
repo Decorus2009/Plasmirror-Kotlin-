@@ -4,6 +4,7 @@ import core.Regime
 import core.Regime.*
 import core.State
 import javafx.scene.chart.XYChart
+import rootController
 import ui.controllers.chart.LineChartState.SERIES_TYPE.COMPUTED
 import ui.controllers.chart.LineChartState.SERIES_TYPE.IMPORTED
 import java.io.File
@@ -95,8 +96,7 @@ object LineChartState {
 
         /* if another regime */
 //        with(State.mainController.globalParametersController.regimeController) {
-
-        with(State.mainController.globalParametersController.regimeController) {
+        with(rootController.mainController.globalParametersController.regimeController) {
             if (regimeBefore == null || State.regime != regimeBefore) {
                 /* init default colors */
                 extendedSeriesReal.color = colors[0]!!

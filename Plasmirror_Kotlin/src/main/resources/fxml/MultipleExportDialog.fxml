@@ -58,7 +58,7 @@
                      <children>
                         <AnchorPane prefHeight="31.0" prefWidth="282.0">
                             <children>
-                                <ChoiceBox fx:id="polarizationChoiceBox" layoutX="175.0" prefHeight="31.0" prefWidth="109.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="186.0" AnchorPane.rightAnchor="186.0" AnchorPane.topAnchor="0.0">
+                                <ChoiceBox fx:id="polarizationChoiceBox" value="P" layoutX="175.0" prefHeight="31.0" prefWidth="109.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="186.0" AnchorPane.rightAnchor="186.0" AnchorPane.topAnchor="0.0">
                                     <items>
                                         <FXCollections fx:factory="observableArrayList">
                                             <String fx:value="P" />

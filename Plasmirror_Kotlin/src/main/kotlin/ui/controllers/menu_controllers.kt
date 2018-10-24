@@ -2,10 +2,9 @@ package ui.controllers
 
 
 import MainApp
-import core.ComputationParametersStorage
-import core.Polarization
 import core.State
 import core.validators.MultipleExportDialogParametersValidator
+import core.validators.ValidationResult.FAILURE
 import core.validators.ValidationResult.SUCCESS
 import javafx.fxml.FXML
 import javafx.fxml.FXMLLoader
@@ -22,9 +21,14 @@ import javafx.stage.DirectoryChooser
 import javafx.stage.FileChooser
 import javafx.stage.Stage
 import org.apache.commons.io.FileUtils
+import rootController
 import java.io.File
 import java.io.File.separator
 import java.nio.file.Paths
+import javafx.scene.control.Alert.AlertType
+import javafx.scene.control.Alert
+
+
 
 
 class MenuController {
@@ -122,7 +126,8 @@ class MenuController {
 
 class MultipleExportDialogController {
 
-    lateinit var mainController: MainController
+//    lateinit var mainController: MainController
+//    lateinit var rootController: RootController
 
     @FXML
     private lateinit var polarizationChoiceBox: ChoiceBox<String>
@@ -138,14 +143,14 @@ class MultipleExportDialogController {
     private lateinit var directoryButton: Button
     @FXML
     private lateinit var exportButton: Button
-    @FXML
-    private lateinit var statusLabel: Label
+//    @FXML
+//    private lateinit var statusLabel: Label
     @FXML
     private lateinit var chosenDirectoryLabel: Label
 
-    var angleFrom: Double = 0.0
-    var angleTo: Double = 0.0
-    var angleStep: Double = 0.0
+//    var angleFrom: Double = 0.0
+//    var angleTo: Double = 0.0
+//    var angleStep: Double = 0.0
 
     var chosenDirectory: File? = null
 
@@ -153,25 +158,15 @@ class MultipleExportDialogController {
     fun initialize() {
         println("multiple export dialog controller init")
 
-//        /* the only way to call another controllers of GUI is using already initialized State.mainController */
-//        State.mainController.multipleExportDialogController = this
-        mainController.multipleExportDialogController = this
+        with(rootController.mainController.globalParametersController.lightParametersController) {
+            this@MultipleExportDialogController.polarizationChoiceBox.selectionModel.selectedItemProperty()
+                    .addListener { _, _, newValue ->
+                        polarizationChoiceBox.value = newValue
+                    }
 
-        with(polarizationChoiceBox) {
-            value = mainController.globalParametersController.lightParametersController.polarizationChoiceBox.value
-            selectionModel.selectedItemProperty().addListener { _, _, newValue ->
-                ComputationParametersStorage.polarization = newValue
-                State.polarization = Polarization.valueOf(ComputationParametersStorage.polarization)
-
-                mainController.globalParametersController.lightParametersController.polarizationChoiceBox.value = value
+            angleFromTextField.textProperty().addListener { _, _, newValue ->
+                angleTextField.text = newValue
             }
-
-
-//            value = State.polarization.toString()
-//            selectionModel.selectedItemProperty().addListener { _, _, _ ->
-//                State.polarization = Polarization.valueOf(value)
-//                State.mainController.globalParametersController.lightParametersController.polarizationChoiceBox.value = value
-//            }
         }
 
         directoryButton.setOnMouseClicked {
@@ -187,56 +182,45 @@ class MultipleExportDialogController {
             chosenDirectory?.let { chosenDirectoryLabel.text = it.canonicalPath }
         }
 
-
-        /**
-         * TODO !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-         * Установить соответствующие поля для поляризации и угла в главном окне в поле light parameters из MultipleExportDialog
-         * и вызывать State.init(), который будет запускать валидацию. Тут ничего не надо проверять
-         */
-
-
-
-
-
-
         exportButton.setOnMouseClicked {
             with(MultipleExportDialogParametersValidator) {
-                if (validateChosenDirectory() == SUCCESS) {
-                    if (validateAngles() == SUCCESS) {
-                        /**
-                        Computation process runs through the setting fields in GUI (angle, polarization, etc.).
-                        After that the validation takes place parsing these GUI fields and setting actual inner
-                        parameters in program (State.angle, State.polarization, etc.).
-                        To be able to compute and export data at multiple angles,
-                        the corresponding GUI text field is init each time and validated and the computation process is performed.
-                        In the end each field must get its initial value.
-                         */
-                        val initialAngle: String = State.mainController.globalParametersController
-                                .lightParametersController.angleTextField.text
-                        val initialPolarization = State.mainController.globalParametersController
-                                .lightParametersController.polarizationChoiceBox.value
+                if (validateChosenDirectory(chosenDirectory) == FAILURE) {
+                    return@setOnMouseClicked
+                }
 
-                        var currentAngle = angleFrom
-                        while (currentAngle < 90.0 && currentAngle <= angleTo) {
-                            with(State) {
-                                /* angleTextField.text will be validated before computation */
-                                mainController.globalParametersController.lightParametersController
-                                        .angleTextField.text = currentAngle.toString()
-                                init()
-                                compute()
-                            }
-                            writeComputedDataTo(File("${chosenDirectory!!.canonicalPath}$separator${buildExportFileName()}.txt"))
-                            currentAngle += angleStep
-                        }
-                        with(State.mainController.globalParametersController.lightParametersController) {
-                            angleTextField.text = initialAngle
-                            polarizationChoiceBox.value = initialPolarization
-                        }
-                    }
-                    statusLabel.text = "Exported"
+                if (validateAngles(angleFromTextField.text, angleToTextField.text, angleStepTextField.text) == FAILURE) {
+                    return@setOnMouseClicked
                 }
             }
+
+            with(rootController.mainController.globalParametersController.lightParametersController) {
+                polarizationChoiceBox.value = this@MultipleExportDialogController.polarizationChoiceBox.value
+
+                var currentAngle = angleFromTextField.text.toDouble()
+                val angleTo = angleToTextField.text.toDouble()
+                val angleStep = angleStepTextField.text.toDouble()
+
+                while (currentAngle < 90.0 && currentAngle <= angleTo) {
+                    angleTextField.text = currentAngle.toString()
+                    with(State) {
+                        if (init() == SUCCESS) {
+                            compute()
+                            println("${angleTextField.text} ${State.angle}")
+                        }
+                    }
+                    writeComputedDataTo(File("${chosenDirectory!!.canonicalPath}$separator${buildExportFileName()}.txt"))
+                    currentAngle += angleStep
+                }
+            }
+            info(contentText = "Export complete")
         }
+    }
+
+    private fun info(title: String = "Information", contentText: String) = with(Alert(AlertType.INFORMATION)) {
+        this.title = title
+        this.headerText = null
+        this.contentText = contentText
+        showAndWait()
     }
 }
 

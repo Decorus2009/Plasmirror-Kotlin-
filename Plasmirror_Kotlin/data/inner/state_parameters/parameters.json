@@ -3,11 +3,11 @@
     "computation_range": {
         "start": "400",
         "end": "1000",
-        "step": "1"
+        "step": "10"
     },
     "regime": "Reflectance",
-    "angle": "0",
-    "polarization": "S",
+    "angle": "85.0",
+    "polarization": "P",
     "left_medium": "Air",
     "left_medium_n": {
         "imaginary": "0.0",

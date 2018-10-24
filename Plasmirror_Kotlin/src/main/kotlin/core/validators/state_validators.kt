@@ -17,7 +17,7 @@ import kotlin.Double.Companion.POSITIVE_INFINITY
 
 object StateValidator {
     fun initState() = when {
-        OpticalParametersValidator.initOpticalParametersUsing() == SUCCESS &&
+        OpticalParametersValidator.initOpticalParameters() == SUCCESS &&
                 StructureValidator.initStructure() == SUCCESS -> SUCCESS
         else -> FAILURE
     }
@@ -26,7 +26,7 @@ object StateValidator {
 
 private object OpticalParametersValidator {
 
-    fun initOpticalParametersUsing() = when {
+    fun initOpticalParameters() = when {
         initRegime() == SUCCESS &&
                 initExternalMediaLayers() == SUCCESS &&
                 initPolarizationAndAngle() == SUCCESS &&

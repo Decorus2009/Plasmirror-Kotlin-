@@ -3,13 +3,15 @@ package core
 import core.Regime.*
 import core.layers.Layer
 import core.validators.StateValidator
+import core.validators.ValidationResult
 import core.validators.ValidationResult.FAILURE
 import core.validators.ValidationResult.SUCCESS
+import rootController
 import ui.controllers.MainController
 
 
 object State {
-    lateinit var mainController: MainController
+//    lateinit var mainController: MainController
 
     var wavelengthStart: Double = 600.0
     var wavelengthEnd: Double = 1000.0
@@ -34,15 +36,27 @@ object State {
     val permittivity = mutableListOf<Complex_>()
     val refractiveIndex = mutableListOf<Complex_>()
 
-
-    fun init() = when (StateValidator.initState()) {
-        SUCCESS -> {
-            clear()
-            buildMirror()
-            SUCCESS
+    fun init(): ValidationResult {
+        saveToStorages()
+        return when (StateValidator.initState()) {
+            SUCCESS -> {
+                clear()
+                buildMirror()
+                SUCCESS
+            }
+            FAILURE -> FAILURE
         }
-        FAILURE -> FAILURE
     }
+
+//    fun init() = when (StateValidator.initState()) {
+//        SUCCESS -> {
+//            rootController.mainController.saveToStorages()
+//            clear()
+//            buildMirror()
+//            SUCCESS
+//        }
+//        FAILURE -> FAILURE
+//    }
 
     fun compute() = (0 until wavelength.size).forEach {
         wavelengthCurrent = wavelength[it]
@@ -90,4 +104,6 @@ object State {
     private fun buildMirror() {
         mirror = Mirror(structure, leftMediumLayer, rightMediumLayer)
     }
+
+    private fun saveToStorages() = rootController.mainController.saveToStorages()
 }

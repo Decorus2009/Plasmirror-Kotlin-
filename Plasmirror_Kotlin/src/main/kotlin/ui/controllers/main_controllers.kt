@@ -70,12 +70,12 @@ class MainController {
         yAxisRangeController.mainController = this
         seriesManagerController.mainController = this
 
-        State.mainController = this
+//        State.mainController = this
 
-        Platform.runLater {
-            // a bit dirty but by the time of this call mainController should be already initialized
-            multipleExportDialogController.mainController = this
-        }
+//        Platform.runLater {
+//            // a bit dirty but by the time of this call mainController should be already initialized
+//            multipleExportDialogController.mainController = this
+//        }
 
 // TODO commented
 /*        with(State) {
@@ -116,7 +116,7 @@ class ControlsController {
                         .put(KeyCodeCombination(KeyCode.SPACE, KeyCombination.SHORTCUT_DOWN), Runnable(this::fire))
             }
             setOnAction {
-                mainController.saveToStorages()
+//                mainController.saveToStorages()
 //                mainController.lineChartController.updateLineChart()
 
                 if (State.init() == SUCCESS) {
