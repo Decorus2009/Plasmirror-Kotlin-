@@ -1,7 +1,7 @@
 package core.layers
 
 import core.*
-import core.optics.AlGaAsPermittivity.epsAlGaAs
+import core.optics.AlGaAsPermittivity.permittivityAlGaAs
 import core.optics.AlGaAsPermittivity.toRefractiveIndex
 import core.Complex_.Companion.I
 import core.Complex_.Companion.ONE
@@ -17,7 +17,7 @@ import java.lang.Math.pow
 
 interface MetallicClustersInAlGaAs : AlGaAsLayer {
     val epsMatrix
-        get() = epsAlGaAs(State.wavelengthCurrent, k, x, epsType)
+        get() = permittivityAlGaAs(State.wavelengthCurrent, k, x, epsType)
     val epsMetal: Complex_
 }
 

@@ -13,7 +13,7 @@ enum class Polarization { S, P }
 
 enum class Regime { REFLECTANCE, TRANSMITTANCE, ABSORBANCE, PERMITTIVITY, REFRACTIVE_INDEX }
 
-enum class EpsType { ADACHI, GAUSS, GAUSS_ADACHI }
+enum class EpsType { ADACHI, GAUSS, GAUSS_WITH_ZERO_IM_PERMITTIVITY_BELOW_E0, GAUSS_ADACHI }
 
 
 fun toEnergy(wavelength: Double) = 1239.8 / wavelength

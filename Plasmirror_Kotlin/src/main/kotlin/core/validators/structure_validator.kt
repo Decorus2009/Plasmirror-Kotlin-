@@ -8,7 +8,7 @@ import core.optics.Regime
  * and builds StructureDescription using LayerDescription and BlockDescription
  */
 object StructureValidator {
-    private var parameterNumbers = mapOf(
+    private var numerOfParameters = mapOf(
             "1-1" to 2, "1-2" to 2, "1-3" to 2,
             "2-1" to 4, "2-2" to 4, "2-3" to 4,
             "3" to 3,
@@ -154,9 +154,9 @@ object StructureValidator {
          */
         filterNot { it[0].startsWith("x") }.forEach {
             val type = it[0]
-            if (type !in parameterNumbers.keys || parameterNumbers[type] != it.size) {
+            if (type !in numerOfParameters.keys || numerOfParameters[type] != it.size) {
                 println(type)
-                println(parameterNumbers[type])
+                println(numerOfParameters[type])
                 println(it)
                 throw StructureDescriptionException("Invalid layer type or incorrect number of parameters for a layer")
             }
