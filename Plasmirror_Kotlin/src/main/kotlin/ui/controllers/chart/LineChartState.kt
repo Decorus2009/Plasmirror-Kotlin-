@@ -1,7 +1,6 @@
 package ui.controllers.chart
 
-import core.Regime
-import core.Regime.*
+import core.optics.Regime.*
 import core.State
 import javafx.scene.chart.XYChart
 import rootController

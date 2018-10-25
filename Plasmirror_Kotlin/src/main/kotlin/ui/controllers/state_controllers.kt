@@ -1,7 +1,7 @@
 package ui.controllers
 
 import core.ComputationParametersStorage
-import core.Regime
+import core.optics.Regime
 import core.StructureDescriptionStorage
 import javafx.fxml.FXML
 import javafx.scene.control.ChoiceBox
@@ -21,8 +21,6 @@ class GlobalParametersController {
     @FXML
     lateinit var regimeController: RegimeController
     @FXML
-    lateinit var temperatureController: TemperatureController
-    @FXML
     lateinit var mediumParametersController: MediumParametersController
     @FXML
     lateinit var lightParametersController: LightParametersController
@@ -34,7 +32,6 @@ class GlobalParametersController {
         println("Global parameters controller init")
 
         regimeController.globalParametersController = this
-        temperatureController.globalParametersController = this
         computationRangeController.globalParametersController = this
     }
 
@@ -93,24 +90,24 @@ class RegimeController {
     }
 }
 
-class TemperatureController {
-
-    lateinit var globalParametersController: GlobalParametersController
-
-    @FXML
-    private lateinit var T_TextField: TextField
-
-//    private val path = Paths.get(".${File.separator}data${File.separator}inner${File.separator}state_parameters${File.separator}temperature.txt")
-
-    @FXML
-    fun initialize() {
-        println("Temperature controller init")
-        /* init initial values */
-        T_TextField.isDisable = true
-
-        /* TODO read from file */
-    }
-}
+//class TemperatureController {
+//
+//    lateinit var globalParametersController: GlobalParametersController
+//
+//    @FXML
+//    private lateinit var T_TextField: TextField
+//
+////    private val path = Paths.get(".${File.separator}data${File.separator}inner${File.separator}state_parameters${File.separator}temperature.txt")
+//
+//    @FXML
+//    fun initialize() {
+//        println("Temperature controller init")
+//        /* init initial values */
+//        T_TextField.isDisable = true
+//
+//        /* TODO read from file */
+//    }
+//}
 
 class MediumParametersController {
 
@@ -379,7 +376,7 @@ class StructureDescriptionController {
      * Code in this method is used using Java style as in the example (to be able to understand what's going on here)
      */
     private fun computeHighlighting(text: String): StyleSpans<Collection<String>> {
-        val COMMENT_PATTERN = "//[^\n]*" + "|" + "/\\*(.|\\REFLECTANCE)*?\\*/"
+        val COMMENT_PATTERN = "//[^\n]*" + "|" + "/\\*(.|\\R)*?\\*/"
         val NAME_PATTERN = "\\w+\\s*=\\s*+"
         val REPEAT_PATTERN = "\\s*[xX]\\s*[0-9]+\\s*"
         val PATTERN = Pattern.compile("(?<COMMENT>$COMMENT_PATTERN)|(?<NAME>$NAME_PATTERN)|(?<REPEAT>$REPEAT_PATTERN)")

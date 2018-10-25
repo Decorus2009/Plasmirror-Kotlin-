@@ -1,7 +1,10 @@
 package core.layers
 
 import core.*
-import core.Polarization.P
+import core.optics.EpsType
+import core.optics.Polarization.P
+import core.optics.cosThetaInLayer
+import core.optics.toEnergy
 import org.apache.commons.math3.complex.Complex.I
 import java.lang.Math.PI
 

@@ -1,13 +1,14 @@
 package core
 
-import core.Regime.*
+import core.optics.Regime.*
 import core.layers.Layer
+import core.optics.Polarization
+import core.optics.Regime
 import core.validators.StateValidator
 import core.validators.ValidationResult
 import core.validators.ValidationResult.FAILURE
 import core.validators.ValidationResult.SUCCESS
 import rootController
-import ui.controllers.MainController
 
 
 object State {

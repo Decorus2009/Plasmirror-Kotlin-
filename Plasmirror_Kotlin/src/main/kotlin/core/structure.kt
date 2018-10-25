@@ -1,6 +1,6 @@
 package core
 
-import core.EpsType.*
+import core.optics.EpsType.*
 import core.layers.*
 
 

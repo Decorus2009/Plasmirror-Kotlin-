@@ -1,12 +1,16 @@
 package core.layers
 
 import core.*
-import core.AlGaAsPermittivity.epsAlGaAs
-import core.AlGaAsPermittivity.eps_to_n
+import core.optics.AlGaAsPermittivity.epsAlGaAs
+import core.optics.AlGaAsPermittivity.eps_to_n
 import core.Complex_.Companion.I
 import core.Complex_.Companion.ONE
-import core.Polarization.P
-import core.Polarization.S
+import core.optics.EpsType
+import core.optics.Polarization.P
+import core.optics.Polarization.S
+import core.optics.SbTabulatedPermittivity
+import core.optics.cosThetaInLayer
+import core.optics.toEnergy
 import java.lang.Math.PI
 import java.lang.Math.pow
 

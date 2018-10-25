@@ -39,11 +39,7 @@
                                                 <Label alignment="CENTER" layoutX="61.0" layoutY="15.0" prefHeight="51.0" prefWidth="157.0" text="Regime" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
                                             </children>
                                         </AnchorPane>
-                                        <AnchorPane GridPane.columnIndex="1">
-                                            <children>
-                                                <Label alignment="CENTER" layoutX="66.0" layoutY="15.0" prefHeight="51.0" prefWidth="167.0" text="Temperature, K" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
-                                            </children>
-                                        </AnchorPane>
+                                        <AnchorPane GridPane.columnIndex="1" />
                                     </children>
                                 </GridPane>
                             </children>
@@ -62,11 +58,6 @@
                                         <AnchorPane prefHeight="200.0" prefWidth="126.0">
                                             <children>
                                                 <fx:include fx:id="regime" source="Regime.fxml" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
-                                            </children>
-                                        </AnchorPane>
-                                        <AnchorPane GridPane.columnIndex="1">
-                                            <children>
-                                                <fx:include fx:id="temperature" source="Temperature.fxml" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
                                             </children>
                                         </AnchorPane>
                                     </children>

@@ -3,10 +3,10 @@ package core.validators
 import core.Complex_
 import core.Complex_.Companion.ONE
 import core.ComputationParametersStorage
-import core.EpsType.*
-import core.Medium.*
-import core.Polarization
-import core.Regime.*
+import core.optics.EpsType.*
+import core.optics.Medium.*
+import core.optics.Polarization
+import core.optics.Regime.*
 import core.State
 import core.layers.ConstRefractiveIndexLayer
 import core.layers.GaAs

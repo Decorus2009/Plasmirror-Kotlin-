@@ -1,9 +1,11 @@
 package core
 
-import core.Polarization.P
-import core.Polarization.S
+import core.optics.Polarization.P
+import core.optics.Polarization.S
 import core.layers.ConstRefractiveIndexLayer
 import core.layers.Layer
+import core.optics.cosThetaInLayer
+import core.optics.cosThetaIncident
 import org.apache.commons.math3.complex.Complex.NaN
 import kotlin.Double.Companion.POSITIVE_INFINITY
 

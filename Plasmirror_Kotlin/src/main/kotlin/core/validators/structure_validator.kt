@@ -1,6 +1,7 @@
 package core.validators
 
 import core.*
+import core.optics.Regime
 
 /**
  * StructureValidator analyzes structure file as a String

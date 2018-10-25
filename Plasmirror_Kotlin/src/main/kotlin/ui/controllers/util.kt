@@ -2,7 +2,7 @@ package ui.controllers
 
 import core.*
 
-import core.Regime.*
+import core.optics.Regime.*
 
 import javafx.scene.control.*
 import java.io.File

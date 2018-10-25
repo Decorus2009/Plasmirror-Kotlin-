@@ -1,10 +1,10 @@
 package core.layers
 
-import core.AlGaAsPermittivity.nAlGaAs
+import core.optics.AlGaAsPermittivity.nAlGaAs
 import core.Complex_
-import core.EpsType
+import core.optics.EpsType
 import core.Matrix_
-import core.cosThetaInLayer
+import core.optics.cosThetaInLayer
 import org.apache.commons.math3.complex.Complex
 import java.lang.Math.PI
 import core.State

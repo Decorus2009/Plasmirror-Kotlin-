@@ -1,7 +1,7 @@
 package ui.controllers.chart
 
 import com.sun.javafx.charts.Legend
-import core.Regime.*
+import core.optics.Regime.*
 import core.State
 import javafx.application.Platform
 import javafx.event.EventHandler

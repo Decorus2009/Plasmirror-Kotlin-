@@ -1,8 +1,5 @@
 package core.validators
 
-import core.ComputationParametersStorage
-import core.Polarization
-import core.State
 import core.validators.ValidationResult.FAILURE
 import core.validators.ValidationResult.SUCCESS
 import java.io.File
