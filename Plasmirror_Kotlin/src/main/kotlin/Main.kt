@@ -48,7 +48,7 @@ class MainApp : Application() {
         // TODO commented
 //        State.init()
         with(Scene(rootLayout)) {
-            stylesheets.add("css/chart.css")
+            stylesheets.add("css/all.css")
             primaryStage.scene = this
             primaryStage.show()
         }

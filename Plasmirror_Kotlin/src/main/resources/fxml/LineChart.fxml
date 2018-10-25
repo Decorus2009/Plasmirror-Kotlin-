@@ -10,7 +10,7 @@
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.65" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ui.controllers.chart.LineChartController">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ui.controllers.chart.LineChartController">
     <children>
             <StackPane prefHeight="95.0" prefWidth="158.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                 <children>
@@ -20,10 +20,16 @@
                                   <children>
                                       <LineChart fx:id="lineChart" alternativeColumnFillVisible="false" alternativeRowFillVisible="false" animated="true" horizontalGridLinesVisible="true" legendVisible="false" prefHeight="400.0" prefWidth="600.0" style="-fx-pref-width: 10;">
                                           <xAxis>
-                                              <NumberAxis autoRanging="false" label="X" lowerBound="200.0" minorTickCount="4" prefWidth="524.0" tickUnit="100.0" upperBound="1000.0" fx:id="xAxis" />
+                                              <NumberAxis autoRanging="false" label="X" lowerBound="600.0" minorTickCount="4" prefWidth="524.0" tickUnit="100.0" upperBound="1000.0" fx:id="xAxis">
+                                 <tickLabelFont>
+                                    <Font size="13.0" />
+                                 </tickLabelFont></NumberAxis>
                                           </xAxis>
                                           <yAxis>
-                                              <NumberAxis fx:id="yAxis" autoRanging="false" label="Y" minorTickCount="2" tickUnit="0.1" upperBound="1.0" />
+                                              <NumberAxis fx:id="yAxis" autoRanging="false" label="Y" minorTickCount="2" tickUnit="0.1" upperBound="1.0">
+                                 <tickLabelFont>
+                                    <Font size="13.0" />
+                                 </tickLabelFont></NumberAxis>
                                           </yAxis>
                                       </LineChart>
                                   </children>

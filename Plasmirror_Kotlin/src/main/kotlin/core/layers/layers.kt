@@ -1,6 +1,6 @@
 package core.layers
 
-import core.optics.AlGaAsPermittivity.refractiveIndexAlGaAs
+import core.optics.AlGaAsPermittivity.AlGaAsRefractiveIndex
 import core.Complex_
 import core.optics.EpsType
 import core.Matrix_
@@ -43,7 +43,7 @@ interface GaAsLayer : Layer {
     val epsType: EpsType
 
     override val n: Complex_
-        get() = refractiveIndexAlGaAs(State.wavelengthCurrent, 0.0, 0.0, epsType)
+        get() = AlGaAsRefractiveIndex(State.wavelengthCurrent, 0.0, 0.0, epsType)
 
     override fun parameters() = listOf(d)
 }
@@ -54,7 +54,7 @@ interface AlGaAsLayer : GaAsLayer {
     val x: Double
 
     override val n: Complex_
-        get() = refractiveIndexAlGaAs(State.wavelengthCurrent, k, x, epsType)
+        get() = AlGaAsRefractiveIndex(State.wavelengthCurrent, k, x, epsType)
 
     override fun parameters() = listOf(d, k, x)
 }

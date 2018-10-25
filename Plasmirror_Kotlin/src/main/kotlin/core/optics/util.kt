@@ -24,20 +24,13 @@ fun cosThetaIncident() = Complex_(cos(angle * PI / 180.0))
  *  Snell law
  */
 fun cosThetaInLayer(n2: Complex_): Complex_ {
-
-
-    /**
-     * !!!!!!!!!!!!!!!!!!!!!!!!!!
-     * State.mirror is not initialized yet
-     */
-    //    val n1 = State.mirror.leftMediumLayer.n
     val n1 = State.leftMediumLayer.n
 
     val cos1 = cosThetaIncident()
-    val sin1_sq = ONE - (cos1 * cos1)
-    val sin2_sq = sin1_sq * ((n1 / n2).pow(2.0))
+    val sin1Sq = ONE - (cos1 * cos1)
+    val sin2Sq = sin1Sq * ((n1 / n2).pow(2.0))
 
-    return Complex_((ONE - sin2_sq).sqrt())
+    return Complex_((ONE - sin2Sq).sqrt())
 }
 
 fun Double.round(): Double {

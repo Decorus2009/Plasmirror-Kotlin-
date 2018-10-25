@@ -105,11 +105,11 @@ class LineChartController {
 
         fun updateYAxisLabel() {
             yAxis.label = when (State.regime) {
-                REFLECTANCE -> "Reflection"
-                TRANSMITTANCE -> "Transmission"
-                ABSORBANCE -> "Absorption"
+                REFLECTANCE -> "Reflectance"
+                TRANSMITTANCE -> "Transmittance"
+                ABSORBANCE -> "Absorbance"
                 PERMITTIVITY -> "Permittivity"
-                REFRACTIVE_INDEX -> "Refractive index"
+                REFRACTIVE_INDEX -> "Refractive Index"
             }
         }
 
@@ -161,7 +161,7 @@ class LineChartController {
          * sometimes when pressing compute button a few times in sequence, 'chart-legend-item-symbol' color is init to default.
          * a bug?
          */
-        Platform.runLater({
+        Platform.runLater {
             lineChart.lookupAll(".chart-legend-item-symbol").forEach { node ->
                 node.styleClass.filter { it.startsWith("series") }.forEach {
                     val i = it.substring("series".length).toInt()
@@ -169,7 +169,7 @@ class LineChartController {
                     node.style = "-fx-background-color: $color;"
                 }
             }
-        })
+        }
     }
 
     fun updateStyleOfAll() = allExtendedSeries().forEach { updateStyleOf(it) }

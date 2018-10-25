@@ -12,34 +12,30 @@ import java.lang.Math.*
  */
 object AlGaAsPermittivity {
 
-    fun permittivityAlGaAs(wavelength: Double, k: Double, x: Double, epsType: EpsType) =
-            eps_and_n_AlGaAs(wavelength, k, x, epsType).first
+    fun AlGaAsPermittivity(wavelength: Double, k: Double, x: Double, epsType: EpsType) =
+            permittivityRefractiveIndex(wavelength, k, x, epsType).first
 
-    fun refractiveIndexAlGaAs(wavelength: Double, k: Double, x: Double, epsType: EpsType) =
-            eps_and_n_AlGaAs(wavelength, k, x, epsType).second
+    fun AlGaAsRefractiveIndex(wavelength: Double, k: Double, x: Double, epsType: EpsType) =
+            permittivityRefractiveIndex(wavelength, k, x, epsType).second
 
-    /**
-     * If w < intersection energy, returns eps and n computed by the Adachi'85 approximation
-     * (with imaginary part computed by the Gauss approximation)
-     * Else returns permittivity computed using the Gauss approximation
-     */
-    private fun eps_and_n_AlGaAs(wavelength: Double, k: Double, x: Double, epsType: EpsType): Pair<Complex_, Complex_> {
+//    /**
+//     * If w < intersection energy, returns eps and n computed by the Adachi'85 approximation
+//     * (with imaginary part computed by the Gauss approximation)
+//     * Else returns permittivity computed using the Gauss approximation
+//     */
+    private fun permittivityRefractiveIndex(wavelength: Double, k: Double, x: Double, epsType: EpsType): Pair<Complex_, Complex_> {
         val w = toEnergy(wavelength)
-        val eps = when (epsType) {
-            ADACHI -> epsAdachi(w, x)
+        val permittivity = when (epsType) {
+            ADACHI -> with(epsAdachi(w, x)) { Complex_(real, real * k) }
             GAUSS -> epsGauss(w, x)
-            GAUSS_WITH_ZERO_IM_PERMITTIVITY_BELOW_E0 -> epsGaussWithZeroImEpsBelowE0(w, x)
+            GAUSS_WITH_ZERO_IM_PERMITTIVITY_BELOW_E0 -> with(epsGauss(w, x)) {
+//                Complex_(real, if (w >= E0(x)) imaginary else 0.0)
+                Complex_(real, if (w >= E0(x)) imaginary else real * k)
+            }
             GAUSS_ADACHI -> epsGaussAdachi(w, x)
         }
-        val n = when (epsType) {
-            ADACHI -> {
-                with(toRefractiveIndex(eps)) {
-                    Complex_(real, real * k)
-                }
-            }
-            else -> toRefractiveIndex(eps)
-        }
-        return eps to n
+
+        return permittivity to refractiveIndex(permittivity)
     }
 
     /**
@@ -68,15 +64,6 @@ object AlGaAsPermittivity {
      * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
      */
     private fun epsGauss(w: Double, x: Double) = epsInf(x) + eps1(w, x) + eps2(w, x) + eps3(w, x) + eps4(w, x)
-    /** * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-
-    /**
-     * Permittivity (Gauss with Im(eps) = 0 below E0)
-     * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
-     */
-    private fun epsGaussWithZeroImEpsBelowE0(w: Double, x: Double) = with(epsGauss(w, x)) {
-        Complex_(real, if (w >= E0(x)) imaginary else 0.0)
-    }
     /** * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
     /**
@@ -128,9 +115,9 @@ object AlGaAsPermittivity {
             w_ = w_.round() // 12.000000000001 -> 12.0 && 13.99999999999 -> 14.0
             w.add(w_)
             epsGauss.add(epsGauss(w_, x))
-            nGauss.add(toRefractiveIndex(epsGauss(w_, x)))
+            nGauss.add(refractiveIndex(epsGauss(w_, x)))
             epsAdachi.add(epsAdachi(w_, x))
-            nAdachi.add(toRefractiveIndex(epsAdachi(w_, x)))
+            nAdachi.add(refractiveIndex(epsAdachi(w_, x)))
             w_ += step
         }
         /**
@@ -149,7 +136,7 @@ object AlGaAsPermittivity {
                 .filter { it.w > 1.4 && it.w < upperBound }.minBy { it.diff }!!.w)
     }
 
-    fun toRefractiveIndex(eps: Complex_): Complex_ {
+    fun refractiveIndex(eps: Complex_): Complex_ {
         val n = sqrt((eps.abs() + eps.real) / 2.0)
         val k = sqrt((eps.abs() - eps.real) / 2.0)
         return Complex_(n, k)

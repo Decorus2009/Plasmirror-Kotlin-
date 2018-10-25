@@ -1,23 +1,18 @@
 package core.layers
 
-import core.*
-import core.optics.AlGaAsPermittivity.permittivityAlGaAs
-import core.optics.AlGaAsPermittivity.toRefractiveIndex
-import core.Complex_.Companion.I
+import core.Complex_
 import core.Complex_.Companion.ONE
+import core.Matrix_
+import core.State
+import core.optics.AlGaAsPermittivity.AlGaAsPermittivity
+import core.optics.AlGaAsPermittivity.refractiveIndex
 import core.optics.EpsType
-import core.optics.Polarization.P
-import core.optics.Polarization.S
-import core.optics.SbTabulatedPermittivity
-import core.optics.cosThetaInLayer
-import core.optics.toEnergy
-import java.lang.Math.PI
-import java.lang.Math.pow
+import core.optics.MetallicClusters
 
 
 interface MetallicClustersInAlGaAs : AlGaAsLayer {
     val epsMatrix
-        get() = permittivityAlGaAs(State.wavelengthCurrent, k, x, epsType)
+        get() = AlGaAsPermittivity(State.wavelengthCurrent, k, x, epsType)
     val epsMetal: Complex_
 }
 
@@ -28,44 +23,24 @@ interface DrudeMetalClustersInAlGaAs : MetallicClustersInAlGaAs {
     val epsInf: Double
 
     override val epsMetal: Complex_
-        get() {
-//            println("calling epsMetal property in interface DrudeMetalClustersInAlGaAs")
-//            println("***********")
-//            println(wPlasma)
-//            println(gammaPlasma)
-//            println(epsInf)
-
-            val w = Complex_(toEnergy(State.wavelengthCurrent)) // eV
-            val numerator = Complex_(wPlasma * wPlasma)
-            val denominator = w * (w + Complex_(0.0, gammaPlasma))
-            return Complex_(epsInf) - (numerator / denominator)
-        }
+        get() = MetallicClusters.Permittivity.Drude.get(State.wavelengthCurrent, wPlasma, gammaPlasma, epsInf)
 }
 
 
 interface SbClustersInAlGaAs : MetallicClustersInAlGaAs {
-
     override val epsMetal: Complex_
-        get() = SbTabulatedPermittivity.get(State.wavelengthCurrent)
+        get() = MetallicClusters.Permittivity.SbTabulated.get(State.wavelengthCurrent)
 }
 
 
-abstract class PerssonModelForMetallicClustersInAlGaAs(d: Double, k: Double, x: Double,
-                                                       val latticeFactor: Double,
-                                                       epsType: EpsType) :
+abstract class TwoDimensionalLayerOfMetallicClustersInAlGaAs(d: Double, k: Double, x: Double,
+                                                             val latticeFactor: Double,
+                                                             epsType: EpsType) :
         MetallicClustersInAlGaAs, AlGaAs(d, k, x, epsType) {
-
-//    init {
-//        println("Constructing abstract class PerssonModelForMetallicClustersInAlGaAs \n" +
-//                "with d = $d, k = $k, x = $x, latticeFactor = $latticeFactor, epsType = $epsType")
-//    }
 
     override val matrix: Matrix_
         get() = Matrix_().apply {
-
-//            println("Matrix property in final class PerssonModelForMetallicClustersInAlGaAs")
-
-            with(rt()) {
+            with(MetallicClusters.TwoDimensionalLayer.rt(State.wavelengthCurrent, d, latticeFactor, epsMatrix, epsMetal)) {
                 val r = first
                 val t = second
                 this@apply[0, 0] = (t * t - r * r) / t
@@ -75,78 +50,24 @@ abstract class PerssonModelForMetallicClustersInAlGaAs(d: Double, k: Double, x: 
             }
         }
 
-    private val R = d / 2.0
-    private val a = latticeFactor * R
-    private val U0 = 9.03 / (a * a * a)
-    // here cos and sin are used with getter due to 'n' is used exactly in getter. Otherwise it is not initialized yet
-    private val cos
-        get() = cosThetaInLayer(n)
-    private val sin
-        get() = Complex_((ONE - cos * cos).sqrt())
-
-
-    private fun rt(): Pair<Complex_, Complex_> {
-        val theta = Complex_(cos.acos())
-        val (alphaParallel, alphaOrthogonal) = alphaParallelOrthogonal()
-        val (A, B) = AB()
-
-        val common1 = cos * cos * alphaParallel
-        val common2 = sin * sin * alphaOrthogonal
-        val common3 = ONE + B * (alphaOrthogonal - alphaParallel)
-        val common4 = A * B * alphaParallel * alphaOrthogonal * ((theta * I * 2.0).exp())
-
-        val rNumerator = when (State.polarization) {
-            S -> -A * common1
-            P -> -A * (common1 - common2) - common4
-        }
-        val tNumerator = when (State.polarization) {
-            S -> ONE - B * alphaParallel
-            P -> common3
-        }
-        val commonDenominator = when (State.polarization) {
-            S -> ONE - B * alphaParallel - A * common1
-            P -> common3 - A * (common1 + common2) - common4
-        }
-
-        return rNumerator / commonDenominator to tNumerator / commonDenominator
-    }
-
-    private fun alphaParallelOrthogonal() = with(alpha()) {
-        this / (ONE - this * 0.5 * U0) to this / (ONE + this * U0)
-    }
-
-    private fun alpha(): Complex_ = (epsMetal - epsMatrix) / (epsMetal + epsMatrix * 2.0) * pow(R, 3.0)
-//            .also {
-//        println("Calling alpha property in abstract class PerssonModelForMetallicClustersInAlGaAs using epsMetal property")
-//    }
-
-    private fun AB() = with(pow(2 * PI / a, 2.0) / State.wavelengthCurrent) {
-        I / cos * this to sin * this
-    }
 }
 
 
-class PerssonModelForDrudeMetalClustersInAlGaAs(d: Double, k: Double, x: Double,
-                                                latticeFactor: Double,
-                                                override val wPlasma: Double,
-                                                override val gammaPlasma: Double,
-                                                override val epsInf: Double,
-                                                epsType: EpsType) :
+class TwoDimensionalLayerOfDrudeMetalClustersInAlGaAs(d: Double, k: Double, x: Double,
+                                                      latticeFactor: Double,
+                                                      override val wPlasma: Double,
+                                                      override val gammaPlasma: Double,
+                                                      override val epsInf: Double,
+                                                      epsType: EpsType) :
         DrudeMetalClustersInAlGaAs,
-        PerssonModelForMetallicClustersInAlGaAs(d, k, x, latticeFactor, epsType) {
-
-//    init {
-//        println("Constructing PerssonModelForDrudeMetalClustersInAlGaAs \n" +
-//                "with d = $d, k = $k, x = $x, wPlasma = $wPlasma, gammaPlasma = $gammaPlasma, epsInf = $epsInf")
-//    }
-}
+        TwoDimensionalLayerOfMetallicClustersInAlGaAs(d, k, x, latticeFactor, epsType)
 
 
-class PerssonModelForSbClustersInAlGaAs(d: Double, k: Double, x: Double,
-                                        latticeFactor: Double,
-                                        epsType: EpsType) :
+class TwoDimensionalLayerOfSbClustersInAlGaAs(d: Double, k: Double, x: Double,
+                                              latticeFactor: Double,
+                                              epsType: EpsType) :
         SbClustersInAlGaAs,
-        PerssonModelForMetallicClustersInAlGaAs(d, k, x, latticeFactor, epsType)
+        TwoDimensionalLayerOfMetallicClustersInAlGaAs(d, k, x, latticeFactor, epsType)
 
 
 /**
@@ -161,14 +82,8 @@ class EffectiveMediumForDrudeMetalClustersInAlGaAs(d: Double, k: Double, x: Doub
                                                    override val epsInf: Double,
                                                    epsType: EpsType) :
         DrudeMetalClustersInAlGaAs, AlGaAs(d, k, x, epsType) {
-    private val epsEff: Complex_
-        get() {
-            val numerator = (epsMetal - epsMatrix) * f * 2.0 + epsMetal + (epsMatrix * 2.0)
-            val denominator = (epsMatrix * 2.0) + epsMetal - (epsMetal - epsMatrix) * f
-            return epsMatrix * (numerator / denominator)
-        }
 
-    override val n = toRefractiveIndex(epsEff)
+    override val n = refractiveIndex(MetallicClusters.Permittivity.EffectiveMediumApproximation.get(epsMatrix, epsMetal, f))
 
     override fun parameters() = listOf(d, k, x, wPlasma, gammaPlasma, f, epsInf)
 }

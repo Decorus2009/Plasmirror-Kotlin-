@@ -49,6 +49,18 @@ object LineChartState {
     val computed = LineChartSeries(ExtendedSeries(color = colors[0]!!), ExtendedSeries(color = colors[1]!!))
     val imported = mutableListOf<LineChartSeries>()
 
+
+    fun toEV() {
+        val data: XYChart.Data<Number, Number> = computed.extendedSeriesReal.series.data[0]
+        data.
+    }
+
+
+
+
+
+
+
     fun allExtendedSeries() = (imported + computed).flatMap { listOf(it.extendedSeriesReal, it.extendedSeriesImaginary) }
 
     fun updateComputed() = with(computed) {

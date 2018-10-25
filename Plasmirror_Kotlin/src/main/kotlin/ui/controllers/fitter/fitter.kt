@@ -100,7 +100,7 @@ class MainFitterController {
                 }
                 is EffectiveMediumForDrudeMetalClustersInAlGaAs -> {
                 }
-                is PerssonModelForDrudeMetalClustersInAlGaAs -> load<NanoparticlesLayerFitterController>(it, "fxml/fitter/NanoparticlesLayerFitter.fxml")
+                is TwoDimensionalLayerOfDrudeMetalClustersInAlGaAs -> load<NanoparticlesLayerFitterController>(it, "fxml/fitter/NanoparticlesLayerFitter.fxml")
             }
         }
 
