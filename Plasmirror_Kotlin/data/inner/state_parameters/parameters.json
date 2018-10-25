@@ -1,13 +1,13 @@
 {
     "right_medium": "Custom",
     "computation_range": {
-        "start": "600",
-        "end": "1000",
+        "start": "650",
+        "end": "900",
         "step": "1"
     },
     "regime": "Reflectance",
-    "angle": "0",
-    "polarization": "P",
+    "angle": "30",
+    "polarization": "S",
     "left_medium": "Air",
     "left_medium_n": {
         "imaginary": "0.0",

@@ -2,6 +2,9 @@ package ui.controllers
 
 import MainApp
 import core.ComputationParametersStorage
+import core.State
+import core.StructureDescriptionStorage
+import core.validators.ValidationResult.SUCCESS
 import javafx.application.Platform
 import javafx.fxml.FXML
 import javafx.scene.control.Button
@@ -9,9 +12,6 @@ import javafx.scene.control.Label
 import javafx.scene.input.KeyCode
 import javafx.scene.input.KeyCodeCombination
 import javafx.scene.input.KeyCombination
-import core.State
-import core.StructureDescriptionStorage
-import core.validators.ValidationResult.*
 import ui.controllers.chart.LineChartController
 import ui.controllers.chart.SeriesManagerController
 import ui.controllers.chart.XAxisRangeController
@@ -112,28 +112,19 @@ class ControlsController {
     fun initialize() {
         with(computeButton) {
             Platform.runLater {
-                scene.accelerators
-                        .put(KeyCodeCombination(KeyCode.SPACE, KeyCombination.SHORTCUT_DOWN), Runnable(this::fire))
+                scene.accelerators[KeyCodeCombination(KeyCode.SPACE, KeyCombination.SHORTCUT_DOWN)] = Runnable(this::fire)
             }
             setOnAction {
-//                mainController.saveToStorages()
-//                mainController.lineChartController.updateLineChart()
-
                 if (State.init() == SUCCESS) {
-                    println("Compute button clicked and State.init() == SUCCESS")
-                    // TODO commented
-
                     val startTime = System.nanoTime()
                     State.compute()
                     val stopTime = System.nanoTime()
-                    computationTimeLabel.text =
-                            "Computation time: ${kotlin.String.format(Locale.US, "%.2f", (stopTime - startTime).toDouble() / 1E6)} ms"
-                    /**
-                    Save and write to file last successful computation parameters
-                     */
+                    computationTimeLabel.text = "Computation time: " +
+                            "${kotlin.String.format(Locale.US, "%.2f", (stopTime - startTime).toDouble() / 1E6)} ms"
+
+                    /* Save and write to file last successful computation parameters */
                     mainController.lineChartController.updateLineChart()
                     mainController.saveToFiles()
-
                 }
             }
         }

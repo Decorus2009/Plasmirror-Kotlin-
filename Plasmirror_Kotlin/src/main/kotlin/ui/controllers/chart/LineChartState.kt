@@ -1,11 +1,11 @@
 package ui.controllers.chart
 
-import core.optics.Regime.*
 import core.State
+import core.optics.Regime.*
+import core.optics.toEnergy
 import javafx.scene.chart.XYChart
-import rootController
-import ui.controllers.chart.LineChartState.SERIES_TYPE.COMPUTED
-import ui.controllers.chart.LineChartState.SERIES_TYPE.IMPORTED
+import ui.controllers.chart.LineChartState.SeriesType.COMPUTED
+import ui.controllers.chart.LineChartState.SeriesType.IMPORTED
 import java.io.File
 import java.nio.file.Files
 import java.util.*
@@ -45,21 +45,18 @@ object LineChartState {
         return colors[offset + currentColorIndex++]!!
     }
 
-
     val computed = LineChartSeries(ExtendedSeries(color = colors[0]!!), ExtendedSeries(color = colors[1]!!))
     val imported = mutableListOf<LineChartSeries>()
 
-
-    fun toEV() {
-        val data: XYChart.Data<Number, Number> = computed.extendedSeriesReal.series.data[0]
-        data.
-    }
-
-
-
-
-
-
+    // TODO
+    fun toEV() = (imported + computed)
+            .map { listOf(it.extendedSeriesReal, it.extendedSeriesImaginary) }
+            .flatten()
+            .forEach {
+                it.series.data.forEach {
+                    it.xValue = toEnergy(it.xValue as Double)
+                }
+            }
 
     fun allExtendedSeries() = (imported + computed).flatMap { listOf(it.extendedSeriesReal, it.extendedSeriesImaginary) }
 
@@ -67,35 +64,22 @@ object LineChartState {
 
         extendedSeriesReal.clear()
         extendedSeriesImaginary.clear()
-//        extendedSeriesReal.series.data.run { if (isNotEmpty()) clear() }
-//        extendedSeriesImaginary.series.data.run { if (isNotEmpty()) clear() }
 
-//        when (State.regime) {
-//            REFLECTANCE -> {
-//                extendedSeriesReal.series.data.addAll()
-//            }
-//
-//            TRANSMITTANCE -> TODO()
-//            ABSORBANCE -> TODO()
-//        }
-
-        extendedSeriesReal.series.data.run {
-            with(State) {
-                when (regime) {
-                    REFLECTANCE -> addAll(wavelength.indices.map { XYChart.Data<Number, Number>(wavelength[it], reflectance[it]) })
-
-                    TRANSMITTANCE -> addAll(wavelength.indices.map { XYChart.Data<Number, Number>(wavelength[it], transmittance[it]) })
-
-                    ABSORBANCE -> addAll(wavelength.indices.map { XYChart.Data<Number, Number>(wavelength[it], absorbance[it]) })
-                    PERMITTIVITY -> {
-                        addAll(wavelength.indices.map { XYChart.Data<Number, Number>(wavelength[it], permittivity[it].real) })
-                        extendedSeriesImaginary.series.data
-                                .addAll(wavelength.indices.map { XYChart.Data<Number, Number>(wavelength[it], permittivity[it].imaginary) })
-                    }
-                    REFRACTIVE_INDEX -> {
-                        addAll(wavelength.indices.map { XYChart.Data<Number, Number>(wavelength[it], refractiveIndex[it].real) })
-                        extendedSeriesImaginary.series.data
-                                .addAll(wavelength.indices.map { XYChart.Data<Number, Number>(wavelength[it], refractiveIndex[it].imaginary) })
+        with(State) {
+            with(extendedSeriesReal.series.data) {
+                when (State.regime) {
+                    REFLECTANCE -> addAll(seriesData(wavelength, reflectance))
+                    TRANSMITTANCE -> addAll(seriesData(wavelength, transmittance))
+                    ABSORBANCE -> addAll(seriesData(wavelength, absorbance))
+                    PERMITTIVITY -> addAll(seriesData(wavelength, permittivity.map { it.real }))
+                    REFRACTIVE_INDEX -> addAll(seriesData(wavelength, refractiveIndex.map { it.real }))
+                }
+            }
+            with(extendedSeriesImaginary.series.data) {
+                when (State.regime) {
+                    PERMITTIVITY -> addAll(seriesData(wavelength, permittivity.map { it.imaginary }))
+                    REFRACTIVE_INDEX -> addAll(seriesData(wavelength, refractiveIndex.map { it.imaginary }))
+                    else -> {
                     }
                 }
             }
@@ -105,18 +89,17 @@ object LineChartState {
         extendedSeriesReal.series.name = "Computed Real"
         extendedSeriesImaginary.series.name = "Computed Imaginary"
 
-        /* if another regime */
-//        with(State.mainController.globalParametersController.regimeController) {
-        with(rootController.mainController.globalParametersController.regimeController) {
-            if (regimeBefore == null || State.regime != regimeBefore) {
-                /* init default colors */
-                extendedSeriesReal.color = colors[0]!!
-                extendedSeriesImaginary.color = colors[1]!!
-                /* init default widths */
-                extendedSeriesReal.width = "2px"
-                extendedSeriesImaginary.width = "2px"
-            }
-        }
+//        /* if regime changed */
+//        with(rootController.mainController.globalParametersController.regimeController) {
+//            if (regimeBefore == null || State.regime != regimeBefore) {
+//                /* init default colors */
+//                extendedSeriesReal.color = colors[0]!!
+//                extendedSeriesImaginary.color = colors[1]!!
+//                /* init default widths */
+//                extendedSeriesReal.width = "2px"
+//                extendedSeriesImaginary.width = "2px"
+//            }
+//        }
     }
 
     fun importFrom(file: File) {
@@ -124,38 +107,45 @@ object LineChartState {
         val yReal = mutableListOf<Double>()
         val yImaginary = mutableListOf<Double>()
 
-        Files.lines(file.toPath()).toList().filter { it[0].isDigit() }.map { it.replace(Regex(","), ".") }.forEach {
-            with(Scanner(it).useLocale(Locale.US)) {
-                if (hasNextDouble()) {
-                    x += nextDouble()
-                } else {
-                    throw IllegalStateException("Input file must contain 2 or 3 columns")
+        Files.lines(file.toPath())
+                .toList()
+                .asSequence()
+                .filter { it[0].isDigit() }
+                .map { it.replace(Regex(","), ".") }
+                .forEach {
+                    with(Scanner(it).useLocale(Locale.US)) {
+                        if (hasNextDouble()) {
+                            x += nextDouble()
+                        } else {
+                            throw IllegalStateException("Input file must contain 2 or 3 columns")
+                        }
+                        if (hasNextDouble()) {
+                            yReal += nextDouble()
+                        } else {
+                            throw IllegalStateException("Input file must contain 2 or 3 columns")
+                        }
+                        /* check if file contains 3 columns for x, Re(y), Im(y) */
+                        if (hasNextDouble()) {
+                            yImaginary += nextDouble()
+                        }
+                    }
                 }
-                if (hasNextDouble()) {
-                    yReal += nextDouble()
-                } else {
-                    throw IllegalStateException("Input file must contain 2 or 3 columns")
-                }
-                /* check if file contains 3 columns for x, Re(y), Im(y) */
-                if (hasNextDouble()) {
-                    yImaginary += nextDouble()
-                }
-            }
-        }
 
         val seriesReal = XYChart.Series<Number, Number>()
         val seriesImaginary = XYChart.Series<Number, Number>()
 
-        seriesReal.data.addAll(x.indices.map { XYChart.Data<Number, Number>(x[it], yReal[it]) })
+        seriesReal.data.addAll(seriesData(x, yReal))
         if (yImaginary.isNotEmpty()) {
-            seriesImaginary.data.addAll(x.indices.map { XYChart.Data<Number, Number>(x[it], yImaginary[it]) })
+            seriesImaginary.data.addAll(seriesData(x, yImaginary))
         }
+
         /* init names */
         with(file.name) {
             seriesReal.name = this + " Real"
             seriesImaginary.name = this + " Imaginary"
         }
-        imported += LineChartSeries(ExtendedSeries(seriesReal, type = IMPORTED), ExtendedSeries(seriesImaginary, type = IMPORTED))
+        imported += LineChartSeries(ExtendedSeries(seriesReal, type = IMPORTED),
+                ExtendedSeries(seriesImaginary, type = IMPORTED))
     }
 
     fun removeByName(name: String) {
@@ -166,6 +156,9 @@ object LineChartState {
         currentColorIndex -= 2
     }
 
+    private fun seriesData(x: List<Double>, y: List<Double>) = x.indices.map { XYChart.Data<Number, Number>(x[it], y[it]) }
+
+
     class LineChartSeries(val extendedSeriesReal: ExtendedSeries = ExtendedSeries(),
                           val extendedSeriesImaginary: ExtendedSeries = ExtendedSeries(color = nextColor(offset = 50)))
 
@@ -174,7 +167,7 @@ object LineChartState {
                               var selected: Boolean = false,
                               var color: String = nextColor(),
                               var width: String = "2px",
-                              var type: SERIES_TYPE = COMPUTED,
+                              var type: SeriesType = COMPUTED,
                               var previousXAxisFactor: Double = 1.0, var previousYAxisFactor: Double = 1.0) {
 
         fun select() {
@@ -190,5 +183,5 @@ object LineChartState {
         fun clear() = series.data.clear()
     }
 
-    enum class SERIES_TYPE { COMPUTED, IMPORTED }
+    enum class SeriesType { COMPUTED, IMPORTED }
 }

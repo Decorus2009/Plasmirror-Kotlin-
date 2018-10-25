@@ -40,8 +40,6 @@ class GlobalParametersController {
         mediumParametersController.save()
         lightParametersController.save()
         computationRangeController.save()
-
-//        temperatureController.writeTemperature()
     }
 }
 
@@ -53,13 +51,6 @@ class RegimeController {
     private lateinit var regimeChoiceBox: ChoiceBox<String>
 
     var regimeBefore: Regime? = null
-
-//    private val regimes = mapOf(
-//            REFLECTANCE to 0, TRANSMITTANCE to 1, ABSORBANCE to 2, PERMITTIVITY to 3, REFRACTIVE_INDEX to 4
-//    )
-//    private val regimesMap = mapOf(
-//            "Reflectance" to 0, "Transmittance" to 1, "Absorbance" to 2, "Permittivity" to 3, "Refractive Index" to 4
-//    )
 
     @FXML
     fun initialize() {
@@ -90,25 +81,6 @@ class RegimeController {
     }
 }
 
-//class TemperatureController {
-//
-//    lateinit var globalParametersController: GlobalParametersController
-//
-//    @FXML
-//    private lateinit var T_TextField: TextField
-//
-////    private val path = Paths.get(".${File.separator}data${File.separator}inner${File.separator}state_parameters${File.separator}temperature.txt")
-//
-//    @FXML
-//    fun initialize() {
-//        println("Temperature controller init")
-//        /* init initial values */
-//        T_TextField.isDisable = true
-//
-//        /* TODO read from file */
-//    }
-//}
-
 class MediumParametersController {
 
     @FXML
@@ -131,16 +103,6 @@ class MediumParametersController {
     lateinit var leftMediumChoiceBox: ChoiceBox<String>
     @FXML
     lateinit var rightMediumChoiceBox: ChoiceBox<String>
-
-
-//    private val media = mapOf(
-//            AIR to 0, GAAS_ADACHI to 1, GAAS_GAUSS to 2, GAAS_GAUSS_ADACHI to 3, CUSTOM to 4
-//    )
-
-//    private val media = mapOf(
-//            "Air" to 0, "GaAs: Adachi" to 1, "GaAs: Gauss" to 2, "GaAs: Gauss-Adachi" to 3, "Custom" to 4
-//    )
-//    private val invMedia = media.map { it.value to it.key }
 
     @FXML
     fun initialize() {
@@ -189,13 +151,6 @@ class MediumParametersController {
                 rightMediumChoiceBox,
                 rightMediumRefractiveIndexRealTextField, rightMediumRefractiveIndexImaginaryTextField
         )
-
-//        leftMediumChoiceBox.selectionModel.selectedIndexProperty().addListener { _, _, newValue ->
-//            ComputationParametersStorage.leftMedium = invMap[newValue as Int].second
-//        }
-//        rightMediumChoiceBox.selectionModel.selectedIndexProperty().addListener { _, _, newValue ->
-//            ComputationParametersStorage.rightMedium = invMap[newValue as Int].second
-//        }
     }
 
     fun disableAll() {
@@ -296,45 +251,6 @@ class ComputationRangeController {
             toTextField.text = wavelengthEnd
             stepTextField.text = wavelengthStep
         }
-
-//        with(fromTextField) {
-//            val previousValue = ComputationParametersStorage.wavelengthStart
-//            text = previousValue.toString()
-//
-//            textProperty().addListener { _, _, newValue ->
-//                try {
-//                    ComputationParametersStorage.wavelengthStart = newValue.toDouble()
-//                } catch (e: NumberFormatException) {
-//                    ComputationParametersStorage.wavelengthStart = previousValue
-//                }
-//            }
-//        }
-//
-//        with(toTextField) {
-//            val previousValue = ComputationParametersStorage.wavelengthEnd
-//            text = previousValue.toString()
-//
-//            textProperty().addListener { _, _, newValue ->
-//                try {
-//                    ComputationParametersStorage.wavelengthEnd = newValue.toDouble()
-//                } catch (e: NumberFormatException) {
-//                    ComputationParametersStorage.wavelengthEnd = previousValue
-//                }
-//            }
-//        }
-//
-//        with(toTextField) {
-//            val previousValue = ComputationParametersStorage.wavelengthStep
-//            text = previousValue.toString()
-//
-//            textProperty().addListener { _, _, newValue ->
-//                try {
-//                    ComputationParametersStorage.wavelengthStep = newValue.toDouble()
-//                } catch (e: NumberFormatException) {
-//                    ComputationParametersStorage.wavelengthStep = previousValue
-//                }
-//            }
-//        }
     }
 
     fun save() = with(ComputationParametersStorage) {

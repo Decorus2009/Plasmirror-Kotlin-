@@ -104,7 +104,7 @@ class SeriesManagerController {
         enable(removeButton)
 
         with(selectedSeries) {
-            if (type == LineChartState.SERIES_TYPE.COMPUTED) {
+            if (type == LineChartState.SeriesType.COMPUTED) {
                 ui.controllers.disable(xAxisFactorLabel, yAxisFactorLabel)
                 ui.controllers.disable(xAxisFactorTextField, yAxisFactorTextField)
                 ui.controllers.disable(removeButton)
