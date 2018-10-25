@@ -2,7 +2,7 @@ package core.layers
 
 import core.*
 import core.optics.AlGaAsPermittivity.epsAlGaAs
-import core.optics.AlGaAsPermittivity.eps_to_n
+import core.optics.AlGaAsPermittivity.toRefractiveIndex
 import core.Complex_.Companion.I
 import core.Complex_.Companion.ONE
 import core.optics.EpsType
@@ -168,7 +168,7 @@ class EffectiveMediumForDrudeMetalClustersInAlGaAs(d: Double, k: Double, x: Doub
             return epsMatrix * (numerator / denominator)
         }
 
-    override val n = eps_to_n(epsEff)
+    override val n = toRefractiveIndex(epsEff)
 
     override fun parameters() = listOf(d, k, x, wPlasma, gammaPlasma, f, epsInf)
 }

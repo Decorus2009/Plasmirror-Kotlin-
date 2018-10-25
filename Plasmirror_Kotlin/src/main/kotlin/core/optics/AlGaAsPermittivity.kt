@@ -32,11 +32,11 @@ object AlGaAsPermittivity {
 
         val n = when (epsType) {
             ADACHI -> {
-                with(eps_to_n(eps)) {
+                with(toRefractiveIndex(eps)) {
                     Complex_(real, real * k)
                 }
             }
-            else -> eps_to_n(eps)
+            else -> toRefractiveIndex(eps)
         }
 
         return eps to n
@@ -69,7 +69,18 @@ object AlGaAsPermittivity {
      */
     private fun epsGauss(w: Double, x: Double) = epsInf(x) + eps1(w, x) + eps2(w, x) + eps3(w, x) + eps4(w, x)
 
-    private fun nGauss(w: Double, x: Double) = eps_to_n(epsGauss(w, x))
+    private fun nGauss(w: Double, x: Double) = toRefractiveIndex(epsGauss(w, x))
+    /** * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+
+    /**
+     * Permittivity (Gauss with Im(eps) = 0 below E0)
+     * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+     */
+    private fun epsGaussWithZeroImEpsBelowE0(w: Double, x: Double) = with(epsGauss(w, x)) {
+        Complex_(real, if (w <= E0(x)) imaginary else 0.0)
+    }
+
+    private fun nGaussWithZeroImEpsBelowE0(w: Double, x: Double) = toRefractiveIndex(epsGaussWithZeroImEpsBelowE0(w, x))
     /** * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
     /**
@@ -123,7 +134,7 @@ object AlGaAsPermittivity {
             epsGauss.add(epsGauss(w_, x))
             nGauss.add(nGauss(w_, x))
             epsAdachi.add(epsAdachi(w_, x))
-            nAdachi.add(eps_to_n(epsAdachi(w_, x)))
+            nAdachi.add(toRefractiveIndex(epsAdachi(w_, x)))
             w_ += step
         }
         /**
@@ -142,7 +153,7 @@ object AlGaAsPermittivity {
                 .filter { it.w > 1.4 && it.w < upperBound }.minBy { it.diff }!!.w)
     }
 
-    fun eps_to_n(eps: Complex_): Complex_ {
+    fun toRefractiveIndex(eps: Complex_): Complex_ {
         val n = sqrt((eps.abs() + eps.real) / 2.0)
         val k = sqrt((eps.abs() - eps.real) / 2.0)
         return Complex_(n, k)

@@ -1,11 +1,11 @@
 {
     "right_medium": "GaAs: Adachi",
     "computation_range": {
-        "start": "200",
-        "end": "2000",
+        "start": "600",
+        "end": "950",
         "step": "2"
     },
-    "regime": "Permittivity",
+    "regime": "Reflectance",
     "angle": "0",
     "polarization": "P",
     "left_medium": "Air",

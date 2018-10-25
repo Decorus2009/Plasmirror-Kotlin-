@@ -36,7 +36,7 @@ object SbTabulatedPermittivity {
     }
 
     private fun read() = Files.lines(path).forEach {
-        with(Scanner(it)) {
+        with(Scanner(it).useLocale(Locale.ENGLISH)) {
             wavelengths += nextDouble()
             epsSb += Complex_(nextDouble(), nextDouble())
         }
