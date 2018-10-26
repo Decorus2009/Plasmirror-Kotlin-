@@ -6,15 +6,18 @@ import core.Complex_.Companion.ONE
 import core.Interpolator
 import core.State
 import org.apache.commons.math3.analysis.polynomials.PolynomialSplineFunction
+import java.lang.Math.*
 import java.nio.file.Files
 import java.nio.file.Paths
 import java.util.*
 
 object MetallicClusters {
 
-    object Permittivity {
-        object Drude {
-            fun get(wavelength: Double, wPlasma: Double, gammaPlasma: Double, epsInf: Double): Complex_ {
+    object OpticalConstants {
+
+        object DrudeModel {
+
+            fun permittivity(wavelength: Double, wPlasma: Double, gammaPlasma: Double, epsInf: Double): Complex_ {
                 val w = Complex_(toEnergy(wavelength)) // eV
                 val numerator = Complex_(wPlasma * wPlasma)
                 val denominator = w * (w + Complex_(0.0, gammaPlasma))
@@ -22,7 +25,11 @@ object MetallicClusters {
             }
         }
 
+        /**
+         * tabulated data by Cardona and Adachi TODO add references
+         */
         object SbTabulated {
+
             private val functions: Pair<PolynomialSplineFunction, PolynomialSplineFunction>
             private val path = Paths.get("data/inner/state_parameters/eps_Sb_Cardona_Adachi.txt")
             private val wavelengths = mutableListOf<Double>()
@@ -33,7 +40,7 @@ object MetallicClusters {
                 functions = interpolate()
             }
 
-            fun get(wavelength: Double) = with(functions) {
+            fun permittivity(wavelength: Double) = with(functions) {
                 if (wavelengths.isEmpty() or epsSb.isEmpty()) {
                     throw IllegalStateException("Empty array of Sb permittivity")
                 }
@@ -57,20 +64,85 @@ object MetallicClusters {
 
             private fun interpolate() = Interpolator.interpolateComplex(wavelengths, epsSb)
         }
+    }
 
-        object EffectiveMediumApproximation {
-            fun get(epsMatrix: Complex_, epsMetal: Complex_, f: Double): Complex_ {
-                val numerator = (epsMetal - epsMatrix) * f * 2.0 + epsMetal + (epsMatrix * 2.0)
-                val denominator = (epsMatrix * 2.0) + epsMetal - (epsMetal - epsMatrix) * f
-                return epsMatrix * (numerator / denominator)
-            }
+    object EffectiveMediumApproximation {
+
+        fun permittivity(epsMatrix: Complex_, epsMetal: Complex_, f: Double): Complex_ {
+            val numerator = (epsMetal - epsMatrix) * f * 2.0 + epsMetal + (epsMatrix * 2.0)
+            val denominator = (epsMatrix * 2.0) + epsMetal - (epsMetal - epsMatrix) * f
+            return epsMatrix * (numerator / denominator)
+        }
+    }
+
+    object MieTheory {
+
+        //        fun alphaExtAlphaSca(wavelength: Double, epsMatrix: Complex_, epsMetal: Complex_, f: Double, r: Double): Pair<Complex_, Complex_> {
+//            val wavelength_ = wavelength * 1E-7 // cm^-1
+//            val r_ = r * 1E-7 // cm^-1
+//
+//            val waveVector = Optics.toRefractiveIndex(epsMatrix) * 2.0 * Math.PI / wavelength_
+//            val x = waveVector * r_
+//
+//            val x3 = x * x * x
+//            val x5 = x * x * x * x * x
+//            val x6 = x * x * x * x * x * x
+//            val mSq = epsMatrix / epsMetal
+//
+//            val c1 = mSq - 1.0
+//            val c2 = c1 / (mSq + 2.0)
+//
+//            val a = listOf(
+//                    -I * x3 * 2.0 / 3.0 * c2 - I * x5 * 2.0 / 5.0 * (mSq - 2.0) / (mSq + 2.0) * c2 + x6 * 4.0 / 9.0 * c2 * c2,
+//                    -I * x5 / 15.0 * c1 / (mSq * 2.0 + 3.0)
+//            )
+//            val b = listOf(
+//                    -I * x5 / 45.0 * c1,
+//                    ZERO
+//            )
+//
+//            val coefficientInCrossSections = Complex_(2.0 * Math.PI) / (waveVector * waveVector)
+//            val coefficientInAlphas = 3.0 / 4.0 * f / (Math.PI * Math.pow(r_, 3.0))
+//            val coefficient = coefficientInCrossSections * coefficientInAlphas
+//
+//            return coefficient * a.indices.sumByDouble { (2 * it + 1) * (a[it] + b[it]).real } to
+//                    coefficient * a.indices.sumByDouble {
+//                (2 * it + 1) * (Math.pow(a[it].abs(), 2.0) + Math.pow(b[it].abs(), 2.0))
+//            }
+//        }
+        fun alphaExtAlphaSca(wavelength: Double, epsMatrix: Complex_, epsMetal: Complex_, f: Double, r: Double): Pair<Double, Double> {
+            val a = r * 1E-7 // cm^-1 as for wavelength
+            val a2 = pow(a, 2.0)
+            val a3 = pow(a, 3.0)
+
+            val n = Optics.toRefractiveIndex(epsMatrix)
+            val waveVector = n.real * 2.0 * PI / (wavelength * 1E-7)
+            val x = waveVector * a
+
+            val x2 = x * x
+            val x4 = x * x * x * x
+            val m = epsMatrix / epsMetal // m_squared in Nolte paper
+
+            val c1 = (m - 1.0) / (m + 2.0)
+            val c2 = c1 * (n.real * n.real) / (n * n)
+            val c3 = 32.0 / 3.0 * PI * a2 * x4
+
+            val Cext = 4.0 * PI * a2 * x * (
+                    c2 * (ONE + c1 * x2 / 15.0 * (m * m + m * 27.0 + 38.0) / (m * 2.0 + 3.0))
+                    ).imaginary +
+                    c3 * (c2 * c1).real
+
+            val Csca = c3 * pow(c1.abs(), 2.0)
+
+            return with(3.0 / 4.0 * f / (PI * a3)) { this * Cext to this * Csca }
         }
     }
 
     /**
-     * Persson model (Phys. Rev. B, 28, PP. 4247 (1983))
+     * Phys. Rev. B, 28, PP. 4247 (1983) - Persson model
      */
     object TwoDimensionalLayer {
+
         fun rt(wavelength: Double,
                d: Double, latticeFactor: Double,
                epsMatrix: Complex_, epsMetal: Complex_): Pair<Complex_, Complex_> {
@@ -79,8 +151,7 @@ object MetallicClusters {
             val a = latticeFactor * R
             val U0 = 9.03 / (a * a * a)
 
-            val n = AlGaAsPermittivity.refractiveIndex(epsMatrix)
-            val (cos, sin) = cosSin(n)
+            val (cos, sin) = cosSin(Optics.toRefractiveIndex(epsMatrix))
             val theta = Complex_(cos.acos())
 
             val (alphaParallel, alphaOrthogonal) = alphaParallelOrthogonal(alpha(epsMatrix, epsMetal, R), U0)
@@ -114,9 +185,9 @@ object MetallicClusters {
         }
 
         private fun alpha(epsMatrix: Complex_, epsMetal: Complex_, R: Double) =
-                (epsMetal - epsMatrix) / (epsMetal + epsMatrix * 2.0) * Math.pow(R, 3.0)
+                (epsMetal - epsMatrix) / (epsMetal + epsMatrix * 2.0) * pow(R, 3.0)
 
-        private fun AB(wavelength: Double, a: Double, cos: Complex_, sin: Complex_) = with(Math.pow(2 * Math.PI / a, 2.0) / wavelength) {
+        private fun AB(wavelength: Double, a: Double, cos: Complex_, sin: Complex_) = with(pow(2 * PI / a, 2.0) / wavelength) {
             I / cos * this to sin * this
         }
     }

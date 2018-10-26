@@ -31,7 +31,7 @@
 4, d, w0, gamma0, gamma
 5, d, k, x, w0, gamma0, gamma
 6, d, n, w0, gamma0, gamma
-7, d, k, x, w_plasma, gamma_plasma, f, eps_inf
+7, d, k, x, w_plasma, gamma_plasma, eps_inf, f
 8, d, k, x, lattice_factor, w_plasma, gamma_plasma, eps_inf (d = 2 * R_particle)
 
 d                    - толщина, нм

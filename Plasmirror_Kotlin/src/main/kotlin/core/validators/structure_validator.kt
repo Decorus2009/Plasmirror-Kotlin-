@@ -8,15 +8,24 @@ import core.optics.Regime
  * and builds StructureDescription using LayerDescription and BlockDescription
  */
 object StructureValidator {
-    private var numerOfParameters = mapOf(
+    private var numberOfParameters = mapOf(
             "1-1" to 2, "1-2" to 2, "1-3" to 2,
+
             "2-1" to 4, "2-2" to 4, "2-3" to 4,
+
             "3" to 3,
+
             "4-1" to 5, "4-2" to 5, "4-3" to 5,
+
             "5-1" to 7, "5-2" to 7, "5-3" to 7,
+
             "6" to 6,
-            "7-1" to 8, "7-2" to 8, "7-3" to 8,
+
+            "7-1-1" to 8, "7-2-1" to 8, "7-3-1" to 8,
+            "7-1-2" to 5, "7-2-2" to 5, "7-3-2" to 5,
+
             "8-1" to 8, "8-2" to 8, "8-3" to 8,
+
             "9-1" to 5, "9-2" to 5, "9-3" to 5
     )
 
@@ -154,9 +163,10 @@ object StructureValidator {
          */
         filterNot { it[0].startsWith("x") }.forEach {
             val type = it[0]
-            if (type !in numerOfParameters.keys || numerOfParameters[type] != it.size) {
+            println("type = $type")
+            if (type !in numberOfParameters.keys || numberOfParameters[type] != it.size) {
                 println(type)
-                println(numerOfParameters[type])
+                println(numberOfParameters[type])
                 println(it)
                 throw StructureDescriptionException("Invalid layer type or incorrect number of parameters for a layer")
             }
@@ -210,6 +220,7 @@ object StructureValidator {
      * @param tokenizedLines structure representation as lines
      * @return structure description object
      */
+    // TODO kotlin style
     private fun buildStructureDescription(tokenizedLines: List<List<String>>) = StructureDescription().apply {
         val blockDescriptions = blockDescriptions
         var layerIndex = 0

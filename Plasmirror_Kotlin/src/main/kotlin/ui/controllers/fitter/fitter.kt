@@ -17,7 +17,6 @@ import javafx.scene.control.Separator
 import javafx.scene.layout.VBox
 import org.apache.commons.math3.analysis.interpolation.SplineInterpolator
 import ui.controllers.chart.LineChartState
-import java.lang.Math.abs
 import kotlin.Double.Companion.MAX_VALUE
 
 object FitterState {
@@ -58,16 +57,16 @@ object FitterState {
     }
 
     /* TODO measure time */
-    fun checkDifference() {
-        val currentDifference = reflectance.zip(interpolated).sumByDouble { abs(it.first - it.second) }
-        if (currentDifference < difference) {
-            difference = currentDifference
-            listOfParameters = mainFitterController.layerToFit.parameters()
-            println("****************************************************")
-            println("new difference: $currentDifference")
-            println("new parameters: $listOfParameters")
-        }
-    }
+//    fun checkDifference() {
+//        val currentDifference = reflectance.zip(interpolated).sumByDouble { abs(it.first - it.second) }
+//        if (currentDifference < difference) {
+//            difference = currentDifference
+//            listOfParameters = mainFitterController.layerToFit.parameters()
+//            println("****************************************************")
+//            println("new difference: $currentDifference")
+//            println("new parameters: $listOfParameters")
+//        }
+//    }
 }
 
 class MainFitterController {
@@ -98,7 +97,7 @@ class MainFitterController {
                 }
                 is ConstRefractiveIndexLayerExcitonic -> {
                 }
-                is EffectiveMediumForDrudeMetalClustersInAlGaAs -> {
+                is EffectiveMediumLayerOfDrudeMetalClustersInAlGaAs -> {
                 }
                 is TwoDimensionalLayerOfDrudeMetalClustersInAlGaAs -> load<NanoparticlesLayerFitterController>(it, "fxml/fitter/NanoparticlesLayerFitter.fxml")
             }

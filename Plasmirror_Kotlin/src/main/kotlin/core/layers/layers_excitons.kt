@@ -8,6 +8,7 @@ import core.optics.toEnergy
 import org.apache.commons.math3.complex.Complex.I
 import java.lang.Math.PI
 
+// TODO absorption coefficient value override taking into account excitonic response
 /**
  * Abstract layer with excitons
  *
@@ -20,7 +21,7 @@ interface LayerExcitonic : Layer {
     val gamma0: Double
     val gamma: Double
 
-    override val matrix: Matrix_
+    override val matrix
         get() = Matrix_().apply {
             val cos = cosThetaInLayer(n)
             /* TODO проверить поляризацию (в VisMirror (GaAs) было S) */
@@ -36,36 +37,41 @@ interface LayerExcitonic : Layer {
             this[1, 0] = Complex_(-S.imaginary, S.real)
             this[1, 1] = Complex_((phi * I * -1.0).exp()) * Complex_(1.0 - S.imaginary, S.real)
         }
-
-    override fun parameters() = listOf(d, n, w0, gamma0, gamma)
 }
 
 
-class GaAsExcitonic(d: Double,
-                    override val w0: Double,
-                    override val gamma0: Double,
-                    override val gamma: Double,
-                    epsType: EpsType) : LayerExcitonic, GaAs(d, epsType) {
+class GaAsExcitonic(
+        d: Double,
+        override val w0: Double,
+        override val gamma0: Double,
+        override val gamma: Double,
+        epsType: EpsType
 
-    override fun parameters() = listOf(d, w0, gamma0, gamma)
-}
-
-
-class AlGaAsExcitonic(d: Double,
-                      k: Double, x: Double,
-                      override val w0: Double,
-                      override val gamma0: Double,
-                      override val gamma: Double,
-                      epsType: EpsType) : LayerExcitonic, AlGaAs(d, k, x, epsType) {
-
-    override fun parameters() = listOf(d, k, x, w0, gamma0, gamma)
-}
+) :
+        LayerExcitonic, GaAs(d, epsType)
 
 
-class ConstRefractiveIndexLayerExcitonic(d: Double, n: Complex_,
-                                         override val w0: Double,
-                                         override val gamma0: Double,
-                                         override val gamma: Double) : LayerExcitonic, ConstRefractiveIndexLayer(d, n) {
+class AlGaAsExcitonic(
+        d: Double,
+        k: Double,
+        x: Double,
+        override val w0: Double,
+        override val gamma0: Double,
+        override val gamma: Double,
+        epsType: EpsType
 
-    override fun parameters() = listOf(d, n, w0, gamma0, gamma)
-}
+) :
+        LayerExcitonic,
+        AlGaAs(d, k, x, epsType)
+
+
+class ConstRefractiveIndexLayerExcitonic(
+        d: Double,
+        n: Complex_,
+        override val w0: Double,
+        override val gamma0: Double,
+        override val gamma: Double
+
+) :
+        LayerExcitonic,
+        ConstRefractiveIndexLayer(d, n)

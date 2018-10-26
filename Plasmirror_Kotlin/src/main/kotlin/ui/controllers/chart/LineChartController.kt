@@ -108,7 +108,7 @@ class LineChartController {
                 REFLECTANCE -> "Reflectance"
                 TRANSMITTANCE -> "Transmittance"
                 ABSORBANCE -> "Absorbance"
-                PERMITTIVITY -> "Permittivity"
+                PERMITTIVITY -> "OpticalConstants"
                 REFRACTIVE_INDEX -> "Refractive Index"
             }
         }

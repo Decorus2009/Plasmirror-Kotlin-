@@ -1,8 +1,8 @@
 {
     "right_medium": "Custom",
     "computation_range": {
-        "start": "650",
-        "end": "900",
+        "start": "200",
+        "end": "2000",
         "step": "1"
     },
     "regime": "Reflectance",
