@@ -12,7 +12,7 @@ import core.optics.Optics
 /** * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 interface MetallicClustersInAlGaAs : AlGaAsLayer {
     val epsMatrix
-        get() = AlGaAsMatrix.Permittivity.permittivity(State.wavelengthCurrent, k, x, epsType)
+        get() = AlGaAsMatrix.Permittivity.get(State.wavelengthCurrent, k, x, epsType)
     val epsMetal: Complex_
 }
 
@@ -137,9 +137,9 @@ abstract class MieTheoryLayerOfMetallicClustersInAlGaAs(
     // (Mie theory is for the computation of extinction and scattering, not for the computation of refractive index
 
     override val alphaExt: Double
-        get() = MetallicClusters.MieTheory.alphaExtAlphaSca(State.wavelengthCurrent, epsMatrix, epsMetal, f, r).first
+        get() = MetallicClusters.MieTheory.extinctionCoefficient(State.wavelengthCurrent, epsMatrix, epsMetal, f, r)
     val alphaSca: Double
-        get() = MetallicClusters.MieTheory.alphaExtAlphaSca(State.wavelengthCurrent, epsMatrix, epsMetal, f, r).second
+        get() = MetallicClusters.MieTheory.scatteringCoefficient(State.wavelengthCurrent, epsMatrix, epsMetal, f, r)
 
 }
 

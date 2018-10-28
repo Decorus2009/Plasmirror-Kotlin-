@@ -42,7 +42,7 @@ object MetallicClusters {
 
             fun permittivity(wavelength: Double) = with(functions) {
                 if (wavelengths.isEmpty() or epsSb.isEmpty()) {
-                    throw IllegalStateException("Empty array of Sb permittivity")
+                    throw IllegalStateException("Empty array of Sb get")
                 }
 
                 val minWavelength = wavelengths[0]
@@ -77,40 +77,13 @@ object MetallicClusters {
 
     object MieTheory {
 
-        //        fun alphaExtAlphaSca(wavelength: Double, epsMatrix: Complex_, epsMetal: Complex_, f: Double, r: Double): Pair<Complex_, Complex_> {
-//            val wavelength_ = wavelength * 1E-7 // cm^-1
-//            val r_ = r * 1E-7 // cm^-1
-//
-//            val waveVector = Optics.toRefractiveIndex(epsMatrix) * 2.0 * Math.PI / wavelength_
-//            val x = waveVector * r_
-//
-//            val x3 = x * x * x
-//            val x5 = x * x * x * x * x
-//            val x6 = x * x * x * x * x * x
-//            val mSq = epsMatrix / epsMetal
-//
-//            val c1 = mSq - 1.0
-//            val c2 = c1 / (mSq + 2.0)
-//
-//            val a = listOf(
-//                    -I * x3 * 2.0 / 3.0 * c2 - I * x5 * 2.0 / 5.0 * (mSq - 2.0) / (mSq + 2.0) * c2 + x6 * 4.0 / 9.0 * c2 * c2,
-//                    -I * x5 / 15.0 * c1 / (mSq * 2.0 + 3.0)
-//            )
-//            val b = listOf(
-//                    -I * x5 / 45.0 * c1,
-//                    ZERO
-//            )
-//
-//            val coefficientInCrossSections = Complex_(2.0 * Math.PI) / (waveVector * waveVector)
-//            val coefficientInAlphas = 3.0 / 4.0 * f / (Math.PI * Math.pow(r_, 3.0))
-//            val coefficient = coefficientInCrossSections * coefficientInAlphas
-//
-//            return coefficient * a.indices.sumByDouble { (2 * it + 1) * (a[it] + b[it]).real } to
-//                    coefficient * a.indices.sumByDouble {
-//                (2 * it + 1) * (Math.pow(a[it].abs(), 2.0) + Math.pow(b[it].abs(), 2.0))
-//            }
-//        }
-        fun alphaExtAlphaSca(wavelength: Double, epsMatrix: Complex_, epsMetal: Complex_, f: Double, r: Double): Pair<Double, Double> {
+        fun extinctionCoefficient(wavelength: Double, epsMatrix: Complex_, epsMetal: Complex_, f: Double, r: Double) =
+                alphaExtAlphaSca(wavelength, epsMatrix, epsMetal, f, r).first
+
+        fun scatteringCoefficient(wavelength: Double, epsMatrix: Complex_, epsMetal: Complex_, f: Double, r: Double) =
+                alphaExtAlphaSca(wavelength, epsMatrix, epsMetal, f, r).second
+
+        private fun alphaExtAlphaSca(wavelength: Double, epsMatrix: Complex_, epsMetal: Complex_, f: Double, r: Double): Pair<Double, Double> {
             val a = r * 1E-7 // cm^-1 as for wavelength
             val a2 = pow(a, 2.0)
             val a3 = pow(a, 3.0)

@@ -65,7 +65,9 @@ private object OpticalParametersValidator {
     private fun initExternalMediaLayers(): ValidationResult {
         val media = mapOf(
                 "Air" to AIR,
-                "GaAs: Adachi" to GAAS_ADACHI, "GaAs: Gauss" to GAAS_GAUSS, "GaAs: Gauss-Adachi" to GAAS_GAUSS_ADACHI,
+                "GaAs: Adachi" to GAAS_ADACHI,
+                "GaAs: Gauss" to GAAS_GAUSS,
+//                "GaAs: Gauss-Adachi" to GAAS_GAUSS_ADACHI,
                 "Custom" to CUSTOM
         )
 
@@ -93,7 +95,7 @@ private object OpticalParametersValidator {
                     AIR -> ConstRefractiveIndexLayer(d = POSITIVE_INFINITY, n = ONE) to SUCCESS
                     GAAS_ADACHI -> GaAs(d = POSITIVE_INFINITY, epsType = ADACHI) to SUCCESS
                     GAAS_GAUSS -> GaAs(d = POSITIVE_INFINITY, epsType = GAUSS) to SUCCESS
-                    GAAS_GAUSS_ADACHI -> GaAs(d = POSITIVE_INFINITY, epsType = GAUSS_ADACHI) to SUCCESS
+//                    GAAS_GAUSS_ADACHI -> GaAs(d = POSITIVE_INFINITY, epsType = GAUSS_ADACHI) to SUCCESS
                     CUSTOM -> {
                         try {
                             val nReal = mediumRefractiveIndexReal.toDouble()

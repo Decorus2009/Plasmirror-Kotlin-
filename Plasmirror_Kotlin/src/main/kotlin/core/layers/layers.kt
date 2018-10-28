@@ -42,7 +42,7 @@ interface GaAsLayer : Layer {
     val epsType: EpsType
 
     override val n
-        get() = Optics.toRefractiveIndex(AlGaAsMatrix.Permittivity.permittivity(State.wavelengthCurrent, 0.0, 0.0, epsType))
+        get() = Optics.toRefractiveIndex(AlGaAsMatrix.Permittivity.get(State.wavelengthCurrent, 0.0, 0.0, epsType))
 }
 
 
@@ -51,7 +51,7 @@ interface AlGaAsLayer : GaAsLayer {
     val x: Double
 
     override val n
-        get() = Optics.toRefractiveIndex(AlGaAsMatrix.Permittivity.permittivity(State.wavelengthCurrent, k, x, epsType))
+        get() = Optics.toRefractiveIndex(AlGaAsMatrix.Permittivity.get(State.wavelengthCurrent, k, x, epsType))
 }
 
 

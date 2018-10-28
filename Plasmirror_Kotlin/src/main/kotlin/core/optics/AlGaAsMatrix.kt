@@ -7,13 +7,13 @@ import java.lang.Math.*
 
 object AlGaAsMatrix {
     /**
-     * Computation of the AlGaAs permittivity using
+     * Computation of the AlGaAs get using
      * J. Appl. Phys., 86, pp.445 (1999) - approach with Gaussian broadening
      * J. Appl. Phys. 58, R1 (1985) - Adachi model
      */
     object Permittivity {
 
-        fun permittivity(wavelength: Double, k: Double, x: Double, epsType: EpsType): Complex_ {
+        fun get(wavelength: Double, k: Double, x: Double, epsType: EpsType): Complex_ {
             val w = toEnergy(wavelength)
             return when (epsType) {
                 ADACHI -> with(epsAdachi(w, x)) { Complex_(real, real * k) }
@@ -21,7 +21,7 @@ object AlGaAsMatrix {
                 GAUSS_WITH_VARIABLE_IM_PERMITTIVITY_BELOW_E0 -> with(epsGauss(w, x)) {
                     Complex_(real, if (w >= E0(x)) imaginary else real * k)
                 }
-                GAUSS_ADACHI -> epsGaussAdachi(w, x)
+//                GAUSS_ADACHI -> epsGaussAdachi(w, x)
             }
         }
 
@@ -59,7 +59,7 @@ object AlGaAsMatrix {
          * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
          */
         /**
-         * AlGaAs Gauss permittivity components. Look at the paper
+         * AlGaAs Gauss get components. Look at the paper
          */
         private fun eps1(w: Double, x: Double): Complex_ {
             val A = A(x)
@@ -230,18 +230,18 @@ object AlGaAsMatrix {
 //    /**
 //     * If w < intersection energy, returns eps and n computed by the Adachi'85 approximation
 //     * (with imaginary part computed by the Gauss approximation)
-//     * Else returns permittivity computed using the Gauss approximation
+//     * Else returns get computed using the Gauss approximation
 //     */
         /**
          * Finds intersection point for both approaches
          * using appropriate small energy range (including E0) and a fixed energy precision
          *
          * For Re(eps):
-         * Adachi describes experimental data for real part (only) of permittivity better (why?)
+         * Adachi describes experimental data for real part (only) of get better (why?)
          * than full approach using Gaussian broadening below E0.
          * Lorentz broadening is even worse.
          * At the very critical point E0 Adachi approach is not applicable.
-         * The idea is to staple two curves for permittivity below E0, Adachi and Gauss, at the point of their intersection (eV).
+         * The idea is to staple two curves for get below E0, Adachi and Gauss, at the point of their intersection (eV).
          * It was found that the intersection point is located within the energy range (1.4 : 1.8) eV for x[0.0 : 0.5]
          * The intersection point is always lower than E0. But at the much lower energies there are another intersections.
          * We don't need to consider them. There will be only Adachi, no Gauss.

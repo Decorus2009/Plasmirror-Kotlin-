@@ -7,19 +7,38 @@ import core.State.angle
 import java.lang.Math.*
 
 // TODO move to optics
-enum class Medium { AIR, GAAS_ADACHI, GAAS_GAUSS, GAAS_GAUSS_ADACHI, CUSTOM }
+enum class Medium {
+    AIR,
+    GAAS_ADACHI,
+    GAAS_GAUSS,
+//    GAAS_GAUSS_ADACHI,
+    CUSTOM
+}
 
-enum class Polarization { S, P }
+enum class Polarization {
+    S,
+    P
+}
 
-enum class Regime { REFLECTANCE, TRANSMITTANCE, ABSORBANCE, PERMITTIVITY, REFRACTIVE_INDEX }
+enum class Regime {
+    REFLECTANCE,
+    TRANSMITTANCE,
+    ABSORBANCE,
+    PERMITTIVITY,
+    REFRACTIVE_INDEX
+}
 
-enum class EpsType { ADACHI, GAUSS, GAUSS_WITH_VARIABLE_IM_PERMITTIVITY_BELOW_E0, GAUSS_ADACHI }
+enum class EpsType {
+    ADACHI,
+    GAUSS,
+    GAUSS_WITH_VARIABLE_IM_PERMITTIVITY_BELOW_E0,
+//    GAUSS_ADACHI
+}
 
 
 fun toEnergy(wavelength: Double) = 1239.8 / wavelength
 
 fun cosThetaIncident() = Complex_(cos(angle * PI / 180.0))
-
 
 
 /**
