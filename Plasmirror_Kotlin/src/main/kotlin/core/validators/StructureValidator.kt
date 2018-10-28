@@ -24,9 +24,8 @@ object StructureValidator {
             "7-1-1" to 8, "7-2-1" to 8, "7-3-1" to 8,
             "7-1-2" to 5, "7-2-2" to 5, "7-3-2" to 5,
 
-            "8-1" to 8, "8-2" to 8, "8-3" to 8,
-
-            "9-1" to 5, "9-2" to 5, "9-3" to 5
+            "8-1-1" to 8, "8-2-1" to 8, "8-3-1" to 8,
+            "8-1-2" to 5, "8-2-2" to 5, "8-3-2" to 5
     )
 
     /**
@@ -119,7 +118,7 @@ object StructureValidator {
         /**
         2 or more consecutive period descriptions
          */
-        (1..size - 1).filter { this[it - 1][0].contains("x") && this[it][0].contains("x") }.forEach {
+        (1 until size).filter { this[it - 1][0].contains("x") && this[it][0].contains("x") }.forEach {
             throw StructureDescriptionException("Two period repeat descriptions are found together")
         }
         /**
@@ -155,7 +154,8 @@ object StructureValidator {
         Check that structure contains only one layer for PERMITTIVITY and REFRACTIVE_INDEX regimes
         (check that tokenizedLines contains only one List<String> with layer parameters)
          */
-        if ((State.regime == Regime.PERMITTIVITY || State.regime == Regime.REFRACTIVE_INDEX) && filterNot { it.all { it.contains("x") } }.size != 1) {
+        if ((State.regime == Regime.PERMITTIVITY || State.regime == Regime.REFRACTIVE_INDEX)
+                && filterNot { it.all { it.contains("x") } }.size != 1) {
             throw StructureDescriptionException("Structure must contain only one layer for this regime")
         }
         /**
@@ -179,6 +179,8 @@ object StructureValidator {
             Complex parameter description should contain both "(" and ")"
              */
             forEach {
+                // TODO check replacement by
+                // (it.contains("(") && it.contains(")")).not()
                 if ((it.contains("(") && it.contains(")").not()) || (it.contains("(").not() && it.contains(")"))) {
                     throw StructureDescriptionException("Invalid complex parameter value format")
                 }
@@ -255,6 +257,7 @@ object StructureValidator {
      * Checks if the line: String contains only one token and represents a repeat number for a block
      */
     private fun List<String>.isRepeat() = size == 1 && this[0].startsWith("x")
+
+    private class StructureDescriptionException(message: String) : RuntimeException(message)
 }
 
-private class StructureDescriptionException(message: String) : RuntimeException(message)
