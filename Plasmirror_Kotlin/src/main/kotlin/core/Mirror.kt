@@ -4,6 +4,7 @@ import core.optics.Polarization.P
 import core.optics.Polarization.S
 import core.layers.ConstRefractiveIndexLayer
 import core.layers.Layer
+import core.layers.MieTheoryLayerOfMetallicClustersInAlGaAs
 import core.optics.cosThetaInLayer
 import core.optics.cosThetaIncident
 import org.apache.commons.math3.complex.Complex.NaN
@@ -14,9 +15,9 @@ import kotlin.Double.Companion.POSITIVE_INFINITY
  */
 class Mirror(val structure: Structure, private val leftMediumLayer: Layer, private val rightMediumLayer: Layer) {
 
-    fun computeReflectance() = with(r().abs()) { this * this }
+    fun reflectance() = with(r().abs()) { this * this }
 
-    fun computeTransmittance(): Double {
+    fun transmittance(): Double {
         val t = t().abs()
 
         // просто обращаться к State.n_left нельзя, NPE
@@ -32,11 +33,15 @@ class Mirror(val structure: Structure, private val leftMediumLayer: Layer, priva
         }
     }
 
-    fun computeAbsorbance() = 1.0 - computeReflectance() - computeTransmittance()
+    fun absorbance() = 1.0 - reflectance() - transmittance()
 
-    fun computeRefractiveIndex() = structure.blocks[0].layers[0].n
+    fun refractiveIndex() = structure.blocks[0].layers[0].n
 
-    fun computePermittivity() = with(computeRefractiveIndex()) { this * this }
+    fun permittivity() = with(refractiveIndex()) { this * this }
+
+    fun extinctionCoefficient() = structure.blocks[0].layers[0].alphaExt
+
+    fun scatteringCoefficient() = (structure.blocks[0].layers[0] as MieTheoryLayerOfMetallicClustersInAlGaAs).alphaSca
 
     private fun r() = with(matrix) { this[1, 0] / this[1, 1] * (-1.0) }
 

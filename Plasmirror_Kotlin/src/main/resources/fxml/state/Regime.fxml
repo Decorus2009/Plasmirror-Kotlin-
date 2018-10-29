@@ -27,6 +27,8 @@
                                 <String fx:value="Absorbance" />
                                 <String fx:value="Permittivity" />
                                 <String fx:value="Refractive Index" />
+                                <String fx:value="Extinction Coefficient" />
+                                <String fx:value="Scattering Coefficient" />
                             </FXCollections>
                         </items>
                     </ChoiceBox>

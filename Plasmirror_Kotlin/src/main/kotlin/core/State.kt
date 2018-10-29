@@ -36,6 +36,8 @@ object State {
     val absorbance = mutableListOf<Double>()
     val permittivity = mutableListOf<Complex_>()
     val refractiveIndex = mutableListOf<Complex_>()
+    val extinctionCoefficient = mutableListOf<Double>()
+    val scatteringCoefficient = mutableListOf<Double>()
 
     fun init(): ValidationResult {
         saveToStorages()
@@ -64,36 +66,21 @@ object State {
 
         with(mirror) {
             when (regime) {
-                REFLECTANCE -> reflectance += computeReflectance()
-                TRANSMITTANCE -> transmittance += computeTransmittance()
-                ABSORBANCE -> absorbance += computeAbsorbance()
-                PERMITTIVITY -> permittivity += computePermittivity()
-                REFRACTIVE_INDEX -> refractiveIndex += computeRefractiveIndex()
+                Regime.REFLECTANCE -> reflectance += reflectance()
+                Regime.TRANSMITTANCE -> transmittance += transmittance()
+                Regime.ABSORBANCE -> absorbance += absorbance()
+                Regime.PERMITTIVITY -> permittivity += permittivity()
+                Regime.REFRACTIVE_INDEX -> refractiveIndex += refractiveIndex()
+                Regime.EXTINCTION_COEFFICIENT -> extinctionCoefficient += extinctionCoefficient()
+                Regime.SCATTERING_COEFFICIENT -> scatteringCoefficient += scatteringCoefficient()
             }
         }
     }
 
-//        fun set_fit() = reflectance.clear()
-//
-//        /**
-//         * Wavelengths are already initialized.
-//         */
-//        fun compute_fit() = (0..wavelength.size - 1).forEach {
-//            wavelengthCurrent = wavelength[it]
-//            reflectance += mirror.computeReflectance()
-//        }
-//
-//        fun computeDifference() {
-//            val imported = LineChartState.imported[0].extendedSeriesReal.series.data
-//        }
-
     private fun clear() {
-//        fun <T> clearIfNotEmpty(vararg lists: MutableList<out T>) = lists.forEach { it.run { if (isNotEmpty()) clear() } }
-
         fun <T> clear(vararg lists: MutableList<out T>) = lists.forEach { it.clear() }
 
-
-        clear(reflectance, transmittance, absorbance)
+        clear(reflectance, transmittance, absorbance, extinctionCoefficient, scatteringCoefficient)
         clear(permittivity, refractiveIndex)
         /*
         TODO Doesn't clear when using this form of extension function (without "run")

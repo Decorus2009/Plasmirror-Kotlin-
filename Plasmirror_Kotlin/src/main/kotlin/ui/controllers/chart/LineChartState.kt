@@ -1,7 +1,7 @@
 package ui.controllers.chart
 
 import core.State
-import core.optics.Regime.*
+import core.optics.Regime
 import core.optics.toEnergy
 import javafx.scene.chart.XYChart
 import ui.controllers.chart.LineChartState.SeriesType.COMPUTED
@@ -68,17 +68,19 @@ object LineChartState {
         with(State) {
             with(extendedSeriesReal.series.data) {
                 when (State.regime) {
-                    REFLECTANCE -> addAll(seriesData(wavelength, reflectance))
-                    TRANSMITTANCE -> addAll(seriesData(wavelength, transmittance))
-                    ABSORBANCE -> addAll(seriesData(wavelength, absorbance))
-                    PERMITTIVITY -> addAll(seriesData(wavelength, permittivity.map { it.real }))
-                    REFRACTIVE_INDEX -> addAll(seriesData(wavelength, refractiveIndex.map { it.real }))
+                    Regime.REFLECTANCE -> addAll(seriesData(wavelength, reflectance))
+                    Regime.TRANSMITTANCE -> addAll(seriesData(wavelength, transmittance))
+                    Regime.ABSORBANCE -> addAll(seriesData(wavelength, absorbance))
+                    Regime.PERMITTIVITY -> addAll(seriesData(wavelength, permittivity.map { it.real }))
+                    Regime.REFRACTIVE_INDEX -> addAll(seriesData(wavelength, refractiveIndex.map { it.real }))
+                    Regime.EXTINCTION_COEFFICIENT -> addAll(seriesData(wavelength, extinctionCoefficient))
+                    Regime.SCATTERING_COEFFICIENT -> addAll(seriesData(wavelength, scatteringCoefficient))
                 }
             }
             with(extendedSeriesImaginary.series.data) {
                 when (State.regime) {
-                    PERMITTIVITY -> addAll(seriesData(wavelength, permittivity.map { it.imaginary }))
-                    REFRACTIVE_INDEX -> addAll(seriesData(wavelength, refractiveIndex.map { it.imaginary }))
+                    Regime.PERMITTIVITY -> addAll(seriesData(wavelength, permittivity.map { it.imaginary }))
+                    Regime.REFRACTIVE_INDEX -> addAll(seriesData(wavelength, refractiveIndex.map { it.imaginary }))
                     else -> {
                     }
                 }
@@ -159,16 +161,21 @@ object LineChartState {
     private fun seriesData(x: List<Double>, y: List<Double>) = x.indices.map { XYChart.Data<Number, Number>(x[it], y[it]) }
 
 
-    class LineChartSeries(val extendedSeriesReal: ExtendedSeries = ExtendedSeries(),
-                          val extendedSeriesImaginary: ExtendedSeries = ExtendedSeries(color = nextColor(offset = 50)))
+    class LineChartSeries(
+            val extendedSeriesReal: ExtendedSeries = ExtendedSeries(),
+            val extendedSeriesImaginary: ExtendedSeries = ExtendedSeries(color = nextColor(offset = 50))
+    )
 
-    data class ExtendedSeries(val series: XYChart.Series<Number, Number> = XYChart.Series<Number, Number>(),
-                              var visible: Boolean = true,
-                              var selected: Boolean = false,
-                              var color: String = nextColor(),
-                              var width: String = "2px",
-                              var type: SeriesType = COMPUTED,
-                              var previousXAxisFactor: Double = 1.0, var previousYAxisFactor: Double = 1.0) {
+    data class ExtendedSeries(
+            val series: XYChart.Series<Number, Number> = XYChart.Series<Number, Number>(),
+            var visible: Boolean = true,
+            var selected: Boolean = false,
+            var color: String = nextColor(),
+            var width: String = "2px",
+            var type: SeriesType = COMPUTED,
+            var previousXAxisFactor: Double = 1.0,
+            var previousYAxisFactor: Double = 1.0
+    ) {
 
         fun select() {
             selected = true

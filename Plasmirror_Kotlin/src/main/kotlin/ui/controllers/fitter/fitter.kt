@@ -53,7 +53,7 @@ object FitterState {
      */
     fun compute() = (0 until wavelength.size).forEach {
         wavelengthCurrent = wavelength[it]
-        reflectance += mirror.computeReflectance()
+        reflectance += mirror.reflectance()
     }
 
     /* TODO measure time */

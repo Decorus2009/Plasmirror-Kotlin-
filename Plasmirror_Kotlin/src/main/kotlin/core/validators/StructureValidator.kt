@@ -154,23 +154,50 @@ object StructureValidator {
             }
         }
         /**
-        Check that structure contains only one layer for PERMITTIVITY and REFRACTIVE_INDEX regimes
+        Check that structure contains only one layer for
+        PERMITTIVITY, REFRACTIVE_INDEX, EXTINCTION_COEFFICIENT and SCATTERING_COEFFICIENT regimes
         (check that tokenizedLines contains only one List<String> with layer parameters)
          */
-        if ((State.regime == Regime.PERMITTIVITY || State.regime == Regime.REFRACTIVE_INDEX)
-                && filterNot { it.all { it.contains("x") } }.size != 1) {
-            throw StructureDescriptionException("Structure must contain only one layer for this regime")
+        when (State.regime) {
+            Regime.PERMITTIVITY,
+            Regime.REFRACTIVE_INDEX,
+            Regime.EXTINCTION_COEFFICIENT,
+            Regime.SCATTERING_COEFFICIENT -> {
+                if (filterNot { it.all { it.contains("x") } }.size != 1) {
+                    throw StructureDescriptionException("Structure must contain only one layer for this regime")
+                }
+            }
+            else -> {
+            }
         }
+//        if ((State.regime == Regime.PERMITTIVITY || State.regime == Regime.REFRACTIVE_INDEX
+//
+//            if ((State.regime == Regime.PERMITTIVITY || State.regime == Regime.REFRACTIVE_INDEX
+//                            || State.regime == Regime.EXTINCTION_COEFFICIENT || State.regime == Regime.SCATTERING_COEFFICIENT)
+//                    && filterNot { it.all { it.contains("x") } }.size != 1) {
+//                throw StructureDescriptionException("Structure must contain only one layer for this regime")
+//            }
+
         /**
-        Check the layer type parameter to correspond to the appropriate number of parameters for a layer
+        Layer type check
          */
         filterNot { it[0].startsWith("x") }.forEach {
             val type = it[0]
-            println("type = $type")
+            /**
+            Check that layer type corresponds to a Mie theory layer for a light scattering computation
+             */
+            if (State.regime == Regime.SCATTERING_COEFFICIENT) {
+                if (type.startsWith("8").not()) {
+                    throw StructureDescriptionException(
+                            "Scattering computation must be provided for a single layer " +
+                                    "considered in terms of Mie theory"
+                    )
+                }
+            }
+            /**
+            Check the layer type parameter to correspond to the appropriate number of parameters for a layer
+             */
             if (type !in numberOfParameters.keys || numberOfParameters[type] != it.size) {
-                println(type)
-                println(numberOfParameters[type])
-                println(it)
                 throw StructureDescriptionException("Invalid layer type or incorrect number of parameters for a layer")
             }
         }

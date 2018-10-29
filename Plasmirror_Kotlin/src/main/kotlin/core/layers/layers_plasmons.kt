@@ -137,7 +137,11 @@ abstract class MieTheoryLayerOfMetallicClustersInAlGaAs(
     // (Mie theory is for the computation of extinction and scattering, not for the computation of refractive index
 
     override val alphaExt: Double
-        get() = MetallicClusters.MieTheory.extinctionCoefficient(State.wavelengthCurrent, epsMatrix, epsMetal, f, r)
+        get() {
+//            println("${State.wavelengthCurrent} ${MetallicClusters.MieTheory.extinctionCoefficient(State.wavelengthCurrent, epsMatrix, epsMetal, f, r)}")
+//            print("${State.wavelengthCurrent} ")
+            return MetallicClusters.MieTheory.extinctionCoefficient(State.wavelengthCurrent, epsMatrix, epsMetal, f, r)
+        }
     val alphaSca: Double
         get() = MetallicClusters.MieTheory.scatteringCoefficient(State.wavelengthCurrent, epsMatrix, epsMetal, f, r)
 

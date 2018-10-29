@@ -84,6 +84,15 @@ object MetallicClusters {
                 alphaExtAlphaSca(wavelength, epsMatrix, epsMetal, f, r).second
 
         private fun alphaExtAlphaSca(wavelength: Double, epsMatrix: Complex_, epsMetal: Complex_, f: Double, r: Double): Pair<Double, Double> {
+
+//            val n = Optics.toRefractiveIndex(epsMatrix)
+//            val m = epsMetal / epsMatrix
+//            val waveVector = n.real * 2.0 * PI / (wavelength * 1E-7)
+//
+//            println(Complex_(n.real * n.real) / (n * n))
+//
+//            return 3.0 * f * waveVector * ((m - 1.0) / (m + 2.0) * (n.real * n.real) / (n * n)).imaginary to 1000.0
+
             val a = r * 1E-7 // cm^-1 as for wavelength
             val a2 = pow(a, 2.0)
             val a3 = pow(a, 3.0)
@@ -94,7 +103,7 @@ object MetallicClusters {
 
             val x2 = x * x
             val x4 = x * x * x * x
-            val m = epsMatrix / epsMetal // m_squared in Nolte paper
+            val m = epsMetal / epsMatrix // m_squared in Nolte paper
 
             val c1 = (m - 1.0) / (m + 2.0)
             val c2 = c1 * (n.real * n.real) / (n * n)

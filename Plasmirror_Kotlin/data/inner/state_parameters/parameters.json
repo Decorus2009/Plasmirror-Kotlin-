@@ -1,11 +1,11 @@
 {
     "right_medium": "Custom",
     "computation_range": {
-        "start": "650",
+        "start": "200",
         "end": "900",
-        "step": "1"
+        "step": "2"
     },
-    "regime": "Reflectance",
+    "regime": "Extinction Coefficient",
     "angle": "0",
     "polarization": "S",
     "left_medium": "Air",

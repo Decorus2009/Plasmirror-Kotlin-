@@ -1,6 +1,7 @@
 package ui.controllers
 
 import core.*
+import core.optics.Regime
 
 import core.optics.Regime.*
 
@@ -20,17 +21,19 @@ fun writeComputedDataTo(file: File) = StringBuilder().apply {
     var computedImaginary: List<Double> = emptyList()
 
     computedReal = when (State.regime) {
-        REFLECTANCE -> State.reflectance
-        TRANSMITTANCE -> State.transmittance
-        ABSORBANCE -> State.absorbance
-        PERMITTIVITY -> {
+        Regime.REFLECTANCE -> State.reflectance
+        Regime.TRANSMITTANCE -> State.transmittance
+        Regime.ABSORBANCE -> State.absorbance
+        Regime.PERMITTIVITY -> {
             computedImaginary = State.permittivity.map { it.imaginary }.toList()
             State.permittivity.map { it.real }.toList()
         }
-        REFRACTIVE_INDEX -> {
+        Regime.REFRACTIVE_INDEX -> {
             computedImaginary = State.refractiveIndex.map { it.imaginary }.toList()
             State.refractiveIndex.map { it.real }.toList()
         }
+        Regime.EXTINCTION_COEFFICIENT -> State.extinctionCoefficient
+        Regime.SCATTERING_COEFFICIENT -> State.scatteringCoefficient
     }
 
     val columnSeparator = "    "

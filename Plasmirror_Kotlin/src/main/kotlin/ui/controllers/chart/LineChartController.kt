@@ -1,8 +1,8 @@
 package ui.controllers.chart
 
 import com.sun.javafx.charts.Legend
-import core.optics.Regime.*
 import core.State
+import core.optics.Regime
 import javafx.application.Platform
 import javafx.event.EventHandler
 import javafx.fxml.FXML
@@ -105,11 +105,13 @@ class LineChartController {
 
         fun updateYAxisLabel() {
             yAxis.label = when (State.regime) {
-                REFLECTANCE -> "Reflectance"
-                TRANSMITTANCE -> "Transmittance"
-                ABSORBANCE -> "Absorbance"
-                PERMITTIVITY -> "OpticalConstants"
-                REFRACTIVE_INDEX -> "Refractive Index"
+                Regime.REFLECTANCE -> "Reflectance"
+                Regime.TRANSMITTANCE -> "Transmittance"
+                Regime.ABSORBANCE -> "Absorbance"
+                Regime.PERMITTIVITY -> "OpticalConstants"
+                Regime.REFRACTIVE_INDEX -> "Refractive Index"
+                Regime.EXTINCTION_COEFFICIENT -> "Extinction coefficient"
+                Regime.SCATTERING_COEFFICIENT -> "Scattering coefficient"
             }
         }
 
@@ -257,20 +259,30 @@ class LineChartController {
             }
         }
         with(yAxis) {
-            if (State.regime == REFLECTANCE || State.regime == ABSORBANCE || State.regime == TRANSMITTANCE) {
-                lowerBound = 0.0
-                upperBound = 1.0
-                tickUnit = 0.1
-            } else if (State.regime == PERMITTIVITY) {
-                lowerBound = -10.0
-                upperBound = 30.0
-                tickUnit = 5.0
-                isAutoRanging = false
-            } else if (State.regime == REFRACTIVE_INDEX) {
-                lowerBound = -1.0
-                upperBound = 4.5
-                tickUnit = 0.5
-                isAutoRanging = false
+            when (State.regime) {
+                Regime.REFLECTANCE, Regime.ABSORBANCE, Regime.TRANSMITTANCE -> {
+                    lowerBound = 0.0
+                    upperBound = 1.0
+                    tickUnit = 0.1
+                }
+                Regime.PERMITTIVITY -> {
+                    lowerBound = -10.0
+                    upperBound = 30.0
+                    tickUnit = 5.0
+                    isAutoRanging = false
+                }
+                Regime.REFRACTIVE_INDEX -> {
+                    lowerBound = -1.0
+                    upperBound = 4.5
+                    tickUnit = 0.5
+                    isAutoRanging = false
+                }
+                Regime.EXTINCTION_COEFFICIENT, Regime.SCATTERING_COEFFICIENT -> {
+                    lowerBound = 0.0
+                    upperBound = 5E4
+                    tickUnit = 2E3
+                    isAutoRanging = false
+                }
             }
         }
     }

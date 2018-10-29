@@ -37,7 +37,8 @@ private object OpticalParametersValidator {
     private fun initRegime(): ValidationResult {
         val regimes = mapOf(
                 "Reflectance" to REFLECTANCE, "Transmittance" to TRANSMITTANCE, "Absorbance" to ABSORBANCE,
-                "Permittivity" to PERMITTIVITY, "Refractive Index" to REFRACTIVE_INDEX
+                "Permittivity" to PERMITTIVITY, "Refractive Index" to REFRACTIVE_INDEX,
+                "Extinction Coefficient" to EXTINCTION_COEFFICIENT, "Scattering Coefficient" to SCATTERING_COEFFICIENT
         )
 
         /*

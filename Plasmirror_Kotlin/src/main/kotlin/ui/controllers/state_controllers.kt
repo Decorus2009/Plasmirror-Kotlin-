@@ -66,7 +66,7 @@ class RegimeController {
                             mediumParametersController.enableAll()
                             lightParametersController.enableAll()
                         }
-                        "OpticalConstants", "Refractive Index" -> {
+                        "Permittivity", "Refractive Index", "Extinction Coefficient", "Scattering Coefficient" -> {
                             mediumParametersController.disableAll()
                             lightParametersController.disableAll()
                         }
