@@ -2,12 +2,12 @@
     "right_medium": "Custom",
     "computation_range": {
         "start": "200",
-        "end": "900",
-        "step": "2"
+        "end": "2000",
+        "step": "10"
     },
     "regime": "Extinction Coefficient",
     "angle": "0",
-    "polarization": "S",
+    "polarization": "P",
     "left_medium": "Air",
     "left_medium_n": {
         "imaginary": "0.0",

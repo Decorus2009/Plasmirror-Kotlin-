@@ -1,17 +1,19 @@
 x1
-type = 8-2-2, d = 100, k = 0. , x = 0.28, 
+//type = 2-1, d = 1000, k = 0.0,  x = 0.27
+
+type = 8-1-2, d = 1000, k = 0.0 , x = 0.27, 
 //wPlasma = 13, gammaPlasma = 1.43, eps_inf  = 1,
-f = 0.0053, r = 10
+f = 0.0053, r = 20
 
 /*
 // Custom: 3.4, 0.0
 x1
 type = 1-2, d = 2
-type = 2-1, d = 165.5, k = 0.0, x = 0.28
+type = 2-1, d = 90, k = 0.0, x = 0.6
 
-x24
-type = 9-2-2, d = 40, k = 0., x = 0.28, lattice_factor = 8.1
-type = 2-3, d = 110., k = 0.00, x = 0.28
+x6
+type = 9-2-2, d = 40, k = 0., x = 0.6, lattice_factor = 8.1
+type = 2-1, d = 235., k = 0.02, x = 0.6
 */
 
 /*
