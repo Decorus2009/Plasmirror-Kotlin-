@@ -1,9 +1,9 @@
 {
     "right_medium": "Custom",
     "computation_range": {
-        "start": "200",
-        "end": "2000",
-        "step": "10"
+        "start": "100",
+        "end": "1000",
+        "step": "1"
     },
     "regime": "Extinction Coefficient",
     "angle": "0",

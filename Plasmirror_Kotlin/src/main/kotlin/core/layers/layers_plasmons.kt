@@ -139,7 +139,7 @@ abstract class MieTheoryLayerOfMetallicClustersInAlGaAs(
     override val alphaExt: Double
         get() {
 //            println("${State.wavelengthCurrent} ${MetallicClusters.MieTheory.extinctionCoefficient(State.wavelengthCurrent, epsMatrix, epsMetal, f, r)}")
-//            print("${State.wavelengthCurrent} ")
+//            println("${State.wavelengthCurrent} ${MetallicClusters.MieTheory.extinctionCoefficient(State.wavelengthCurrent, epsMatrix, epsMetal, f, r)}")
             return MetallicClusters.MieTheory.extinctionCoefficient(State.wavelengthCurrent, epsMatrix, epsMetal, f, r)
         }
     val alphaSca: Double

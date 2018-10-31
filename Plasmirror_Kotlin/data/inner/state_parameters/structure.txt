@@ -1,9 +1,9 @@
 x1
 //type = 2-1, d = 1000, k = 0.0,  x = 0.27
 
-type = 8-1-2, d = 1000, k = 0.0 , x = 0.27, 
-//wPlasma = 13, gammaPlasma = 1.43, eps_inf  = 1,
-f = 0.0053, r = 20
+type = 8-3-1, d = 1000, k = 0.025 , x = 0.27, 
+wPlasma = 13, gammaPlasma = 1.43, eps_inf  = 1,
+f = 0.053, r = 20
 
 /*
 // Custom: 3.4, 0.0
