@@ -279,7 +279,7 @@ class LineChartController {
                 }
                 Regime.EXTINCTION_COEFFICIENT, Regime.SCATTERING_COEFFICIENT -> {
                     lowerBound = 0.0
-                    upperBound = 5E4
+                    upperBound = 2E4
                     tickUnit = 2E3
                     isAutoRanging = false
                 }

@@ -1,0 +1,22 @@
+// ST1279-7 R0 modeling
+// Custom: 3.4, 0.0
+x1
+type = 1-2,
+d = 2
+type = 2-1,
+d = 166.5,
+k = 0.0,
+x = 0.3
+
+x24
+type = 9-2-2,
+// layer thickness is considered as double average size of NI (4 radii)
+d = 60,
+k = 0.1,
+x = 0.3,
+lattice_factor = 9.8
+
+type = 2-3,
+d = 110.37 ,
+k = 0.0005,
+x = 0.3

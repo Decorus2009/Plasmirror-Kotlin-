@@ -1,8 +1,8 @@
 {
     "right_medium": "Custom",
     "computation_range": {
-        "start": "100",
-        "end": "1600",
+        "start": "200",
+        "end": "1500",
         "step": "1"
     },
     "regime": "Extinction Coefficient",

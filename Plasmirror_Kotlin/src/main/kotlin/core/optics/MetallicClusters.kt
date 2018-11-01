@@ -85,8 +85,6 @@ object MetallicClusters {
         private lateinit var b: MutableList<Complex_>
 
         private var x = 0.0
-        private var wavevector = 0.0
-        private var radius = 0.0
         private var nStop = 0
         private var xStop = 0.0
         private lateinit var m: Complex_
@@ -100,19 +98,19 @@ object MetallicClusters {
 
         private fun alphaExtAlphaSca(wavelength: Double, epsMatrix: Complex_, epsMetal: Complex_, f: Double, r: Double): Pair<Double, Double> {
 
-            val NANG = 20
-            m = Optics.toRefractiveIndex(epsMetal) / Optics.toRefractiveIndex(epsMatrix)
+            val numberOfAngles = 20
+            val nMatrix = Optics.toRefractiveIndex(epsMatrix)
+            val nMetal = Optics.toRefractiveIndex(epsMetal)
+            m = nMetal / nMatrix
 
+            x = nMatrix.real * 2.0 * Math.PI * r / wavelength
 
-            // TODO Optics.toRefractiveIndex(epsMatrix).real *
-            x = 2.0 * Math.PI * r / wavelength
+            val (Qext, Qsca) = BHMie(x, numberOfAngles)
+            val Cext = Qext * Math.PI * Math.pow(r * 1E-7, 2.0)
+            val Csca = Qsca * Math.PI * Math.pow(r * 1E-7, 2.0)
 
-
-
-            val (QEXT, QSCA) = BHMie(x, NANG)
-
-            val c2 = 3.0 / 4.0 * f / (Math.PI * pow(r * 1E-7, 3.0)) * Math.PI * pow(r * 1E-7, 2.0)
-            return c2 * QEXT to c2 * QSCA
+            val c = 3.0 / 4.0 * f / (Math.PI * Math.pow(r * 1E-7, 3.0))
+            return c * Cext to c * Csca
         }
 
 
@@ -213,6 +211,9 @@ object MetallicClusters {
                 val SCommon = (2.0 * ind + 1.0) / (ind * (ind + 1.0))
                 for (i in 1 until numberOfAngles + 1) {
                     pi[i] = pi1[i]
+                    /*
+                    Борен-Хаффман, стр. 152
+                     */
                     tau[i] = ind * mu[i] * pi[i] - (ind + 1.0) * pi0[i]
 
                     S1[i] = S1[i] + a * Complex_(SCommon * pi[i]) + b * Complex_(SCommon * tau[i])

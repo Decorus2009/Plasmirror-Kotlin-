@@ -1,0 +1,28 @@
+// BP2444-6 P04 R0 modeling
+// Custom: 3.05, 0.0
+x1
+type = 1-2, 
+d = 14.5
+
+type = 2-2, 
+d = 2.5, 
+k = 0., 
+x = 1
+
+type = 2-2, 
+d = 140, 
+k = 0.0,
+x = 0.25
+
+x12
+type = 9-2-2, 
+// layer thickness is considered as double average size of NI (4 radii)
+d = 20,
+k = 0.1, 
+x = 0.25, 
+lattice_factor = 5.3
+
+type = 2-3, 
+d = 107.9,
+k = 0.008, 
+x = 0.25
