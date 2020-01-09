@@ -13,8 +13,6 @@ import ui.controllers.RootController
 lateinit var rootController: RootController
 
 class MainApp : Application() {
-
-
     lateinit var primaryStage: Stage
     private lateinit var rootLayout: AnchorPane
 
