@@ -16,59 +16,73 @@ import java.util.*
 
 class AlGaAsLayerFitterController : LayerFitterController() {
 
-    @FXML lateinit var enableCheckBox: CheckBox
-    @FXML private lateinit var gridPane: GridPane
-    @FXML private lateinit var d_valueTextField: TextField
-    @FXML private lateinit var d_fromTextField: TextField
-    @FXML private lateinit var d_toTextField: TextField
-    @FXML private lateinit var d_stepTextField: TextField
-    @FXML private lateinit var k_valueTextField: TextField
-    @FXML private lateinit var k_fromTextField: TextField
-    @FXML private lateinit var k_toTextField: TextField
-    @FXML private lateinit var k_stepTextField: TextField
-    @FXML private lateinit var x_valueTextField: TextField
-    @FXML private lateinit var x_fromTextField: TextField
-    @FXML private lateinit var x_toTextField: TextField
-    @FXML private lateinit var x_stepTextField: TextField
+  @FXML
+  lateinit var enableCheckBox: CheckBox
+  @FXML
+  private lateinit var gridPane: GridPane
+  @FXML
+  private lateinit var d_valueTextField: TextField
+  @FXML
+  private lateinit var d_fromTextField: TextField
+  @FXML
+  private lateinit var d_toTextField: TextField
+  @FXML
+  private lateinit var d_stepTextField: TextField
+  @FXML
+  private lateinit var k_valueTextField: TextField
+  @FXML
+  private lateinit var k_fromTextField: TextField
+  @FXML
+  private lateinit var k_toTextField: TextField
+  @FXML
+  private lateinit var k_stepTextField: TextField
+  @FXML
+  private lateinit var x_valueTextField: TextField
+  @FXML
+  private lateinit var x_fromTextField: TextField
+  @FXML
+  private lateinit var x_toTextField: TextField
+  @FXML
+  private lateinit var x_stepTextField: TextField
 
-    override lateinit var layer: Layer
-    override lateinit var mainFitterController: MainFitterController
+  override lateinit var layer: Layer
+  override lateinit var mainFitterController: MainFitterController
 
-    @FXML
-    fun initialize() {
-        enableCheckBox.setOnAction {
-            gridPane.isDisable = enableCheckBox.isSelected.not()
-            mainFitterController.layersToFitterControllers.values.filterNot { it === this }.forEach {
-                it.disable()
-            }
-        }
-        Platform.runLater {
-            with(layer as AlGaAs) {
-                d.let {
-                    d_valueTextField.text = String.format(Locale.US, "%.2f", it)
-                    d_fromTextField.text = String.format(Locale.US, "%.2f", it * 0.5)
-                    d_toTextField.text = String.format(Locale.US, "%.2f", it * 1.5)
-                    d_stepTextField.text = String.format(Locale.US, "%.2f", it / 100.0)
-                }
-                k.let {
-                    k_valueTextField.text = String.format(Locale.US, "%.2f", it)
-                    k_fromTextField.text = String.format(Locale.US, "%.2f", it * 0.5)
-                    k_toTextField.text = String.format(Locale.US, "%.2f", it * 1.5)
-                    k_stepTextField.text = String.format(Locale.US, "%.2f", it / 100.0)
-                }
-                x.let {
-                    x_valueTextField.text = String.format(Locale.US, "%.2f", it)
-                    x_fromTextField.text = String.format(Locale.US, "%.2f", it * 0.5)
-                    x_toTextField.text = String.format(Locale.US, "%.2f", it * 1.5)
-                    x_stepTextField.text = String.format(Locale.US, "%.2f", it / 100.0)
-                }
-            }
-        }
+  @FXML
+  fun initialize() {
+    enableCheckBox.setOnAction {
+      gridPane.isDisable = enableCheckBox.isSelected.not()
+      mainFitterController.layersToFitterControllers.values.filterNot { it === this }.forEach {
+        it.disable()
+      }
     }
+    Platform.runLater {
+      with(layer as AlGaAs) {
+        d.let {
+          d_valueTextField.text = String.format(Locale.US, "%.2f", it)
+          d_fromTextField.text = String.format(Locale.US, "%.2f", it * 0.5)
+          d_toTextField.text = String.format(Locale.US, "%.2f", it * 1.5)
+          d_stepTextField.text = String.format(Locale.US, "%.2f", it / 100.0)
+        }
+        k.let {
+          k_valueTextField.text = String.format(Locale.US, "%.2f", it)
+          k_fromTextField.text = String.format(Locale.US, "%.2f", it * 0.5)
+          k_toTextField.text = String.format(Locale.US, "%.2f", it * 1.5)
+          k_stepTextField.text = String.format(Locale.US, "%.2f", it / 100.0)
+        }
+        x.let {
+          x_valueTextField.text = String.format(Locale.US, "%.2f", it)
+          x_fromTextField.text = String.format(Locale.US, "%.2f", it * 0.5)
+          x_toTextField.text = String.format(Locale.US, "%.2f", it * 1.5)
+          x_stepTextField.text = String.format(Locale.US, "%.2f", it / 100.0)
+        }
+      }
+    }
+  }
 
-    override fun fit() {
-        // fitting procedure is slow and ineffective
-        TODO()
+  override fun fit() {
+    // fitting procedure is slow and ineffective
+    TODO()
 /*
         println("Fitting AlGaAs layer")
 
@@ -114,19 +128,19 @@ class AlGaAsLayerFitterController : LayerFitterController() {
         }
         println("Fitter values: ${FitterState.listOfParameters}")
 */
-    }
+  }
 
-    override fun enable() {
-        enableCheckBox.isSelected = true
-        gridPane.isDisable = false
-    }
+  override fun enable() {
+    enableCheckBox.isSelected = true
+    gridPane.isDisable = false
+  }
 
-    override fun disable() {
-        enableCheckBox.isSelected = false
-        gridPane.isDisable = true
-    }
+  override fun disable() {
+    enableCheckBox.isSelected = false
+    gridPane.isDisable = true
+  }
 
-    override val selected: Boolean
-        get() = enableCheckBox.isSelected
+  override val selected: Boolean
+    get() = enableCheckBox.isSelected
 
 }
