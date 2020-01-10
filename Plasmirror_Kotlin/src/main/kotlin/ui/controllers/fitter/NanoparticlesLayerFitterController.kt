@@ -1,7 +1,7 @@
 package ui.controllers.fitter
 
-import core.layers.Layer
-import core.layers.TwoDimensionalLayerOfDrudeMetalClustersInAlGaAs
+import core.layers.semiconductor.Layer
+import core.layers.metal.clusters.TwoDimensionalLayerOfDrudeMetalClustersInAlGaAs
 import javafx.application.Platform
 import javafx.fxml.FXML
 import javafx.scene.control.CheckBox

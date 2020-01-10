@@ -54,7 +54,7 @@ object LineChartState {
     .flatten()
     .forEach {
       it.series.data.forEach {
-        it.xValue = toEnergy(it.xValue as Double)
+        it.xValue = (it.xValue as Double).toEnergy()
       }
     }
 

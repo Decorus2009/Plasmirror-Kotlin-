@@ -10,10 +10,10 @@ type = 8-2-1,
 d = 1000, 
 k = 0.03 , 
 x = 0.3, 
-w_plasma = 7.38, 
-gamma_plasma = 1, 
+w_plasma = 13.6, 
+gamma_plasma = 1.58, 
 eps_inf = 1,
-f = 0.0017, 
+f = 0.0053, 
 r = 7.5
 
 

@@ -1,4 +1,4 @@
-package core.layers
+package core.layers.semiconductor
 
 import core.*
 import core.optics.*
@@ -28,7 +28,7 @@ interface LayerExcitonic : Layer {
         else -> gamma0 * (cos.pow(-1.0)).real
       }
       val phi = Complex_(2.0 * PI * d / State.wavelengthCurrent) * n * cos
-      val S = Complex_(gamma0e) / Complex_(toEnergy(State.wavelengthCurrent) - w0, gamma)
+      val S = Complex_(gamma0e) / Complex_(State.wavelengthCurrent.toEnergy() - w0, gamma)
 
       this[0, 0] = Complex_((phi * I).exp()) * Complex_(1.0 + S.imaginary, -S.real)
       this[0, 1] = Complex_(S.imaginary, -S.real)
@@ -37,17 +37,13 @@ interface LayerExcitonic : Layer {
     }
 }
 
-
 class GaAsExcitonic(
   d: Double,
   override val w0: Double,
   override val gamma0: Double,
   override val gamma: Double,
   epsType: EpsType
-
-) :
-  LayerExcitonic, GaAs(d, epsType)
-
+) : LayerExcitonic, GaAs(d, epsType)
 
 class AlGaAsExcitonic(
   d: Double,
@@ -57,11 +53,7 @@ class AlGaAsExcitonic(
   override val gamma0: Double,
   override val gamma: Double,
   epsType: EpsType
-
-) :
-  LayerExcitonic,
-  AlGaAs(d, k, x, epsType)
-
+) : LayerExcitonic, AlGaAs(d, k, x, epsType)
 
 class ConstRefractiveIndexLayerExcitonic(
   d: Double,
@@ -69,7 +61,4 @@ class ConstRefractiveIndexLayerExcitonic(
   override val w0: Double,
   override val gamma0: Double,
   override val gamma: Double
-
-) :
-  LayerExcitonic,
-  ConstRefractiveIndexLayer(d, n)
+) : LayerExcitonic, ConstRefractiveIndexLayer(d, n)

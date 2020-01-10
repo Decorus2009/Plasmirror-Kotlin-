@@ -7,15 +7,6 @@ import core.State.angle
 import java.lang.Math.PI
 import kotlin.math.*
 
-object Optics {
-  fun extinctionCoefficient(wavelength: Double, refractiveIndex: Complex_) =
-    4.0 * PI * refractiveIndex.imaginary / (wavelength * 1E-7) // cm^-1
-
-  fun toRefractiveIndex(eps: Complex_) = with(eps) {
-    Complex_(sqrt((abs() + real) / 2.0), sqrt((abs() - real) / 2.0))
-  }
-}
-
 enum class Polarization { S, P }
 
 enum class Medium { AIR, GAAS_ADACHI, GAAS_GAUSS, CUSTOM }
@@ -26,8 +17,12 @@ enum class Regime {
   REFLECTANCE, TRANSMITTANCE, ABSORBANCE, PERMITTIVITY, REFRACTIVE_INDEX, EXTINCTION_COEFFICIENT, SCATTERING_COEFFICIENT
 }
 
+fun extinctionCoefficientOf(refractiveIndex: Complex_, wavelength: Double) =
+  4.0 * PI * refractiveIndex.imaginary / (wavelength * 1E-7) // cm^-1
 
-fun toEnergy(wavelength: Double) = 1239.8 / wavelength
+fun Complex_.toRefractiveIndex() = Complex_(sqrt((abs() + real) / 2.0), sqrt((abs() - real) / 2.0))
+
+fun Double.toEnergy() = 1239.8 / this
 
 fun cosThetaIncident() = Complex_(cos(angle * PI / 180.0))
 
@@ -43,10 +38,3 @@ fun cosThetaInLayer(n2: Complex_): Complex_ {
 
   return Complex_((ONE - sin2Sq).sqrt())
 }
-
-fun Double.round(): Double {
-  val precision = 7.0
-  val power = 10.0.pow(precision).toInt()
-  return floor((this + 1E-8) * power) / power
-}
-

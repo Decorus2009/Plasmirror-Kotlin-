@@ -8,7 +8,9 @@ import core.State.wavelengthCurrent
 import core.State.wavelengthEnd
 import core.State.wavelengthStart
 import core.State.wavelengthStep
-import core.layers.*
+import core.layers.metal.clusters.EffectiveMediumLayerOfDrudeMetalClustersInAlGaAs
+import core.layers.metal.clusters.TwoDimensionalLayerOfDrudeMetalClustersInAlGaAs
+import core.layers.semiconductor.*
 import javafx.fxml.FXML
 import javafx.fxml.FXMLLoader
 import javafx.scene.Parent

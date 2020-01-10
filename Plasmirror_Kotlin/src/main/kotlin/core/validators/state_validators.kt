@@ -2,8 +2,8 @@ package core.validators
 
 import core.*
 import core.Complex_.Companion.ONE
-import core.layers.ConstRefractiveIndexLayer
-import core.layers.GaAs
+import core.layers.semiconductor.ConstRefractiveIndexLayer
+import core.layers.semiconductor.GaAs
 import core.optics.EpsType.ADACHI
 import core.optics.EpsType.GAUSS
 import core.optics.Medium.*

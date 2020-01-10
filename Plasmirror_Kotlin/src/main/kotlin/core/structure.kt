@@ -1,17 +1,21 @@
 package core
 
-import core.layers.*
+import core.layers.metal.clusters.*
+import core.layers.metal.clusters.mie.MieFullLayerOfDrudeMetalClustersInAlGaAs
+import core.layers.metal.clusters.mie.MieFullLayerOfSbClustersInAlGaAs
+import core.layers.semiconductor.*
 import core.optics.EpsType
 import core.optics.EpsType.*
 
 
 class LayerDescription(val type: String, val description: List<String>)
 
-class BlockDescription(val repeat: String,
-                       val layerDescriptions: MutableList<LayerDescription> = mutableListOf<LayerDescription>())
+class BlockDescription(
+  val repeat: String,
+  val layerDescriptions: MutableList<LayerDescription> = mutableListOf()
+)
 
-class StructureDescription(val blockDescriptions: MutableList<BlockDescription> = mutableListOf<BlockDescription>())
-
+class StructureDescription(val blockDescriptions: MutableList<BlockDescription> = mutableListOf())
 
 /**
  * Period is a sequence of layers
@@ -26,7 +30,6 @@ class Block(val repeat: Int, val layers: List<Layer>)
  * Structure is a sequence of blocks
  */
 class Structure(var blocks: List<Block>)
-
 
 object StructureBuilder {
   fun build(structureDescription: StructureDescription) = Structure(structureDescription.blockDescriptions.map {
@@ -58,31 +61,31 @@ object StructureBuilder {
           }
         }
         3 -> {
-          val metallicClustersType = typesList[2]
+          val metalClustersType = typesList[2]
           when (layerType) {
             "7" -> {
-              when (metallicClustersType) {
+              when (metalClustersType) {
                 "1" -> effectiveMediumLayerOfDrudeMetalClustersInAlGaAs(this, matrixType)
                 "2" -> effectiveMediumLayerOfSbClustersInAlGaAs(this, matrixType)
                 else -> throw IllegalStateException("Unknown effective medium layer (must never be reached)")
               }
             }
             "8" -> {
-              when (metallicClustersType) {
+              when (metalClustersType) {
                 "1" -> mieTheoryLayerOfDrudeMetalClustersInAlGaAs(this, matrixType)
                 "2" -> mieTheoryLayerOfSbClustersInAlGaAs(this, matrixType)
-                else -> throw IllegalStateException("Unknown Mie theory layer of metallic clusters in AlGaAs (must never be reached)")
+                else -> throw IllegalStateException("Unknown Mie theory layer of metal clusters in AlGaAs (must never be reached)")
               }
             }
             "9" -> {
-              when (metallicClustersType) {
+              when (metalClustersType) {
                 "1" -> twoDimensionalLayerOfDrudeMetalClustersInAlGaAs(this, matrixType)
                 "2" -> twoDimensionalLayerOfSbClustersInAlGaAs(this, matrixType)
-                else -> throw IllegalStateException("Unknown two-dimensional layer of metallic clusters in AlGaAs (must never be reached)"
+                else -> throw IllegalStateException("Unknown two-dimensional layer of metal clusters in AlGaAs (must never be reached)"
                 )
               }
             }
-            else -> throw IllegalStateException("Unknown AlGaAs layer with metallic clusters (must never be reached)")
+            else -> throw IllegalStateException("Unknown AlGaAs layer with metal clusters (must never be reached)")
           }
         }
         else -> throw IllegalStateException("Unknown layer (must never be reached)")
@@ -91,38 +94,23 @@ object StructureBuilder {
   }
 
   // type = 1-1, type = 1-2, type = 1-3
-  private fun GaAs(description: List<String>, epsType: EpsType)
-    : GaAs = with(description) {
-    GaAs(
-      d = parseAt(i = 0),
-      epsType = epsType
-    )
+  private fun GaAs(description: List<String>, epsType: EpsType) = with(description) {
+    GaAs(d = parseAt(i = 0), epsType = epsType)
   }
 
   // type = 2-1, type = 2-2, type = 2-3
-  private fun AlGaAs(description: List<String>, epsType: EpsType)
-    : AlGaAs = with(description) {
-    return AlGaAs(
-      d = parseAt(i = 0),
-      k = parseAt(i = 1),
-      x = parseAt(i = 2),
-      epsType = epsType
-    )
+  private fun AlGaAs(description: List<String>, epsType: EpsType) = with(description) {
+    AlGaAs(d = parseAt(i = 0), k = parseAt(i = 1), x = parseAt(i = 2), epsType = epsType)
   }
 
   // type = 3
-  private fun constRefractiveIndexLayer(description: List<String>)
-    : ConstRefractiveIndexLayer = with(description) {
-    return ConstRefractiveIndexLayer(
-      d = parseAt(i = 0),
-      n = parseComplexAt(i = 1)
-    )
+  private fun constRefractiveIndexLayer(description: List<String>) = with(description) {
+    ConstRefractiveIndexLayer(d = parseAt(i = 0), n = parseComplexAt(i = 1))
   }
 
   // type = 4-1, type = 4-2, type = 4-3
-  private fun GaAsExcitonic(description: List<String>, epsType: EpsType)
-    : GaAsExcitonic = with(description) {
-    return GaAsExcitonic(
+  private fun GaAsExcitonic(description: List<String>, epsType: EpsType) = with(description) {
+    GaAsExcitonic(
       d = parseAt(i = 0),
       w0 = parseAt(i = 1),
       gamma0 = parseAt(i = 2),
@@ -132,9 +120,8 @@ object StructureBuilder {
   }
 
   // type = 5-1, type = 5-2, type = 5-3
-  private fun AlGaAsExcitonic(description: List<String>, epsType: EpsType)
-    : AlGaAsExcitonic = with(description) {
-    return AlGaAsExcitonic(
+  private fun AlGaAsExcitonic(description: List<String>, epsType: EpsType) = with(description) {
+    AlGaAsExcitonic(
       d = parseAt(i = 0),
       k = parseAt(i = 1),
       x = parseAt(i = 2),
@@ -146,9 +133,8 @@ object StructureBuilder {
   }
 
   // type = 6
-  private fun constRefractiveIndexLayerExcitonic(description: List<String>)
-    : ConstRefractiveIndexLayerExcitonic = with(description) {
-    return ConstRefractiveIndexLayerExcitonic(
+  private fun constRefractiveIndexLayerExcitonic(description: List<String>) = with(description) {
+    ConstRefractiveIndexLayerExcitonic(
       d = parseAt(i = 0),
       n = parseComplexAt(i = 1),
       w0 = parseAt(i = 2),
@@ -158,9 +144,8 @@ object StructureBuilder {
   }
 
   // type = 7-1-1, type = 7-2-1, type = 7-3-1
-  private fun effectiveMediumLayerOfDrudeMetalClustersInAlGaAs(description: List<String>, epsType: EpsType)
-    : EffectiveMediumLayerOfDrudeMetalClustersInAlGaAs = with(description) {
-    return EffectiveMediumLayerOfDrudeMetalClustersInAlGaAs(
+  private fun effectiveMediumLayerOfDrudeMetalClustersInAlGaAs(description: List<String>, epsType: EpsType) = with(description) {
+    EffectiveMediumLayerOfDrudeMetalClustersInAlGaAs(
       d = parseAt(i = 0),
       k = parseAt(i = 1),
       x = parseAt(i = 2),
@@ -173,9 +158,8 @@ object StructureBuilder {
   }
 
   // type = 7-1-2, type = 7-2-2, type = 7-3-2
-  private fun effectiveMediumLayerOfSbClustersInAlGaAs(description: List<String>, epsType: EpsType)
-    : EffectiveMediumLayerOfSbClustersInAlGaAs = with(description) {
-    return EffectiveMediumLayerOfSbClustersInAlGaAs(
+  private fun effectiveMediumLayerOfSbClustersInAlGaAs(description: List<String>, epsType: EpsType) = with(description) {
+    EffectiveMediumLayerOfSbClustersInAlGaAs(
       d = parseAt(i = 0),
       k = parseAt(i = 1),
       x = parseAt(i = 2),
@@ -185,9 +169,8 @@ object StructureBuilder {
   }
 
   // type = 8-1-1, type = 8-2-1, type = 8-3-1
-  private fun mieTheoryLayerOfDrudeMetalClustersInAlGaAs(description: List<String>, epsType: EpsType)
-    : MieTheoryLayerOfDrudeMetalClustersInAlGaAs = with(description) {
-    return MieTheoryLayerOfDrudeMetalClustersInAlGaAs(
+  private fun mieTheoryLayerOfDrudeMetalClustersInAlGaAs(description: List<String>, epsType: EpsType) = with(description) {
+    MieFullLayerOfDrudeMetalClustersInAlGaAs(
       d = parseAt(i = 0),
       k = parseAt(i = 1),
       x = parseAt(i = 2),
@@ -201,9 +184,8 @@ object StructureBuilder {
   }
 
   // type = 8-1-2, type = 8-2-2, type = 8-3-2
-  private fun mieTheoryLayerOfSbClustersInAlGaAs(description: List<String>, epsType: EpsType)
-    : MieTheoryLayerOfSbClustersInAlGaAs = with(description) {
-    return MieTheoryLayerOfSbClustersInAlGaAs(
+  private fun mieTheoryLayerOfSbClustersInAlGaAs(description: List<String>, epsType: EpsType) = with(description) {
+    MieFullLayerOfSbClustersInAlGaAs(
       d = parseAt(i = 0),
       k = parseAt(i = 1),
       x = parseAt(i = 2),
@@ -214,9 +196,8 @@ object StructureBuilder {
   }
 
   // type = 9-1-1, type = 9-2-1, type = 9-3-1
-  private fun twoDimensionalLayerOfDrudeMetalClustersInAlGaAs(description: List<String>, epsType: EpsType)
-    : TwoDimensionalLayerOfDrudeMetalClustersInAlGaAs = with(description) {
-    return TwoDimensionalLayerOfDrudeMetalClustersInAlGaAs(
+  private fun twoDimensionalLayerOfDrudeMetalClustersInAlGaAs(description: List<String>, epsType: EpsType) = with(description) {
+    TwoDimensionalLayerOfDrudeMetalClustersInAlGaAs(
       d = parseAt(i = 0),
       k = parseAt(i = 1),
       x = parseAt(i = 2),
@@ -229,9 +210,8 @@ object StructureBuilder {
   }
 
   // type = 9-1-2, type = 9-2-2, type = 9-3-2
-  private fun twoDimensionalLayerOfSbClustersInAlGaAs(description: List<String>, epsType: EpsType)
-    : TwoDimensionalLayerOfSbClustersInAlGaAs = with(description) {
-    return TwoDimensionalLayerOfSbClustersInAlGaAs(
+  private fun twoDimensionalLayerOfSbClustersInAlGaAs(description: List<String>, epsType: EpsType) = with(description) {
+    TwoDimensionalLayerOfSbClustersInAlGaAs(
       d = parseAt(i = 0),
       k = parseAt(i = 1),
       x = parseAt(i = 2),

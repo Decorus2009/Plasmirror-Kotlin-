@@ -7,6 +7,8 @@ import org.apache.commons.math3.complex.Complex.*
 import org.apache.commons.math3.complex.ComplexField
 import org.apache.commons.math3.linear.Array2DRowFieldMatrix
 import org.apache.commons.math3.linear.FieldMatrix
+import kotlin.math.floor
+import kotlin.math.pow
 
 class Complex_(real: Double, imaginary: Double) : Complex(real, imaginary) {
 
@@ -95,7 +97,6 @@ class Matrix_(private val matrix: FieldMatrix<Complex> = Array2DRowFieldMatrix(C
   }
 }
 
-
 object Interpolator {
   fun interpolateComplex(x: List<Double>, y: List<Complex_>): Pair<PolynomialSplineFunction, PolynomialSplineFunction> {
     with(LinearInterpolator()) {
@@ -105,3 +106,10 @@ object Interpolator {
     }
   }
 }
+
+fun Double.round(): Double {
+  val precision = 7.0
+  val power = 10.0.pow(precision).toInt()
+  return floor((this + 1E-8) * power) / power
+}
+

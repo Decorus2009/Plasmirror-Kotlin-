@@ -1,7 +1,7 @@
 package core.optics.metal.clusters.mie
 
 import core.Complex_
-import core.optics.Optics
+import core.optics.toRefractiveIndex
 import kotlin.math.pow
 
 object MieFull : Mie {
@@ -17,16 +17,16 @@ object MieFull : Mie {
   private lateinit var m: Complex_
   private lateinit var mx: Complex_
 
-  override fun extinctionCoefficient(wavelength: Double, epsMatrix: Complex_, epsMetal: Complex_, f: Double, r: Double) =
-    alphaExtAlphaSca(wavelength, epsMatrix, epsMetal, f, r).first
+  override fun extinctionCoefficient(wavelength: Double, epsSemiconductor: Complex_, epsMetal: Complex_, f: Double, r: Double) =
+    alphaExtAlphaSca(wavelength, epsSemiconductor, epsMetal, f, r).first
 
-  override fun scatteringCoefficient(wavelength: Double, epsMatrix: Complex_, epsMetal: Complex_, f: Double, r: Double) =
-    alphaExtAlphaSca(wavelength, epsMatrix, epsMetal, f, r).second
+  override fun scatteringCoefficient(wavelength: Double, epsSemiconductor: Complex_, epsMetal: Complex_, f: Double, r: Double) =
+    alphaExtAlphaSca(wavelength, epsSemiconductor, epsMetal, f, r).second
 
   private fun alphaExtAlphaSca(wavelength: Double, epsMatrix: Complex_, epsMetal: Complex_, f: Double, r: Double): Pair<Double, Double> {
     val numberOfAngles = 20
-    val nMatrix = Optics.toRefractiveIndex(epsMatrix)
-    val nMetal = Optics.toRefractiveIndex(epsMetal)
+    val nMatrix = epsMatrix.toRefractiveIndex()
+    val nMetal = epsMetal.toRefractiveIndex()
     m = nMetal / nMatrix
 
     x = nMatrix.real * 2.0 * Math.PI * r / wavelength

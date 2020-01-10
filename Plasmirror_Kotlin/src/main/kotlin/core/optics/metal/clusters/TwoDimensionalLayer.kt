@@ -20,7 +20,7 @@ object TwoDimensionalLayer {
     val a = latticeFactor * R
     val U0 = 9.03 / (a * a * a)
 
-    val (cos, sin) = cosSin(Optics.toRefractiveIndex(epsMatrix))
+    val (cos, sin) = cosSin(epsMatrix.toRefractiveIndex())
     val theta = Complex_(cos.acos())
 
     val (alphaParallel, alphaOrthogonal) = alphaParallelOrthogonal(alpha(epsMatrix, epsMetal, R), U0)

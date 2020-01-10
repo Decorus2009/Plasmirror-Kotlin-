@@ -1,7 +1,7 @@
 package ui.controllers.fitter
 
-import core.layers.AlGaAs
-import core.layers.Layer
+import core.layers.semiconductor.AlGaAs
+import core.layers.semiconductor.Layer
 import javafx.application.Platform
 import javafx.fxml.FXML
 import javafx.scene.control.CheckBox

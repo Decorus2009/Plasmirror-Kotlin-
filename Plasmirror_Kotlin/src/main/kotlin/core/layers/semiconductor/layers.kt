@@ -1,4 +1,4 @@
-package core.layers
+package core.layers.semiconductor
 
 import core.*
 import core.optics.*
@@ -17,7 +17,7 @@ interface Layer {
   val d: Double
   val n: Complex_
   val alphaExt
-    get() = Optics.extinctionCoefficient(State.wavelengthCurrent, n)
+    get() = extinctionCoefficientOf(n, State.wavelengthCurrent)
 
   /**
    * @return transfer matrix for layer without excitons
@@ -36,26 +36,20 @@ interface Layer {
     }
 }
 
-
 interface GaAsLayer : Layer {
   val epsType: EpsType
-
   override val n
-    get() = Optics.toRefractiveIndex(AlGaAsMatrix.Permittivity.get(State.wavelengthCurrent, 0.0, 0.0, epsType))
+    get() = AlGaAsMatrix.permittivity(State.wavelengthCurrent, 0.0, 0.0, epsType).toRefractiveIndex()
 }
-
 
 interface AlGaAsLayer : GaAsLayer {
   val k: Double
   val x: Double
-
   override val n
-    get() = Optics.toRefractiveIndex(AlGaAsMatrix.Permittivity.get(State.wavelengthCurrent, k, x, epsType))
+    get() = AlGaAsMatrix.permittivity(State.wavelengthCurrent, k, x, epsType).toRefractiveIndex()
 }
 
-
 open class GaAs(override val d: Double, override val epsType: EpsType) : GaAsLayer
-
 
 /**
  * @param k for Adachi computation n = (Re(n); Im(n) = k * Re(n))
@@ -66,6 +60,5 @@ open class AlGaAs(
   override val x: Double,
   override val epsType: EpsType
 ) : AlGaAsLayer
-
 
 open class ConstRefractiveIndexLayer(override val d: Double, override val n: Complex_) : Layer

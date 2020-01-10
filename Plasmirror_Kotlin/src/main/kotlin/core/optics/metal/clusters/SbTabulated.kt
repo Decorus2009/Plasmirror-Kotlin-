@@ -28,12 +28,11 @@ object SbTabulated {
 
     val minWavelength = wavelengths[0]
     val maxWavelength = wavelengths[wavelengths.size - 1]
-    val actualWavelength =
-      when {
-        wavelength < minWavelength -> minWavelength
-        wavelength > maxWavelength -> maxWavelength
-        else -> wavelength
-      }
+    val actualWavelength = when {
+      wavelength < minWavelength -> minWavelength
+      wavelength > maxWavelength -> maxWavelength
+      else -> wavelength
+    }
 
     Complex_(first.value(actualWavelength), second.value(actualWavelength))
   }

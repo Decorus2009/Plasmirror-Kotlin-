@@ -1,6 +1,6 @@
 package core
 
-import core.layers.Layer
+import core.layers.semiconductor.Layer
 import core.optics.Polarization
 import core.optics.Regime
 import core.validators.StateValidator

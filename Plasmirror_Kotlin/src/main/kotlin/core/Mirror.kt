@@ -1,6 +1,9 @@
 package core
 
-import core.layers.*
+import core.layers.metal.clusters.mie.MieFullLayerOfMetalClustersInAlGaAs
+import core.layers.metal.clusters.mie.MieLayerOfMetalClustersInAlGaAs
+import core.layers.semiconductor.ConstRefractiveIndexLayer
+import core.layers.semiconductor.Layer
 import core.optics.Polarization.P
 import core.optics.Polarization.S
 import core.optics.cosThetaInLayer
@@ -39,7 +42,7 @@ class Mirror(val structure: Structure, private val leftMediumLayer: Layer, priva
 
   fun extinctionCoefficient() = structure.blocks[0].layers[0].alphaExt
 
-  fun scatteringCoefficient() = (structure.blocks[0].layers[0] as MieTheoryLayerOfMetallicClustersInAlGaAs).alphaSca
+  fun scatteringCoefficient() = (structure.blocks[0].layers[0] as MieLayerOfMetalClustersInAlGaAs).alphaSca
 
   private fun r() = with(matrix) { this[1, 0] / this[1, 1] * (-1.0) }
 
