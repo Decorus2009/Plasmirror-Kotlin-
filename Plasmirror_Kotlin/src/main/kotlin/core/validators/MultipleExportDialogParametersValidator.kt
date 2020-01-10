@@ -4,7 +4,6 @@ import core.validators.ValidationResult.FAILURE
 import core.validators.ValidationResult.SUCCESS
 import java.io.File
 
-// TODO
 object MultipleExportDialogParametersValidator {
   fun validateAngles(angleFromStr: String, angleToStr: String, angleStepStr: String): ValidationResult {
     try {
@@ -12,13 +11,9 @@ object MultipleExportDialogParametersValidator {
       val angleTo = angleToStr.toDouble()
       val angleStep = angleStepStr.toDouble()
 
-      if (angleFrom.isNotAllowed() or angleTo.isNotAllowed() or angleStep.isNotAllowed() or
+      if (
+        angleFrom.isNotAllowed() or angleTo.isNotAllowed() or angleStep.isNotAllowed() or
         (angleFrom > angleTo) or (angleStep > angleTo) or (angleStep == 0.0)
-
-//                    // angleTo - angleFrom must be divisible by angleStep
-//                    // so that angleFrom + n * angleStep to never exceed angleTo
-//                    or (java.lang.Double.compare(((angleTo - angleFrom) / angleStep), 0.0) != 0)
-
       ) {
         alert(headerText = "Angle range error", contentText = "Provide correct angle range")
         return FAILURE

@@ -9,10 +9,8 @@ import core.validators.ValidationResult.FAILURE
 import core.validators.ValidationResult.SUCCESS
 import rootController
 
-
 object State {
 //    lateinit var mainController: MainController
-
   var wavelengthStart: Double = 600.0
   var wavelengthEnd: Double = 1000.0
   var wavelengthStep: Double = 1.0
@@ -50,16 +48,6 @@ object State {
     }
   }
 
-//    fun init() = when (StateValidator.initState()) {
-//        SUCCESS -> {
-//            rootController.mainController.saveToStorages()
-//            clear()
-//            buildMirror()
-//            SUCCESS
-//        }
-//        FAILURE -> FAILURE
-//    }
-
   fun compute() = (0 until wavelength.size).forEach {
     wavelengthCurrent = wavelength[it]
 
@@ -81,11 +69,6 @@ object State {
 
     clear(reflectance, transmittance, absorbance, extinctionCoefficient, scatteringCoefficient)
     clear(permittivity, refractiveIndex)
-    /*
-    TODO Doesn't clear when using this form of extension function (without "run")
-    fun <T> MutableList<out T>.clearIfNotEmpty() = run { if (isNotEmpty()) clear() } // works
-    fun <T> MutableList<T>.clearIfNotEmpty() = { if (isNotEmpty()) clear() } // doesn't work
-     */
   }
 
   private fun buildMirror() {

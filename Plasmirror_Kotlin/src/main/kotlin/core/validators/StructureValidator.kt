@@ -10,23 +10,15 @@ import core.optics.Regime
 object StructureValidator {
   private var numberOfParameters = mapOf(
     "1-1" to 2, "1-2" to 2, "1-3" to 2,
-
     "2-1" to 4, "2-2" to 4, "2-3" to 4,
-
     "3" to 3,
-
     "4-1" to 5, "4-2" to 5, "4-3" to 5,
-
     "5-1" to 7, "5-2" to 7, "5-3" to 7,
-
     "6" to 6,
-
     "7-1-1" to 8, "7-2-1" to 8, "7-3-1" to 8,
     "7-1-2" to 5, "7-2-2" to 5, "7-3-2" to 5,
-
     "8-1-1" to 9, "8-2-1" to 9, "8-3-1" to 9,
     "8-1-2" to 6, "8-2-2" to 6, "8-3-2" to 6,
-
     "9-1-1" to 8, "9-2-1" to 8, "9-3-1" to 8,
     "9-1-2" to 5, "9-2-2" to 5, "9-3-2" to 5
   )
@@ -170,13 +162,6 @@ object StructureValidator {
       else -> {
       }
     }
-//        if ((State.regime == Regime.PERMITTIVITY || State.regime == Regime.REFRACTIVE_INDEX
-//
-//            if ((State.regime == Regime.PERMITTIVITY || State.regime == Regime.REFRACTIVE_INDEX
-//                            || State.regime == Regime.EXTINCTION_COEFFICIENT || State.regime == Regime.SCATTERING_COEFFICIENT)
-//                    && filterNot { it.all { it.contains("x") } }.size != 1) {
-//                throw StructureDescriptionException("Structure must contain only one layer for this regime")
-//            }
 
     /**
     Layer type check

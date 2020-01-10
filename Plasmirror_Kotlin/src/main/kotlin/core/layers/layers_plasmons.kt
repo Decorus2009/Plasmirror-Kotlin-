@@ -3,8 +3,10 @@ package core.layers
 import core.*
 import core.Complex_.Companion.ONE
 import core.optics.*
+import core.optics.metal.clusters.*
+import core.optics.metal.clusters.mie.MieFull
+import core.optics.semiconductor.AlGaAsMatrix
 
-/** * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 interface MetallicClustersInAlGaAs : AlGaAsLayer {
   val epsMatrix
     get() = AlGaAsMatrix.Permittivity.get(State.wavelengthCurrent, k, x, epsType)
@@ -17,29 +19,25 @@ interface DrudeMetalClustersInAlGaAs : MetallicClustersInAlGaAs {
   val epsInf: Double
 
   override val epsMetal
-    get() = MetallicClusters.OpticalConstants.DrudeModel.permittivity(State.wavelengthCurrent, wPlasma, gammaPlasma, epsInf)
+    get() = DrudeModel.permittivity(State.wavelengthCurrent, wPlasma, gammaPlasma, epsInf)
 }
 
 interface SbClustersInAlGaAs : MetallicClustersInAlGaAs {
   override val epsMetal
-    get() = MetallicClusters.OpticalConstants.SbTabulated.permittivity(State.wavelengthCurrent)
+    get() = SbTabulated.permittivity(State.wavelengthCurrent)
 }
 
 
-/** * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 abstract class TwoDimensionalLayerOfMetallicClustersInAlGaAs(
   d: Double,
   k: Double,
   x: Double,
   val latticeFactor: Double,
   epsType: EpsType
-) :
-  MetallicClustersInAlGaAs,
-  AlGaAs(d, k, x, epsType) {
-
+) : MetallicClustersInAlGaAs, AlGaAs(d, k, x, epsType) {
   override val matrix
     get() = Matrix_().apply {
-      with(MetallicClusters.TwoDimensionalLayer.rt(State.wavelengthCurrent, d, latticeFactor, epsMatrix, epsMetal)) {
+      with(TwoDimensionalLayer.rt(State.wavelengthCurrent, d, latticeFactor, epsMatrix, epsMetal)) {
         val r = first
         val t = second
         this@apply[0, 0] = (t * t - r * r) / t
@@ -59,9 +57,7 @@ class TwoDimensionalLayerOfDrudeMetalClustersInAlGaAs(
   override val gammaPlasma: Double,
   override val epsInf: Double,
   epsType: EpsType
-) :
-  DrudeMetalClustersInAlGaAs,
-  TwoDimensionalLayerOfMetallicClustersInAlGaAs(d, k, x, latticeFactor, epsType)
+) : DrudeMetalClustersInAlGaAs, TwoDimensionalLayerOfMetallicClustersInAlGaAs(d, k, x, latticeFactor, epsType)
 
 class TwoDimensionalLayerOfSbClustersInAlGaAs(
   d: Double,
@@ -69,12 +65,9 @@ class TwoDimensionalLayerOfSbClustersInAlGaAs(
   x: Double,
   latticeFactor: Double,
   epsType: EpsType
-) :
-  SbClustersInAlGaAs,
-  TwoDimensionalLayerOfMetallicClustersInAlGaAs(d, k, x, latticeFactor, epsType)
+) : SbClustersInAlGaAs, TwoDimensionalLayerOfMetallicClustersInAlGaAs(d, k, x, latticeFactor, epsType)
 
 
-/** * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 /**
  * https://en.wikipedia.oxrg/wiki/Effective_medium_approximations
  * @param f  volume fraction of metallic clusters in AlGaAs matrix
@@ -86,11 +79,9 @@ abstract class EffectiveMediumLayerOfMetallicClustersInAlGaAs(
   x: Double,
   private val f: Double,
   epsType: EpsType
-) :
-  MetallicClustersInAlGaAs, AlGaAs(d, k, x, epsType) {
-
+) : MetallicClustersInAlGaAs, AlGaAs(d, k, x, epsType) {
   override val n
-    get() = Optics.toRefractiveIndex(MetallicClusters.EffectiveMediumApproximation.permittivity(epsMatrix, epsMetal, f))
+    get() = Optics.toRefractiveIndex(EffectiveMediumApproximation.permittivity(epsMatrix, epsMetal, f))
 }
 
 class EffectiveMediumLayerOfDrudeMetalClustersInAlGaAs(
@@ -102,9 +93,7 @@ class EffectiveMediumLayerOfDrudeMetalClustersInAlGaAs(
   override val epsInf: Double,
   f: Double,
   epsType: EpsType
-) :
-  DrudeMetalClustersInAlGaAs,
-  EffectiveMediumLayerOfMetallicClustersInAlGaAs(d, k, x, f, epsType)
+) : DrudeMetalClustersInAlGaAs, EffectiveMediumLayerOfMetallicClustersInAlGaAs(d, k, x, f, epsType)
 
 class EffectiveMediumLayerOfSbClustersInAlGaAs(
   d: Double,
@@ -112,12 +101,9 @@ class EffectiveMediumLayerOfSbClustersInAlGaAs(
   x: Double,
   f: Double,
   epsType: EpsType
-) :
-  SbClustersInAlGaAs,
-  EffectiveMediumLayerOfMetallicClustersInAlGaAs(d, k, x, f, epsType)
+) : SbClustersInAlGaAs, EffectiveMediumLayerOfMetallicClustersInAlGaAs(d, k, x, f, epsType)
 
 
-/** * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 abstract class MieTheoryLayerOfMetallicClustersInAlGaAs(
   d: Double,
   k: Double,
@@ -125,17 +111,13 @@ abstract class MieTheoryLayerOfMetallicClustersInAlGaAs(
   private val f: Double,
   private val r: Double,
   epsType: EpsType
-) :
-  MetallicClustersInAlGaAs, AlGaAs(d, k, x, epsType) {
-
+) : MetallicClustersInAlGaAs, AlGaAs(d, k, x, epsType) {
   // value of AlGaAs refractive index is used as n-property here
   // (Mie theory is for the computation of extinction and scattering, not for the computation of refractive index
-
   override val alphaExt: Double
-    get() = MetallicClusters.Mie.extinctionCoefficient(State.wavelengthCurrent, epsMatrix, epsMetal, f, r)
+    get() = MieFull.extinctionCoefficient(State.wavelengthCurrent, epsMatrix, epsMetal, f, r)
   val alphaSca: Double
-    get() = MetallicClusters.Mie.scatteringCoefficient(State.wavelengthCurrent, epsMatrix, epsMetal, f, r)
-
+    get() = MieFull.scatteringCoefficient(State.wavelengthCurrent, epsMatrix, epsMetal, f, r)
 }
 
 class MieTheoryLayerOfDrudeMetalClustersInAlGaAs(
@@ -148,9 +130,7 @@ class MieTheoryLayerOfDrudeMetalClustersInAlGaAs(
   f: Double,
   r: Double,
   epsType: EpsType
-) :
-  DrudeMetalClustersInAlGaAs,
-  MieTheoryLayerOfMetallicClustersInAlGaAs(d, k, x, f, r, epsType)
+) : DrudeMetalClustersInAlGaAs, MieTheoryLayerOfMetallicClustersInAlGaAs(d, k, x, f, r, epsType)
 
 class MieTheoryLayerOfSbClustersInAlGaAs(
   d: Double,
@@ -159,6 +139,4 @@ class MieTheoryLayerOfSbClustersInAlGaAs(
   f: Double,
   r: Double,
   epsType: EpsType
-) :
-  SbClustersInAlGaAs,
-  MieTheoryLayerOfMetallicClustersInAlGaAs(d, k, x, f, r, epsType)
+) : SbClustersInAlGaAs, MieTheoryLayerOfMetallicClustersInAlGaAs(d, k, x, f, r, epsType)

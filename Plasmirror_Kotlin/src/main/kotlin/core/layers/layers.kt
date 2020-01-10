@@ -2,6 +2,7 @@ package core.layers
 
 import core.*
 import core.optics.*
+import core.optics.semiconductor.AlGaAsMatrix
 import org.apache.commons.math3.complex.Complex
 import java.lang.Math.PI
 
@@ -67,7 +68,4 @@ open class AlGaAs(
 ) : AlGaAsLayer
 
 
-open class ConstRefractiveIndexLayer(
-  override val d: Double,
-  override val n: Complex_
-) : Layer
+open class ConstRefractiveIndexLayer(override val d: Double, override val n: Complex_) : Layer

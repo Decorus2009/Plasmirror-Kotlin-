@@ -5,11 +5,9 @@ import org.json.JSONObject
 import ui.controllers.writeTo
 import java.nio.file.Paths
 
-
 /*
 TODO Must be initialized before GUI elements
  */
-
 object StructureDescriptionStorage {
   private val file = Paths.get("./data/inner/state_parameters/structure.txt").toFile()
   var description = FileUtils.readFileToString(file, "utf-8")
@@ -18,7 +16,6 @@ object StructureDescriptionStorage {
 }
 
 object ComputationParametersStorage {
-
   private val file = Paths.get("./data/inner/state_parameters/parameters.json").toFile()
   private val content = FileUtils.readFileToString(file, "utf-8")
   private var parameters: JSONObject = JSONObject(content)

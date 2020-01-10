@@ -43,7 +43,7 @@ class Complex_(real: Double, imaginary: Double) : Complex(real, imaginary) {
 /**
  * 2 x 2 matrix of complex numbers
  */
-class Matrix_(val matrix: FieldMatrix<Complex> = Array2DRowFieldMatrix(ComplexField.getInstance(), 2, 2)) {
+class Matrix_(private val matrix: FieldMatrix<Complex> = Array2DRowFieldMatrix(ComplexField.getInstance(), 2, 2)) {
 
   operator fun get(i: Int, j: Int): Complex_ = Complex_(matrix.getEntry(i, j))
 
@@ -97,12 +97,10 @@ class Matrix_(val matrix: FieldMatrix<Complex> = Array2DRowFieldMatrix(ComplexFi
 
 
 object Interpolator {
-
   fun interpolateComplex(x: List<Double>, y: List<Complex_>): Pair<PolynomialSplineFunction, PolynomialSplineFunction> {
     with(LinearInterpolator()) {
       val functionReal = interpolate(x.toDoubleArray(), y.map { it.real }.toDoubleArray())
       val functionImag = interpolate(x.toDoubleArray(), y.map { it.imaginary }.toDoubleArray())
-
       return functionReal to functionImag
     }
   }

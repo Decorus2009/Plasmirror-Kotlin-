@@ -1,8 +1,11 @@
-package core.optics
+package core.optics.semiconductor
 
 import core.Complex_
+import core.optics.*
 import core.optics.EpsType.*
 import java.lang.Math.*
+import kotlin.math.exp
+import kotlin.math.pow
 
 
 object AlGaAsMatrix {
@@ -12,7 +15,6 @@ object AlGaAsMatrix {
    * J. Appl. Phys. 58, R1 (1985) - Adachi model
    */
   object Permittivity {
-
     fun get(wavelength: Double, k: Double, x: Double, epsType: EpsType): Complex_ {
       val w = toEnergy(wavelength)
       return when (epsType) {
@@ -21,7 +23,6 @@ object AlGaAsMatrix {
         GAUSS_WITH_VARIABLE_IM_PERMITTIVITY_BELOW_E0 -> with(epsGauss(w, x)) {
           Complex_(real, if (w >= E0(x)) imaginary else real * k)
         }
-//                GAUSS_ADACHI -> epsGaussAdachi(w, x)
       }
     }
 
@@ -139,7 +140,7 @@ object AlGaAsMatrix {
       return accumulator
     }
 
-    //    /**
+//    /**
 //     * Table I
 //     * E0, E0 + delta0, E1, E1 + delta1 dependent on x.
 //     *
@@ -171,23 +172,23 @@ object AlGaAsMatrix {
      * Lorentz shapes modified by the exponential decay (Gaussian-like shapes)
      */
     private fun gamma0Gauss(w: Double, x: Double) = with(gamma0(x)) {
-      this * exp(-alpha0(x) * pow((w - E0(x)) / this, 2.0))
+      this * exp(-alpha0(x) * ((w - E0(x)) / this).pow(2.0))
     }
 
     private fun gamma1Gauss(w: Double, x: Double) = with(gamma1(x)) {
-      this * exp(-alpha1(x) * pow((w - E1(x)) / this, 2.0))
+      this * exp(-alpha1(x) * ((w - E1(x)) / this).pow(2.0))
     }
 
     private fun gamma2Gauss(w: Double, x: Double) = with(gamma2(x)) {
-      this * exp(-alpha2(x) * pow((w - E2(x)) / this, 2.0))
+      this * exp(-alpha2(x) * ((w - E2(x)) / this).pow(2.0))
     }
 
     private fun gamma3Gauss(w: Double, x: Double) = with(gamma3(x)) {
-      this * exp(-alpha3(x) * pow((w - E3(x)) / this, 2.0))
+      this * exp(-alpha3(x) * ((w - E3(x)) / this).pow(2.0))
     }
 
     private fun gamma4Gauss(w: Double, x: Double) = with(gamma4(x)) {
-      this * exp(-alpha4(x) * pow((w - E4(x)) / this, 2.0))
+      this * exp(-alpha4(x) * ((w - E4(x)) / this).pow(2.0))
     }
 
     private fun epsInf(x: Double) = Complex_(cubic(x, doubleArrayOf(1.347, 0.02, -0.568, 4.210)))
