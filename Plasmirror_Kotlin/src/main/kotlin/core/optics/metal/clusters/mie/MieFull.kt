@@ -2,6 +2,8 @@ package core.optics.metal.clusters.mie
 
 import core.Complex_
 import core.optics.toRefractiveIndex
+import core.toCm
+import java.lang.Math.*
 import kotlin.math.pow
 
 object MieFull : Mie {
@@ -17,26 +19,31 @@ object MieFull : Mie {
   private lateinit var m: Complex_
   private lateinit var mx: Complex_
 
-  override fun scatteringCoefficient(wavelength: Double, epsSemiconductor: Complex_, epsMetal: Complex_, f: Double, r: Double) =
-    alphaExtAlphaSca(wavelength, epsSemiconductor, epsMetal, f, r).second
+  override fun extinctionCoefficient(
+    wavelength: Double, epsSemiconductor: Complex_, epsMetal: Complex_, f: Double, r: Double
+  ) = alphaExtAlphaSca(wavelength, epsSemiconductor, epsMetal, f, r).first
 
-  override fun extinctionCoefficient(wavelength: Double, epsSemiconductor: Complex_, epsMetal: Complex_, f: Double, r: Double) =
-    alphaExtAlphaSca(wavelength, epsSemiconductor, epsMetal, f, r).first
+  override fun scatteringCoefficient(
+    wavelength: Double, epsSemiconductor: Complex_, epsMetal: Complex_, f: Double, r: Double
+  ) = alphaExtAlphaSca(wavelength, epsSemiconductor, epsMetal, f, r).second
 
-  private fun alphaExtAlphaSca(wavelength: Double, epsMatrix: Complex_, epsMetal: Complex_, f: Double, r: Double): Pair<Double, Double> {
+  private fun alphaExtAlphaSca(
+    wavelength: Double, epsSemiconductor: Complex_, epsMetal: Complex_, f: Double, r: Double
+  ): Pair<Double, Double> {
     val numberOfAngles = 20
-    val nMatrix = epsMatrix.toRefractiveIndex()
+    val nSemiconductor = epsSemiconductor.toRefractiveIndex()
     val nMetal = epsMetal.toRefractiveIndex()
-    m = nMetal / nMatrix
+    m = nMetal / nSemiconductor
 
-    x = nMatrix.real * 2.0 * Math.PI * r / wavelength
+    x = nSemiconductor.real * 2.0 * PI * r / wavelength
 
+    val common1 = PI * (r.toCm()).pow(2.0)
+    val common2 = 3.0 / 4.0 * f / (PI * r.toCm().pow(3.0))
     val (Qext, Qsca) = bohrenHuffmanMie(x, numberOfAngles)
-    val Cext = Qext * Math.PI * Math.pow(r * 1E-7, 2.0)
-    val Csca = Qsca * Math.PI * Math.pow(r * 1E-7, 2.0)
+    val Cext = Qext * common1
+    val Csca = Qsca * common1
 
-    val c = 3.0 / 4.0 * f / (Math.PI * Math.pow(r * 1E-7, 3.0))
-    return c * Cext to c * Csca
+    return common2 * Cext to common2 * Csca
   }
 
   private fun bohrenHuffmanMie(x: Double, NANG: Int): Pair<Double, Double> {
@@ -58,13 +65,13 @@ object MieFull : Mie {
 
     var angleStep = 0.0
     if (numberOfAngles > 1) {
-      angleStep = 0.5 * Math.PI / (numberOfAngles - 1)
+      angleStep = 0.5 * PI / (numberOfAngles - 1)
     }
     val mu = DoubleArray(numberOfAngles + 1)
 
     for (i in 1 until numberOfAngles + 1) {
       val theta = (i - 1) * angleStep
-      mu[i] = Math.cos(theta)
+      mu[i] = cos(theta)
     }
 
     val pi0 = DoubleArray(numberOfAngles + 1) { 0.0 }
@@ -87,10 +94,10 @@ object MieFull : Mie {
     Riccati-Bessel functions with real argument x
     calculated by upward recurrence
      */
-    var psiPrevPrev = Math.cos(x)
-    var psiPrev = Math.sin(x)
-    var chiPrevPrev = -Math.sin(x)
-    var chiPrev = Math.cos(x)
+    var psiPrevPrev = cos(x)
+    var psiPrev = sin(x)
+    var chiPrevPrev = -sin(x)
+    var chiPrev = cos(x)
     var xiPrev = Complex_(psiPrev, -chiPrev)
 
     for (ind in 1 until nStop.toInt() + 1) {
@@ -117,7 +124,7 @@ object MieFull : Mie {
       b = (bCommon * psi - psiPrev) / (bCommon * xi - xiPrev)
 
       //*** Augment sums for Qsca and g=<cos(theta)>
-      QSca += (2.0 * ind + 1.0) * (Math.pow(a.abs(), 2.0) + Math.pow(b.abs(), 2.0))
+      QSca += (2.0 * ind + 1.0) * (pow(a.abs(), 2.0) + pow(b.abs(), 2.0))
       GSca += (2.0 * ind + 1.0) / (ind * (ind + 1.0)) * (a.real * b.real + a.imaginary * b.imaginary)
       if (ind > 1) {
         GSca += (ind - 1.0) * (ind + 1.0) / ind *
@@ -177,7 +184,7 @@ object MieFull : Mie {
     GSca = 2.0 * GSca / QSca
     QSca = 2.0 / (x * x) * QSca
     val QEXT = 4.0 / (x * x) * S1[1].real
-    val QBACK = Math.pow(S1[2 * numberOfAngles - 1].abs() / x, 2.0) / Math.PI
+    val QBACK = pow(S1[2 * numberOfAngles - 1].abs() / x, 2.0) / PI
     val QABS = QEXT - QSca
 
     return QEXT to QSca
@@ -186,7 +193,7 @@ object MieFull : Mie {
   private fun computeD() {
     val NMXX = 150000
     val mx = m * x
-    val nMax = Math.round(Math.max(xStop, mx.abs()) + 15).toInt()
+    val nMax = round(max(xStop, mx.abs()) + 15).toInt()
 
     if (nMax > NMXX) {
       throw IllegalArgumentException("Error: nMax > NMXX=' + NMXX + ' for |m|x=' + YMOD")
@@ -202,12 +209,12 @@ object MieFull : Mie {
 
   private fun computePsiXi() {
     psi = DoubleArray(nStop).toMutableList()
-    psi[0] = Math.cos(x)
-    psi[1] = Math.sin(x)
+    psi[0] = cos(x)
+    psi[1] = sin(x)
 
     val chi = DoubleArray(nStop).toMutableList()
-    chi[0] = -Math.sin(x)
-    chi[1] = Math.cos(x)
+    chi[0] = -sin(x)
+    chi[1] = cos(x)
 
     for (i in 2 until nStop) {
       psi[i] = (2.0 * i - 1.0) / x * psi[i - 1] - psi[i - 2]

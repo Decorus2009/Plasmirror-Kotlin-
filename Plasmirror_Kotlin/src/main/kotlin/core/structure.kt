@@ -1,8 +1,7 @@
 package core
 
 import core.layers.metal.clusters.*
-import core.layers.metal.clusters.mie.MieFullLayerOfDrudeMetalClustersInAlGaAs
-import core.layers.metal.clusters.mie.MieFullLayerOfSbClustersInAlGaAs
+import core.layers.metal.clusters.mie.*
 import core.layers.semiconductor.*
 import core.optics.EpsType
 import core.optics.EpsType.*
@@ -70,10 +69,24 @@ object StructureBuilder {
                 else -> throw IllegalStateException("Unknown effective medium layer (must never be reached)")
               }
             }
-            "8" -> {
+            "8[1]" -> {
               when (metalClustersType) {
-                "1" -> mieTheoryLayerOfDrudeMetalClustersInAlGaAs(this, matrixType)
-                "2" -> mieTheoryLayerOfSbClustersInAlGaAs(this, matrixType)
+                "1" -> mieFirstOrderLayerOfDrudeMetalClustersInAlGaAs(this, matrixType)
+                "2" -> mieFirstOrderLayerOfSbClustersInAlGaAs(this, matrixType)
+                else -> throw IllegalStateException("Unknown Mie theory layer of metal clusters in AlGaAs (must never be reached)")
+              }
+            }
+            "8[1&2]" -> {
+              when (metalClustersType) {
+                "1" -> mieFirstAndSecondOrderLayerOfDrudeMetalClustersInAlGaAs(this, matrixType)
+                "2" -> mieFirstAndSecondOrderLayerOfSbClustersInAlGaAs(this, matrixType)
+                else -> throw IllegalStateException("Unknown Mie theory layer of metal clusters in AlGaAs (must never be reached)")
+              }
+            }
+            "8[all]" -> {
+              when (metalClustersType) {
+                "1" -> mieFullLayerOfDrudeMetalClustersInAlGaAs(this, matrixType)
+                "2" -> mieFullLayerOfSbClustersInAlGaAs(this, matrixType)
                 else -> throw IllegalStateException("Unknown Mie theory layer of metal clusters in AlGaAs (must never be reached)")
               }
             }
@@ -168,8 +181,64 @@ object StructureBuilder {
     )
   }
 
-  // type = 8-1-1, type = 8-2-1, type = 8-3-1
-  private fun mieTheoryLayerOfDrudeMetalClustersInAlGaAs(description: List<String>, epsType: EpsType) = with(description) {
+  // type = 8[1]-1-1, type = 8[1]-2-1, type = 8[1]-3-1
+  private fun mieFirstOrderLayerOfDrudeMetalClustersInAlGaAs(description: List<String>, epsType: EpsType) = with(description) {
+    MieFirstOrderLayerOfDrudeMetalClustersInAlGaAs(
+      d = parseAt(i = 0),
+      k = parseAt(i = 1),
+      x = parseAt(i = 2),
+      wPlasma = parseAt(i = 3),
+      gammaPlasma = parseAt(i = 4),
+      epsInf = parseAt(i = 5),
+      f = parseAt(i = 6),
+      r = parseAt(i = 7),
+      epsType = epsType
+    )
+  }
+
+  // type = 8[1]-1-2, type = 8[1]-2-2, type = 8[1]-3-2
+  private fun mieFirstOrderLayerOfSbClustersInAlGaAs(description: List<String>, epsType: EpsType) = with(description) {
+    MieFirstOrderLayerOfSbClustersInAlGaAs(
+      d = parseAt(i = 0),
+      k = parseAt(i = 1),
+      x = parseAt(i = 2),
+      f = parseAt(i = 3),
+      r = parseAt(i = 4),
+      epsType = epsType
+    )
+  }
+
+
+  // type = 8[1&2]-1-1, type = 8[1&2]-2-1, type = 8[1&2]-3-1
+  private fun mieFirstAndSecondOrderLayerOfDrudeMetalClustersInAlGaAs(description: List<String>, epsType: EpsType) = with(description) {
+    MieFirstAndSecondOrderLayerOfDrudeMetalClustersInAlGaAs(
+      d = parseAt(i = 0),
+      k = parseAt(i = 1),
+      x = parseAt(i = 2),
+      wPlasma = parseAt(i = 3),
+      gammaPlasma = parseAt(i = 4),
+      epsInf = parseAt(i = 5),
+      f = parseAt(i = 6),
+      r = parseAt(i = 7),
+      epsType = epsType
+    )
+  }
+
+  // type = 8[1&2]-1-2, type = 8[1&2]-2-2, type = 8[1&2]-3-2
+  private fun mieFirstAndSecondOrderLayerOfSbClustersInAlGaAs(description: List<String>, epsType: EpsType) = with(description) {
+    MieFirstAndSecondOrderLayerOfSbClustersInAlGaAs(
+      d = parseAt(i = 0),
+      k = parseAt(i = 1),
+      x = parseAt(i = 2),
+      f = parseAt(i = 3),
+      r = parseAt(i = 4),
+      epsType = epsType
+    )
+  }
+
+
+  // type = 8[all]-1-1, type = 8[all]-2-1, type = 8[all]-3-1
+  private fun mieFullLayerOfDrudeMetalClustersInAlGaAs(description: List<String>, epsType: EpsType) = with(description) {
     MieFullLayerOfDrudeMetalClustersInAlGaAs(
       d = parseAt(i = 0),
       k = parseAt(i = 1),
@@ -183,8 +252,8 @@ object StructureBuilder {
     )
   }
 
-  // type = 8-1-2, type = 8-2-2, type = 8-3-2
-  private fun mieTheoryLayerOfSbClustersInAlGaAs(description: List<String>, epsType: EpsType) = with(description) {
+  // type = 8[all]-1-2, type = 8[all]-2-2, type = 8[all]-3-2
+  private fun mieFullLayerOfSbClustersInAlGaAs(description: List<String>, epsType: EpsType) = with(description) {
     MieFullLayerOfSbClustersInAlGaAs(
       d = parseAt(i = 0),
       k = parseAt(i = 1),

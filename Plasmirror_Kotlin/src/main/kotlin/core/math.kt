@@ -113,3 +113,4 @@ fun Double.round(): Double {
   return floor((this + 1E-8) * power) / power
 }
 
+fun Double.toCm() = this * 1E-7 // wavelength: nm -> cm^-1

@@ -1,10 +1,10 @@
 package core.optics
 
-import core.Complex_
+import core.*
 import core.Complex_.Companion.ONE
-import core.State
 import java.lang.Math.PI
-import kotlin.math.*
+import kotlin.math.cos
+import kotlin.math.sqrt
 
 enum class Polarization { S, P }
 
@@ -17,7 +17,7 @@ enum class Regime {
 }
 
 fun extinctionCoefficientOf(refractiveIndex: Complex_, wavelength: Double) =
-  4.0 * PI * refractiveIndex.imaginary / (wavelength * 1E-7) // cm^-1
+  4.0 * PI * refractiveIndex.imaginary / (wavelength.toCm()) // cm^-1
 
 fun Complex_.toRefractiveIndex() = Complex_(sqrt((abs() + real) / 2.0), sqrt((abs() - real) / 2.0))
 

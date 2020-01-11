@@ -39,12 +39,12 @@ fun writeComputedDataTo(file: File) = StringBuilder().apply {
     indices.forEach { i ->
       append(String.format(Locale.US, "%.8f", State.wavelength[i]))
       append(columnSeparator)
-      append(String.format(Locale.US, "%.8f", this[i]))
+      append(String.format(Locale.US, "%.32f", this[i]))
 
       with(computedImaginary) {
         if (isNotEmpty()) {
           append(columnSeparator)
-          append(String.format(Locale.US, "%.8f", this[i]))
+          append(String.format(Locale.US, "%.32f", this[i]))
         }
       }
       append(System.lineSeparator())

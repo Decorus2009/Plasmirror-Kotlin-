@@ -2,7 +2,7 @@
     "right_medium": "Custom",
     "computation_range": {
         "start": "200",
-        "end": "1500",
+        "end": "1600",
         "step": "1"
     },
     "regime": "Extinction Coefficient",

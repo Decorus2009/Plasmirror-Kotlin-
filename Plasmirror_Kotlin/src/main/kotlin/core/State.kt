@@ -58,7 +58,11 @@ object State {
         Regime.ABSORBANCE -> absorbance += absorbance()
         Regime.PERMITTIVITY -> permittivity += permittivity()
         Regime.REFRACTIVE_INDEX -> refractiveIndex += refractiveIndex()
-        Regime.EXTINCTION_COEFFICIENT -> extinctionCoefficient += extinctionCoefficient()
+        Regime.EXTINCTION_COEFFICIENT -> {
+          extinctionCoefficient += extinctionCoefficient()
+//          wavelength.forEach { print("$it\t") }
+//          println()
+        }
         Regime.SCATTERING_COEFFICIENT -> scatteringCoefficient += scatteringCoefficient()
       }
     }
