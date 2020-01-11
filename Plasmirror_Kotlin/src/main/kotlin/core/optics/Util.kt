@@ -3,7 +3,6 @@ package core.optics
 import core.Complex_
 import core.Complex_.Companion.ONE
 import core.State
-import core.State.angle
 import java.lang.Math.PI
 import kotlin.math.*
 
@@ -24,7 +23,7 @@ fun Complex_.toRefractiveIndex() = Complex_(sqrt((abs() + real) / 2.0), sqrt((ab
 
 fun Double.toEnergy() = 1239.8 / this
 
-fun cosThetaIncident() = Complex_(cos(angle * PI / 180.0))
+fun cosThetaIncident() = Complex_(cos(State.angle * PI / 180.0))
 
 /**
  *  Snell law

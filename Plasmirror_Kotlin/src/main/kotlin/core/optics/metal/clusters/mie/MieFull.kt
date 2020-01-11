@@ -17,11 +17,11 @@ object MieFull : Mie {
   private lateinit var m: Complex_
   private lateinit var mx: Complex_
 
-  override fun extinctionCoefficient(wavelength: Double, epsSemiconductor: Complex_, epsMetal: Complex_, f: Double, r: Double) =
-    alphaExtAlphaSca(wavelength, epsSemiconductor, epsMetal, f, r).first
-
   override fun scatteringCoefficient(wavelength: Double, epsSemiconductor: Complex_, epsMetal: Complex_, f: Double, r: Double) =
     alphaExtAlphaSca(wavelength, epsSemiconductor, epsMetal, f, r).second
+
+  override fun extinctionCoefficient(wavelength: Double, epsSemiconductor: Complex_, epsMetal: Complex_, f: Double, r: Double) =
+    alphaExtAlphaSca(wavelength, epsSemiconductor, epsMetal, f, r).first
 
   private fun alphaExtAlphaSca(wavelength: Double, epsMatrix: Complex_, epsMetal: Complex_, f: Double, r: Double): Pair<Double, Double> {
     val numberOfAngles = 20

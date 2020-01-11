@@ -17,9 +17,9 @@ abstract class MieFullLayerOfMetalClustersInAlGaAs(
 ) : MieLayerOfMetalClustersInAlGaAs, AlGaAs(d, k, x, epsType) {
   // value of AlGaAs refractive index is used as n-property here
   // Mie theory is for the computation of extinction and scattering, not for the computation of refractive index
-  override val alphaExt: Double
+  override val extinctionCoefficient: Double
     get() = MieFull.extinctionCoefficient(State.wavelengthCurrent, matrixPermittivity, clusterPermittivity, f, r)
-  override val alphaSca: Double
+  override val scatteringCoefficient: Double
     get() = MieFull.scatteringCoefficient(State.wavelengthCurrent, matrixPermittivity, clusterPermittivity, f, r)
 }
 

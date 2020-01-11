@@ -8,7 +8,7 @@ import core.State.wavelengthCurrent
 import core.State.wavelengthEnd
 import core.State.wavelengthStart
 import core.State.wavelengthStep
-import core.layers.metal.clusters.EffectiveMediumLayerOfDrudeMetalClustersInAlGaAs
+import core.layers.metal.clusters.EffectiveMediumApproximationLayerOfDrudeMetalClustersInAlGaAs
 import core.layers.metal.clusters.TwoDimensionalLayerOfDrudeMetalClustersInAlGaAs
 import core.layers.semiconductor.*
 import javafx.fxml.FXML
@@ -101,7 +101,7 @@ class MainFitterController {
         }
         is ConstRefractiveIndexLayerExcitonic -> {
         }
-        is EffectiveMediumLayerOfDrudeMetalClustersInAlGaAs -> {
+        is EffectiveMediumApproximationLayerOfDrudeMetalClustersInAlGaAs -> {
         }
         is TwoDimensionalLayerOfDrudeMetalClustersInAlGaAs -> load<NanoparticlesLayerFitterController>(it, "fxml/fitter/NanoparticlesLayerFitter.fxml")
       }

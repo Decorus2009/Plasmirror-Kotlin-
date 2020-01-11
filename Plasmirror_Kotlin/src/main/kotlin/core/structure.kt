@@ -145,7 +145,7 @@ object StructureBuilder {
 
   // type = 7-1-1, type = 7-2-1, type = 7-3-1
   private fun effectiveMediumLayerOfDrudeMetalClustersInAlGaAs(description: List<String>, epsType: EpsType) = with(description) {
-    EffectiveMediumLayerOfDrudeMetalClustersInAlGaAs(
+    EffectiveMediumApproximationLayerOfDrudeMetalClustersInAlGaAs(
       d = parseAt(i = 0),
       k = parseAt(i = 1),
       x = parseAt(i = 2),
@@ -159,7 +159,7 @@ object StructureBuilder {
 
   // type = 7-1-2, type = 7-2-2, type = 7-3-2
   private fun effectiveMediumLayerOfSbClustersInAlGaAs(description: List<String>, epsType: EpsType) = with(description) {
-    EffectiveMediumLayerOfSbClustersInAlGaAs(
+    EffectiveMediumApproximationLayerOfSbClustersInAlGaAs(
       d = parseAt(i = 0),
       k = parseAt(i = 1),
       x = parseAt(i = 2),

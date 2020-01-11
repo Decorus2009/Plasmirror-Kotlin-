@@ -5,9 +5,9 @@ import core.layers.metal.clusters.DrudeMetalClustersInAlGaAs
 import core.layers.metal.clusters.SbClustersInAlGaAs
 import core.layers.semiconductor.AlGaAs
 import core.optics.EpsType
-import core.optics.metal.clusters.mie.MieFirstAndSecondOrder
+import core.optics.metal.clusters.mie.MieSimple
 
-abstract class MieFirstAndSecondOrderLayerOfMetalClustersInAlGaAs(
+abstract class MieSimpleLayerOfMetalClustersInAlGaAs(
   d: Double,
   k: Double,
   x: Double,
@@ -16,12 +16,12 @@ abstract class MieFirstAndSecondOrderLayerOfMetalClustersInAlGaAs(
   epsType: EpsType
 ) : MieLayerOfMetalClustersInAlGaAs, AlGaAs(d, k, x, epsType) {
   override val extinctionCoefficient: Double
-    get() = MieFirstAndSecondOrder.extinctionCoefficient(State.wavelengthCurrent, matrixPermittivity, clusterPermittivity, f, r)
+    get() = MieSimple.extinctionCoefficient(State.wavelengthCurrent, matrixPermittivity, clusterPermittivity, f, r)
   override val scatteringCoefficient: Double
-    get() = MieFirstAndSecondOrder.scatteringCoefficient(State.wavelengthCurrent, matrixPermittivity, clusterPermittivity, f, r)
+    get() = MieSimple.scatteringCoefficient(State.wavelengthCurrent, matrixPermittivity, clusterPermittivity, f, r)
 }
 
-class MieFirstAndSecondOrderLayerOfDrudeMetalClustersInAlGaAs(
+class MieSimpleLayerOfDrudeMetalClustersInAlGaAs(
   d: Double,
   k: Double,
   x: Double,
@@ -31,13 +31,13 @@ class MieFirstAndSecondOrderLayerOfDrudeMetalClustersInAlGaAs(
   f: Double,
   r: Double,
   epsType: EpsType
-) : DrudeMetalClustersInAlGaAs, MieFirstAndSecondOrderLayerOfMetalClustersInAlGaAs(d, k, x, f, r, epsType)
+) : DrudeMetalClustersInAlGaAs, MieSimpleLayerOfMetalClustersInAlGaAs(d, k, x, f, r, epsType)
 
-class MieFirstAndSecondOrderLayerOfSbClustersInAlGaAs(
+class MieSimpleLayerOfSbClustersInAlGaAs(
   d: Double,
   k: Double,
   x: Double,
   f: Double,
   r: Double,
   epsType: EpsType
-) : SbClustersInAlGaAs, MieFirstAndSecondOrderLayerOfMetalClustersInAlGaAs(d, k, x, f, r, epsType)
+) : SbClustersInAlGaAs, MieSimpleLayerOfMetalClustersInAlGaAs(d, k, x, f, r, epsType)

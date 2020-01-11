@@ -16,7 +16,7 @@ import java.lang.Math.PI
 interface Layer {
   val d: Double
   val n: Complex_
-  val alphaExt
+  val extinctionCoefficient
     get() = extinctionCoefficientOf(n, State.wavelengthCurrent)
 
   /**

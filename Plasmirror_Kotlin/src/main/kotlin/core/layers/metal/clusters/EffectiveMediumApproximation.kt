@@ -9,7 +9,7 @@ import core.optics.metal.clusters.EffectiveMediumApproximation
  * @param f  volume fraction of metal clusters in AlGaAs matrix
  * @return Maxwell-Garnett epsEff
  */
-abstract class EffectiveMediumLayerOfMetalClustersInAlGaAs(
+abstract class EffectiveMediumApproximationLayerOfMetalClustersInAlGaAs(
   d: Double,
   k: Double,
   x: Double,
@@ -20,7 +20,7 @@ abstract class EffectiveMediumLayerOfMetalClustersInAlGaAs(
     get() = EffectiveMediumApproximation.permittivity(matrixPermittivity, clusterPermittivity, f).toRefractiveIndex()
 }
 
-class EffectiveMediumLayerOfDrudeMetalClustersInAlGaAs(
+class EffectiveMediumApproximationLayerOfDrudeMetalClustersInAlGaAs(
   d: Double,
   k: Double,
   x: Double,
@@ -29,12 +29,12 @@ class EffectiveMediumLayerOfDrudeMetalClustersInAlGaAs(
   override val epsInf: Double,
   f: Double,
   epsType: EpsType
-) : DrudeMetalClustersInAlGaAs, EffectiveMediumLayerOfMetalClustersInAlGaAs(d, k, x, f, epsType)
+) : DrudeMetalClustersInAlGaAs, EffectiveMediumApproximationLayerOfMetalClustersInAlGaAs(d, k, x, f, epsType)
 
-class EffectiveMediumLayerOfSbClustersInAlGaAs(
+class EffectiveMediumApproximationLayerOfSbClustersInAlGaAs(
   d: Double,
   k: Double,
   x: Double,
   f: Double,
   epsType: EpsType
-) : SbClustersInAlGaAs, EffectiveMediumLayerOfMetalClustersInAlGaAs(d, k, x, f, epsType)
+) : SbClustersInAlGaAs, EffectiveMediumApproximationLayerOfMetalClustersInAlGaAs(d, k, x, f, epsType)

@@ -3,6 +3,6 @@ package core.layers.metal.clusters.mie
 import core.layers.metal.clusters.MetalClustersInAlGaAs
 
 interface MieLayerOfMetalClustersInAlGaAs : MetalClustersInAlGaAs {
-  val alphaSca: Double
-  override val alphaExt: Double
+  val scatteringCoefficient: Double
+  override val extinctionCoefficient: Double
 }

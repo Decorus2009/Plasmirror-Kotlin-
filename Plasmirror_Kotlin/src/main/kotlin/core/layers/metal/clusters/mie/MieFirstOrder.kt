@@ -15,9 +15,9 @@ abstract class MieFirstOrderLayerOfMetalClustersInAlGaAs(
   private val r: Double,
   epsType: EpsType
 ) : MieLayerOfMetalClustersInAlGaAs, AlGaAs(d, k, x, epsType) {
-  override val alphaExt: Double
+  override val extinctionCoefficient: Double
     get() = MieFirstOrder.extinctionCoefficient(State.wavelengthCurrent, matrixPermittivity, clusterPermittivity, f, r)
-  override val alphaSca: Double
+  override val scatteringCoefficient: Double
     get() = MieFirstOrder.scatteringCoefficient(State.wavelengthCurrent, matrixPermittivity, clusterPermittivity, f, r)
 }
 
